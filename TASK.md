@@ -1,70 +1,70 @@
-@'
-# Task - Sprint 8 Localization Baseline
+# Task - Sprint 9 SPATIAL_28 comparison
 
-Implement quantitative localization evaluation for the existing Bottle SPATIAL_14 model.
+Evaluate the existing MobileNetV4 SPATIAL_28 variant on the same Bottle experiment.
 
-Do not change the model, training, encoder, preprocessing, VSA math, Adjoint compilation or raw scoring.
+This is a comparison with the frozen SPATIAL_14 baseline, not a redesign.
 
-## Ground truth
+## Fixed
 
-Dataset:
-../Anomalib4j_md/mvtec-ad-DatasetNinja
+Keep unchanged:
+- preprocessing
+- Bottle train/test split
+- VSA dimensions = 10000
+- projection seed = 42
+- normalization/statistics policy
+- positional archetype construction
+- Adjoint compilation
+- raw discrepancy = 1 - compiledScore
+- image score = max(raw)
+- localization conventions from LOCALIZATION_CONVENTIONS.md
 
-Bottle annotations:
-test/ann/<image>.png.json
+## SPATIAL_28
 
-Decode DatasetNinja bitmap annotations:
-- bitmap.data: base64 PNG
-- bitmap.origin: [x,y]
-- combine multiple bitmap objects by union
-- good images -> empty mask
+Use the existing encoder variant:
 
-Add focused unit tests for mask reconstruction.
+SPATIAL_28 -> 28x28x64.
 
-## Prediction map
+Train a new model from the same 209 `bottle_good` images.
 
-Use the existing raw 14x14 discrepancy:
+Rebuild statistics, positional archetypes and Adjoint filters for this variant.
 
-raw = 1 - compiledScore
+Do not reuse the SPATIAL_14 model.
 
-Upsample it bilinearly to original image dimensions.
+## Evaluation
 
-No smoothing, calibration, thresholding or per-patch normalization.
-
-## Metrics
-
-Implement:
+On the same 83 Bottle test images compute:
+- Image AUROC
 - Pixel AUROC
-- standard MVTec-style PRO/AUPRO
+- AUPRO@0.30
 
-Document the exact AUPRO convention used.
+Generate the same four localization overlays used in Sprint 8.
 
-## Regression
+Keep SPATIAL_28 outputs separate from SPATIAL_14 artifacts.
 
-The localization evaluation must not alter Sprint 7 behavior.
+Verify explicit-VSA vs compiled-Adjoint numerical equivalence on a bounded representative sample.
 
-Image AUROC should remain approximately:
-0.9857142857142858
+Do not repeat the expensive Sprint 7 scoring benchmark.
 
-## Qualitative output support
+## Baseline comparison
 
-Provide code to generate comparison overlays for:
-- bottle_good_000
-- bottle_broken_large_000
-- bottle_broken_small_000
-- bottle_contamination_000
+SPATIAL_14 baseline:
+- Image AUROC = 0.9857142857142858
+- Pixel AUROC = 0.9569495750935939
+- AUPRO@0.30 = 0.8653474657258569
 
-## Scope for Astra
+Important:
+do not attribute differences solely to spatial resolution.
 
-Implement the code and unit tests only.
+SPATIAL_28 is an earlier 64-channel feature stage while SPATIAL_14 is a deeper 96-channel stage.
 
-Do not run the expensive full Bottle training/evaluation unless necessary to debug correctness.
+## Astra scope
 
-At completion, report only:
+Implement code and focused tests only.
+
+Do not run the long real-data experiment unless required for debugging.
+
+At completion report only:
 - files changed
-- unit tests run
-- expensive command OpenCode should execute afterward
-- any unresolved decision
-
-Do not write a long report.
-'@ | Set-Content -Encoding utf8 TASK.md
+- tests run
+- exact validation command for OpenCode
+- unresolved decisions
