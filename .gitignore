@@ -1,0 +1,8 @@
+target/
+.idea/
+*.iml
+*.log
+Thumbs.db
+.DS_Store
+session-*.md
+session-*.md
