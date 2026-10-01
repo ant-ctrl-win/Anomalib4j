@@ -16,17 +16,15 @@ Keep unchanged:
 - Adjoint compilation
 - raw discrepancy = 1 - compiledScore
 - image score = max(raw)
-- localization conventions from LOCALIZATION_CONVENTIONS.md
+- localization metric conventions from LOCALIZATION_CONVENTIONS.md
 
 ## SPATIAL_28
 
 Use the existing encoder variant:
-
 SPATIAL_28 -> 28x28x64.
 
-Train a new model from the same 209 `bottle_good` images.
-
-Rebuild statistics, positional archetypes and Adjoint filters for this variant.
+Train a new model from the same 209 bottle_good images.
+All statistics, archetypes and Adjoint filters must be rebuilt for this variant.
 
 Do not reuse the SPATIAL_14 model.
 
@@ -37,25 +35,23 @@ On the same 83 Bottle test images compute:
 - Pixel AUROC
 - AUPRO@0.30
 
-Generate the same four localization overlays used in Sprint 8.
+Generate the same four localization overlays.
 
-Keep SPATIAL_28 outputs separate from SPATIAL_14 artifacts.
+Write outputs separately from the 14x14 artifacts.
 
-Verify explicit-VSA vs compiled-Adjoint numerical equivalence on a bounded representative sample.
+Verify explicit-VSA vs compiled-Adjoint numerical equivalence on a bounded representative sample; do not repeat the expensive Sprint 7 scoring benchmark.
 
-Do not repeat the expensive Sprint 7 scoring benchmark.
+## Comparison
 
-## Baseline comparison
+Report the measured SPATIAL_28 results beside the frozen Sprint 8 baseline:
 
-SPATIAL_14 baseline:
+SPATIAL_14:
 - Image AUROC = 0.9857142857142858
 - Pixel AUROC = 0.9569495750935939
 - AUPRO@0.30 = 0.8653474657258569
 
-Important:
-do not attribute differences solely to spatial resolution.
-
-SPATIAL_28 is an earlier 64-channel feature stage while SPATIAL_14 is a deeper 96-channel stage.
+Do not reinterpret a difference as caused solely by spatial resolution:
+SPATIAL_28 is also an earlier 64-channel feature stage, while SPATIAL_14 is 96-channel.
 
 ## Astra scope
 
