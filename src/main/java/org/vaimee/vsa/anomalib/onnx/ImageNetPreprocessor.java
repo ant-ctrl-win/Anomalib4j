@@ -3,6 +3,7 @@ package org.vaimee.vsa.anomalib.onnx;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferInt;
 import java.util.Objects;
 
 final class ImageNetPreprocessor {
@@ -13,12 +14,17 @@ final class ImageNetPreprocessor {
 
     static float[] preprocess(BufferedImage image) {
         Objects.requireNonNull(image, "image");
-        int width = image.getWidth();
-        int height = image.getHeight();
-        int[] sourcePixels = image.getRGB(0, 0, width, height, null, 0, width);
-        // getRGB converts to sRGB; TYPE_INT_RGB discards alpha without compositing.
-        var rgb = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-        rgb.setRGB(0, 0, width, height, sourcePixels, 0, width);
+        BufferedImage rgb = image;
+        boolean direct = image.getClass() == BufferedImage.class
+                && (image.getType() == BufferedImage.TYPE_INT_RGB || image.getType() == BufferedImage.TYPE_3BYTE_BGR)
+                && !image.getColorModel().hasAlpha() && image.getColorModel().getColorSpace().isCS_sRGB();
+        if (!direct) {
+            int width = image.getWidth();
+            int height = image.getHeight();
+            int[] sourcePixels = image.getRGB(0, 0, width, height, null, 0, width);
+            rgb = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+            rgb.setRGB(0, 0, width, height, sourcePixels, 0, width);
+        }
         var resized = new BufferedImage(INPUT_SIZE, INPUT_SIZE, BufferedImage.TYPE_INT_RGB);
         Graphics2D graphics = resized.createGraphics();
         try {
@@ -28,7 +34,7 @@ final class ImageNetPreprocessor {
         } finally {
             graphics.dispose();
         }
-        int[] pixels = resized.getRGB(0, 0, INPUT_SIZE, INPUT_SIZE, null, 0, INPUT_SIZE);
+        int[] pixels = ((DataBufferInt) resized.getRaster().getDataBuffer()).getData();
         int plane = INPUT_SIZE * INPUT_SIZE;
         float[] nchw = new float[3 * plane];
         for (int p = 0; p < plane; p++) {

@@ -1,4 +1,3 @@
-@'
 # Anomalib4j - Agent Contract
 
 ## Project idea
@@ -62,11 +61,9 @@ Preprocessing: imagenet-rgb-resize224-bicubic-v1
 
 ## Canonical supporting documents
 
-- PROJECT_STATE.md
-- TASK.md
-- ONNX_MODEL_CONTRACT.md
-- MVTEC_DATASET_CENSUS.md
-- SPRINT7_RESULT.md
+- docs/PROJECT_STATE.md
+- docs/architecture/ONNX_MODEL_CONTRACT.md
+- docs/benchmark/MVTEC_DATASET_CENSUS.md
+- docs/development/SPRINT7_RESULT.md
 
 Read only the documents needed for the current task.
-'@ | Set-Content -Encoding utf8 AGENTS.md

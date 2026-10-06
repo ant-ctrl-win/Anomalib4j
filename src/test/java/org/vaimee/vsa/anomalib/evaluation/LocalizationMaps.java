@@ -33,6 +33,11 @@ final class LocalizationMaps {
 
     static void overlay(Path path, BufferedImage original, boolean[] mask, double[] scores,
                         double low, double high) throws IOException {
+        overlay(path, original, mask, scores, low, high, "Raw bilinear map (blue to red)");
+    }
+
+    static void overlay(Path path, BufferedImage original, boolean[] mask, double[] scores,
+                        double low, double high, String scoreLabel) throws IOException {
         int width = original.getWidth();
         int height = original.getHeight();
         if (mask.length != width * height || scores.length != mask.length || !Double.isFinite(low)
@@ -44,7 +49,7 @@ final class LocalizationMaps {
             g.fillRect(0, 0, result.getWidth(), result.getHeight());
             g.setColor(Color.BLACK);
             g.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 16));
-            String[] titles = {"Original", "Ground truth (red)", "Raw bilinear map (blue to red)"};
+            String[] titles = {"Original", "Ground truth (red)", scoreLabel};
             for (int panel = 0; panel < 3; panel++) {
                 g.drawString(titles[panel], panel * width + 5, 20);
                 g.drawImage(original, panel * width, 60, null);

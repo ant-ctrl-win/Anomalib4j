@@ -1,0 +1,16 @@
+﻿{
+    "cpu":  [
+                {
+                    "Name":  "AMD Ryzen AI 9 HX 370 w/ Radeon 890M           ",
+                    "NumberOfCores":  12,
+                    "NumberOfLogicalProcessors":  24
+                }
+            ],
+    "ram_bytes":  67772403712,
+    "os":  "Microsoft Windows 11 Pro",
+    "build":  "26200",
+    "version":  "10.0.26200",
+    "observer_affinity":  16777215,
+    "power_profile":  "GUID combinazione risparmio energia: 381b4222-f694-41f0-9685-ff5bb260df2e  (Bilanciato)",
+    "captured_utc":  "2026-10-03T12:26:36.7513748Z"
+}

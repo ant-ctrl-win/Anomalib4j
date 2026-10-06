@@ -15,10 +15,7 @@ final class BottleEvaluation {
     private BottleEvaluation() { }
 
     static String defect(String filename) {
-        if (!filename.matches("bottle_(good|broken_large|broken_small|contamination)_[0-9]+\\.png")) {
-            throw new IllegalArgumentException("Unexpected bottle filename: " + filename);
-        }
-        return filename.substring(7, filename.lastIndexOf('_'));
+        return EvaluationLabels.defect(filename);
     }
 
     static double auroc(double[] good, double[] anomaly) {

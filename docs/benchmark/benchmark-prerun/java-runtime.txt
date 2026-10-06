@@ -1,0 +1,6 @@
+java.version=21.0.9
+providers=[CPU, AZURE]
+inputArguments=[-agentlib:jdwp=transport=dt_socket,address=kubernetes.docker.internal:50372, -Xmx2g, -Djdk.console=jdk.jshell]
+maxHeap=2147483648
+gc=[G1 Young Generation, G1 Concurrent GC, G1 Old Generation]
+pid=11000

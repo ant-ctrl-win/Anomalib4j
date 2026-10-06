@@ -4,5 +4,7 @@ target/
 *.log
 Thumbs.db
 .DS_Store
+__pycache__/
+*.pyc
 session-*.md
-session-*.md
+CHAT_HANDOFF.md

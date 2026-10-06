@@ -52,7 +52,7 @@ final class Spatial28Evaluation {
                 Training: 209 normal images, 163856 patch observations; test: 83 images (20 good, 63 anomaly).
                 D=10000, seed=42, norm epsilon=1e-6, std floor=1e-8, backbone frozen.
                 Preprocessing: imagenet-rgb-resize224-bicubic-v1. Image score: max(1 - compiledScore).
-                Localization follows LOCALIZATION_CONVENTIONS.md (bilinear half-pixel, 8-connectivity,
+                Localization follows docs/benchmark/LOCALIZATION_CONVENTIONS.md (bilinear half-pixel, 8-connectivity,
                 exact threshold sweep, AUPRO integrated to FPR 0.30 and normalized by 0.30).
                 Explicit/compiled comparisons: %d (all cells of the four named overlay examples).
                 Maximum absolute score error: %.17g; asserted tolerance: 1e-9. No scoring benchmark.
