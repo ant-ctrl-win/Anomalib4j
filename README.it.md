@@ -128,33 +128,38 @@ Il risultato è un **compromesso qualità/latenza misurato**, non una superiorit
 
 ## Esempi qualitativi
 
-Le immagini mostrano il comportamento del prototipo e servono come visualizzazione qualitativa, non come prova statistica. Nelle tavole Bottle il pannello centrale mostra la ground truth in rosso; le scale cromatiche Bottle e Metal Nut sono diverse e non rappresentano probabilità.
+Le immagini mostrano il comportamento del prototipo e servono come visualizzazione qualitativa, non come prova statistica.
+
+- **Bottle**: mappe **RAW di discrepanza** (`1 - compiledScore`), output di localizzazione qualitativa canonici della baseline SPATIAL_14 dello Sprint 8; il pannello centrale mostra la ground truth in rosso.
+- **Metal Nut**: mappa **Z posizionale** (la heatmap scientifica conserva i valori Z senza clamp); il pannello centrale è la mappa Z presentata su scala di visualizzazione.
+
+Tutti i pannelli usano la stessa colormap di presentazione **blu -> rosso**. Gli intervalli di visualizzazione sono **specifici per categoria e non numericamente confrontabili** tra Bottle e Metal Nut. I colori non sono probabilità e la scalatura serve solo alla visualizzazione: non modifica alcuna metrica riportata.
 
 <p align="center">
-  <img src="docs/images/bottle-broken-large.png" alt="Bottle broken large: originale, ground truth e overlay Z" width="880">
+  <img src="docs/images/bottle-broken-large.png" alt="Bottle broken large: originale, ground truth e mappa RAW di discrepanza" width="880">
 </p>
 
-**Bottle · broken_large_000** — La risposta segue parte della frattura estesa sul bordo destro e inferiore.
+**Bottle · broken_large_000** — Mappa RAW di discrepanza (`1 - compiledScore`). La risposta segue parte della frattura estesa sul bordo destro e inferiore; il colore serve solo alla visualizzazione.
 
 <p align="center">
-  <img src="docs/images/bottle-broken-small.png" alt="Bottle broken small: originale, ground truth e overlay Z" width="880">
+  <img src="docs/images/bottle-broken-small.png" alt="Bottle broken small: originale, ground truth e mappa RAW di discrepanza" width="880">
 </p>
 
-**Bottle · broken_small_000** — Una piccola scheggiatura mostra il livello di dettaglio del caso e la risposta locale sulla griglia grossolana.
+**Bottle · broken_small_000** — Mappa RAW di discrepanza (`1 - compiledScore`). Una piccola scheggiatura mostra il livello di dettaglio del caso e la risposta locale sulla griglia grossolana; il colore serve solo alla visualizzazione.
 
 <p align="center">
-  <img src="docs/images/bottle-good.png" alt="Bottle good: originale, ground truth e overlay Z" width="880">
+  <img src="docs/images/bottle-good.png" alt="Bottle good: originale, ground truth e mappa RAW di discrepanza" width="880">
 </p>
 
-**Bottle · good_000** — Un esempio sano con risposta contenuta sulla scala condivisa degli esempi Bottle.
+**Bottle · good_000** — Mappa RAW di discrepanza (`1 - compiledScore`). Un esempio sano con risposta contenuta sulla scala condivisa degli esempi Bottle; il colore serve solo alla visualizzazione.
 
 <p align="center">
-  <img src="docs/images/metal-nut-good-activation.png" alt="Metal Nut good con falsa attivazione: originale, heatmap Z e overlay" width="880">
+  <img src="docs/images/metal-nut-good-activation.png" alt="Metal Nut good: originale, mappa Z posizionale e overlay (blu -> rosso)" width="880">
 </p>
 
-**Metal Nut · good_009** — Un pezzo sano produce un'attivazione interna marcata: un esempio concreto del limite della configurazione corrente.
+**Metal Nut · good_009** — Mappa Z posizionale. Un pezzo sano produce un'attivazione interna marcata: un esempio concreto del limite della configurazione corrente. La scala cromatica blu -> rosso è specifica Metal Nut e serve solo alla visualizzazione.
 
-Le immagini pubblicate nel README devono essere copiate dagli artefatti locali in `docs/images/`; `target/` resta esclusa dal repository.
+Le tavole Bottle pubblicate sono gli output RAW di localizzazione (baseline SPATIAL_14 dello Sprint 8), copiati dagli artefatti locali `target/bottle-localization/` in `docs/images/`; la scala cromatica serve solo alla visualizzazione e `target/` resta esclusa dal repository.
 
 ## Cosa ha funzionato, e dove si vedono i limiti
 
