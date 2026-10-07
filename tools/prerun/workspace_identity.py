@@ -40,12 +40,12 @@ CRITICAL_FILES: Final = (
     "docs/benchmark/benchmark-prerun/resize-equivalence.json",
     "docs/benchmark/benchmark-prerun/map-format/fixtures.json",
     "pom.xml",
-    "src/main/java/org/vaimee/vsa/anomalib/onnx/ImageNetPreprocessor.java",
+    "src/main/java/io/github/antctrlwin/anomalib4j/onnx/ImageNetPreprocessor.java",
     "src/main/resources/models/mobilenetv4_spatial_14x14.onnx",
     "src/main/resources/models/mobilenetv4_spatial_28x28.onnx",
-    "src/test/java/org/vaimee/vsa/anomalib/evaluation/EvaluationLabels.java",
-    "src/test/java/org/vaimee/vsa/anomalib/evaluation/LocalizationMaps.java",
-    "src/test/java/org/vaimee/vsa/anomalib/evaluation/LocalizationMetrics.java",
+    "src/test/java/io/github/antctrlwin/anomalib4j/evaluation/EvaluationLabels.java",
+    "src/test/java/io/github/antctrlwin/anomalib4j/evaluation/LocalizationMaps.java",
+    "src/test/java/io/github/antctrlwin/anomalib4j/evaluation/LocalizationMetrics.java",
 )
 
 

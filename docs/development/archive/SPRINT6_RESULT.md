@@ -119,7 +119,7 @@ try (var encoder = new OnnxMobileNetV4Encoder()) {
 
 ## File creati o modificati
 
-Percorsi relativi a `src/main/java/org/vaimee/vsa/anomalib/`:
+Percorsi relativi a `src/main/java/io/github/antctrlwin/anomalib4j/`:
 
 - Modificato `model/ModelDescriptor.java`.
 - Modificato `onnx/OnnxMobileNetV4Encoder.java`.
@@ -128,7 +128,7 @@ Percorsi relativi a `src/main/java/org/vaimee/vsa/anomalib/`:
 - Creato `training/NormalImageTrainer.java`.
 - Creato `validation/ExplicitVsaScorer.java`.
 
-Percorsi relativi a `src/test/java/org/vaimee/vsa/anomalib/`:
+Percorsi relativi a `src/test/java/io/github/antctrlwin/anomalib4j/`:
 
 - Creato `model/PreprocessingContractTest.java`.
 - Creato `projection/NormalizedPatchProjectionTest.java`.
@@ -142,7 +142,7 @@ Creato questo report `SPRINT6_RESULT.md`. Nessuna dipendenza aggiunta.
 Nessun errore di training o di equivalenza rilevato. Il collegamento MCP del
 comando lungo e scaduto dopo 300 secondi; Maven ha continuato e terminato
 correttamente. Il risultato e stato verificato dal log completo e dal report
-JUnit `org.vaimee.vsa.anomalib.training.BottleTrainingTest.txt`, senza
+JUnit `io.github.antctrlwin.anomalib4j.training.BottleTrainingTest.txt`, senza
 riavviare il training.
 
 Il modello viene costruito e compilato in memoria durante il test; la fine

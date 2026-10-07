@@ -134,7 +134,7 @@ def ensure_dump(category: str) -> Path:
     manifest = RUN / "data" / category / "anomalib4j-fit.txt"
     command = [
         "java", "-Xmx2g", "-cp", classpath(),
-        "org.vaimee.vsa.anomalib.evaluation.PositionalVarianceFeatureDump",
+        "io.github.antctrlwin.anomalib4j.evaluation.PositionalVarianceFeatureDump",
         str(DATASET), str(out), str(manifest), category,
     ]
     subprocess.run(command, cwd=ROOT, check=True)

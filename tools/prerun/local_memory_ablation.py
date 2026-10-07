@@ -105,7 +105,7 @@ def ensure_features(category: str, role: str) -> Path:
     out.mkdir(parents=True, exist_ok=True)
     command = [
         "java", "-Xmx2g", "-cp", _classpath(),
-        "org.vaimee.vsa.anomalib.evaluation.PositionalVarianceFeatureDump",
+        "io.github.antctrlwin.anomalib4j.evaluation.PositionalVarianceFeatureDump",
         str(DATASET), str(out), str(RUN / "data" / category / manifest_name), category, java_role,
     ]
     subprocess.run(command, cwd=ROOT, check=True)

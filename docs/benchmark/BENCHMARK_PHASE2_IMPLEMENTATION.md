@@ -14,7 +14,7 @@ gia congelati in Phase 1 e nella preparazione Phase 2.
 Il runner e composto da due lati che condividono lo stesso layout su disco:
 
 - **Lato Java (Anomalib4j):** classi di orchestrazione nel package di test
-  `org.vaimee.vsa.anomalib.evaluation` (`ComparisonRunner`, `ComparisonEvaluator`,
+  `io.github.antctrlwin.anomalib4j.evaluation` (`ComparisonRunner`, `ComparisonEvaluator`,
   `ComparisonModel`, `ComparisonArtifacts`) e la suite JMH `ComparisonBenchmark`.
 - **Lato Python (competitor):** `tools/comparison/` orchestra Anomalib 2.6.2 nativo (PaDiM e
   PatchCore) tramite il venv verificato, scrive gli stessi artefatti e riusa gli stessi helper di
@@ -34,7 +34,7 @@ Principi applicati:
 
 ### Java (test scope)
 
-Creati in `src/test/java/org/vaimee/vsa/anomalib/evaluation/`:
+Creati in `src/test/java/io/github/antctrlwin/anomalib4j/evaluation/`:
 
 | File | Ruolo |
 | --- | --- |
@@ -48,7 +48,7 @@ Creati in `src/test/java/org/vaimee/vsa/anomalib/evaluation/`:
 | `PositionalRawCalibration.java` | Calibrazione Z per posizione (filtri) |
 | test: `ComparisonModelTest`, `ComparisonArtifactsTest`, `ComparisonEvaluatorTest`, `EvaluationLabelsTest`, `NpyMapTest`, `ResizeEquivalenceTest` | Verifiche mirate |
 
-Creato in `src/jmh/java/org/vaimee/vsa/anomalib/evaluation/`:
+Creato in `src/jmh/java/io/github/antctrlwin/anomalib4j/evaluation/`:
 
 | File | Ruolo |
 | --- | --- |

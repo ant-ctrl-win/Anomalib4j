@@ -54,7 +54,7 @@ mvn -B -Pbenchmark "-Dtest=*Test,!BottleTrainingTest,!BottleRealEvaluationTest" 
 if ($LASTEXITCODE -ne 0) { throw 'Compilation/tests failed' }
 New-Item -ItemType Directory -Force target/benchmark | Out-Null
 $benchmarkCp = "target/test-classes;target/classes;" + (Get-Content -Raw target/benchmark-classpath.txt).Trim()
-java -cp $benchmarkCp org.openjdk.jmh.Main 'org.vaimee.vsa.anomalib.onnx.EncoderMicroprofile.*' -foe true -rf json -rff target/benchmark/encoder-microprofile.json -o target/benchmark/encoder-microprofile.txt
+java -cp $benchmarkCp org.openjdk.jmh.Main 'io.github.antctrlwin.anomalib4j.onnx.EncoderMicroprofile.*' -foe true -rf json -rff target/benchmark/encoder-microprofile.json -o target/benchmark/encoder-microprofile.txt
 if ($LASTEXITCODE -ne 0) { throw 'JMH failed' }
 ```
 

@@ -9,7 +9,7 @@ Code was not modified or optimized; results are reported as measured.
 mvn -B -Pbenchmark "-Dtest=*Test,!BottleTrainingTest,!BottleRealEvaluationTest" test org.apache.maven.plugins:maven-dependency-plugin:3.8.1:build-classpath "-Dmdep.includeScope=test" "-Dmdep.outputFile=target/benchmark-classpath.txt"
 New-Item -ItemType Directory -Force target/benchmark | Out-Null
 $benchmarkCp = "target/test-classes;target/classes;" + (Get-Content -Raw target/benchmark-classpath.txt).Trim()
-java -cp $benchmarkCp org.openjdk.jmh.Main 'org.vaimee.vsa.anomalib.evaluation.PerformanceBaseline.*' -foe true -rf json -rff target/benchmark/baseline.json -o target/benchmark/baseline.txt
+java -cp $benchmarkCp org.openjdk.jmh.Main 'io.github.antctrlwin.anomalib4j.evaluation.PerformanceBaseline.*' -foe true -rf json -rff target/benchmark/baseline.json -o target/benchmark/baseline.txt
 ```
 
 Build phase: BUILD SUCCESS, 83 tests, 0 failures / 0 errors / 0 skipped (pre-existing suite; unrelated to the benchmark).

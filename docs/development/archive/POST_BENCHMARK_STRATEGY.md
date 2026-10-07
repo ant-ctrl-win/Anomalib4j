@@ -41,7 +41,7 @@ Fonti: [in-sample](../../benchmark/POSITIONAL_CALIBRATION_RESULT.md), [held-out]
 
 ### Che cosa dimostra l'Adjoint
 
-**VERIFIED:** lo Sprint 7 confronta 16268 celle test, con errore massimo explicit/compiled di 1.3073986337985843e-12, contro tolleranza 1e-9. Il codice [AdjointCompiler](../../../src/main/java/org/vaimee/vsa/anomalib/adjoint/AdjointCompiler.java) compila il prodotto scalare VSA in pesi e bias CNN; [PositionalMemoryBuilder](../../../src/main/java/org/vaimee/vsa/anomalib/memory/PositionalMemoryBuilder.java) somma vettori standardizzati e normalizza la somma.
+**VERIFIED:** lo Sprint 7 confronta 16268 celle test, con errore massimo explicit/compiled di 1.3073986337985843e-12, contro tolleranza 1e-9. Il codice [AdjointCompiler](../../../src/main/java/io/github/antctrlwin/anomalib4j/adjoint/AdjointCompiler.java) compila il prodotto scalare VSA in pesi e bias CNN; [PositionalMemoryBuilder](../../../src/main/java/io/github/antctrlwin/anomalib4j/memory/PositionalMemoryBuilder.java) somma vettori standardizzati e normalizza la somma.
 
 **INFERENCE — Conclusione forte:** e dimostrata una compilazione numericamente fedele dello **score definito dal modello**, non una ricostruzione generale dei vettori CNN o un'inversione della proiezione. L'identita del prodotto scalare con l'aggiunto non necessita di un'ipotesi Johnson-Lindenstrauss; preserva la formula implementata. Non certifica automaticamente l'equivalenza con cosine similarity VSA dotata di una diversa normalizzazione.
 

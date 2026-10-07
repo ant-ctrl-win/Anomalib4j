@@ -18,7 +18,7 @@ mvn -B -Dtest=BottleRealEvaluationTest test
 
 | Voce | Valore |
 | --- | --- |
-| Test eseguito | `org.vaimee.vsa.anomalib.evaluation.BottleRealEvaluationTest` |
+| Test eseguito | `io.github.antctrlwin.anomalib4j.evaluation.BottleRealEvaluationTest` |
 | Tests run | 1 |
 | Failures | 0 |
 | Errors | 0 |
@@ -29,8 +29,8 @@ mvn -B -Dtest=BottleRealEvaluationTest test
 | Terminato | 2026-09-29T16:23:17+02:00 |
 
 Report Surefire:
-- `target/surefire-reports/org.vaimee.vsa.anomalib.evaluation.BottleRealEvaluationTest.txt`
-- `target/surefire-reports/TEST-org.vaimee.vsa.anomalib.evaluation.BottleRealEvaluationTest.xml`
+- `target/surefire-reports/io.github.antctrlwin.anomalib4j.evaluation.BottleRealEvaluationTest.txt`
+- `target/surefire-reports/TEST-io.github.antctrlwin.anomalib4j.evaluation.BottleRealEvaluationTest.xml`
 
 Estratto Surefire:
 

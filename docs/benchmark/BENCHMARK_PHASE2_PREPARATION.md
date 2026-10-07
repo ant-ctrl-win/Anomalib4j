@@ -20,11 +20,11 @@ Non sono stati toccati `BENCHMARK_CONTRACT.md`, le configurazioni, i pesi, il da
 ## 2. File modificati/creati
 
 Creati:
-- `src/test/java/org/vaimee/vsa/anomalib/evaluation/EvaluationLabels.java`
-- `src/test/java/org/vaimee/vsa/anomalib/evaluation/EvaluationLabelsTest.java`
-- `src/test/java/org/vaimee/vsa/anomalib/evaluation/ResizeEquivalenceTest.java`
-- `src/test/java/org/vaimee/vsa/anomalib/evaluation/NpyMap.java`
-- `src/test/java/org/vaimee/vsa/anomalib/evaluation/NpyMapTest.java`
+- `src/test/java/io/github/antctrlwin/anomalib4j/evaluation/EvaluationLabels.java`
+- `src/test/java/io/github/antctrlwin/anomalib4j/evaluation/EvaluationLabelsTest.java`
+- `src/test/java/io/github/antctrlwin/anomalib4j/evaluation/ResizeEquivalenceTest.java`
+- `src/test/java/io/github/antctrlwin/anomalib4j/evaluation/NpyMap.java`
+- `src/test/java/io/github/antctrlwin/anomalib4j/evaluation/NpyMapTest.java`
 - `tools/prerun/resize_equivalence.py`
 - `tools/prerun/offline_env.py`
 - `tools/prerun/map_io.py`
@@ -33,7 +33,7 @@ Creati:
 - `docs/benchmark/benchmark-prerun/map-format/{native_4x5,evaluated_2x3}.{npy,json}` e `fixtures.json` (fixture, generate)
 
 Modificati:
-- `src/test/java/org/vaimee/vsa/anomalib/evaluation/BottleEvaluation.java`: `defect(String)` ora delega a `EvaluationLabels.defect(...)`; rimossa la regex Bottle-only. La logica delle metriche e invariata.
+- `src/test/java/io/github/antctrlwin/anomalib4j/evaluation/BottleEvaluation.java`: `defect(String)` ora delega a `EvaluationLabels.defect(...)`; rimossa la regex Bottle-only. La logica delle metriche e invariata.
 
 Nessun altro file di produzione e stato toccato.
 

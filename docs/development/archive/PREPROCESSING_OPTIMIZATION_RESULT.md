@@ -11,7 +11,7 @@ This report only records the values measured by the run.
 mvn -B -Pbenchmark "-Dtest=*Test,PreprocessingOptimizationIT,!BottleTrainingTest,!BottleRealEvaluationTest" test org.apache.maven.plugins:maven-dependency-plugin:3.8.1:build-classpath "-Dmdep.includeScope=test" "-Dmdep.outputFile=target/benchmark-classpath.txt"
 New-Item -ItemType Directory -Force target/benchmark | Out-Null
 $benchmarkCp = "target/test-classes;target/classes;" + (Get-Content -Raw target/benchmark-classpath.txt).Trim()
-$benchmarks = 'org.vaimee.vsa.anomalib.(onnx.PreprocessingMicroprofile.fullPreprocessing|onnx.EncoderMicroprofile.fullExtract|evaluation.PerformanceBaseline.detectionInference|evaluation.PerformanceBaseline.localizationInference)$'
+$benchmarks = 'io.github.antctrlwin.anomalib4j.(onnx.PreprocessingMicroprofile.fullPreprocessing|onnx.EncoderMicroprofile.fullExtract|evaluation.PerformanceBaseline.detectionInference|evaluation.PerformanceBaseline.localizationInference)$'
 java -cp $benchmarkCp org.openjdk.jmh.Main $benchmarks -foe true -rf json -rff target/benchmark/preprocessing-optimized-full.json -o target/benchmark/preprocessing-optimized-full.txt
 ```
 
@@ -125,8 +125,8 @@ smoke-to-full comparison exists for them.
 
 ```
  M pom.xml
- M src/main/java/org/vaimee/vsa/anomalib/onnx/ImageNetPreprocessor.java
- M src/test/java/org/vaimee/vsa/anomalib/evaluation/LocalizationMaps.java
+ M src/main/java/io/github/antctrlwin/anomalib4j/onnx/ImageNetPreprocessor.java
+ M src/test/java/io/github/antctrlwin/anomalib4j/evaluation/LocalizationMaps.java
 ?? PREPROCESSING_OPTIMIZATION_RESULT.md
 ... (pre-existing untracked report .md files and test sources) ...
 ```

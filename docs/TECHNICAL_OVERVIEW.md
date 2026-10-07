@@ -42,13 +42,13 @@ score sul subset di calibrazione. Non sono intercambiabili.
 
 ## 2. Dall'immagine al contratto MobileNetV4
 
-[ImageNetPreprocessor](../src/main/java/org/vaimee/vsa/anomalib/onnx/ImageNetPreprocessor.java)
+[ImageNetPreprocessor](../src/main/java/io/github/antctrlwin/anomalib4j/onnx/ImageNetPreprocessor.java)
 porta l'immagine RGB a 224×224 mediante resize bicubico. Per ogni canale divide
 il pixel per 255, sottrae la media ImageNet e divide per la deviazione standard:
 medie (0.485, 0.456, 0.406), deviazioni (0.229, 0.224, 0.225).
 Questi sono parametri fissi del preprocessing, non statistiche apprese su MVTec.
 
-[OnnxMobileNetV4Encoder](../src/main/java/org/vaimee/vsa/anomalib/onnx/OnnxMobileNetV4Encoder.java)
+[OnnxMobileNetV4Encoder](../src/main/java/io/github/antctrlwin/anomalib4j/onnx/OnnxMobileNetV4Encoder.java)
 usa il modello SPATIAL_14 congelato:
 input float32 NCHW $[1,3,224,224]$, output float32 NHWC
 $[1,14,14,96]$. Il grafo restituisce feature, non uno score di anomalia.
@@ -72,7 +72,7 @@ Shape, hash degli asset e limiti della provenienza dei pesi sono nel
 
 ## 3. Costruzione della memoria M0
 
-[DenseRademacherProjection](../src/main/java/org/vaimee/vsa/anomalib/projection/DenseRademacherProjection.java)
+[DenseRademacherProjection](../src/main/java/io/github/antctrlwin/anomalib4j/projection/DenseRademacherProjection.java)
 costruisce $R$ con coefficienti ±1, seed 42 e ordine deterministico
 canale CNN esterno/coordinata VSA interna. La proiezione è:
 
@@ -80,13 +80,13 @@ $
 y_{i,p}=Ru_{i,p}/\sqrt D.
 $
 
-Sul solo fit, [ProjectionStatisticsAccumulator](../src/main/java/org/vaimee/vsa/anomalib/memory/ProjectionStatisticsAccumulator.java)
+Sul solo fit, [ProjectionStatisticsAccumulator](../src/main/java/io/github/antctrlwin/anomalib4j/memory/ProjectionStatisticsAccumulator.java)
 stima media globale $g$ e deviazione standard campionaria globale $s_g$
 aggregando immagini e posizioni. La deviazione effettiva è
 $\tilde s_{g,d}=\max(s_{g,d},10^{-8})$.
 Il vettore standardizzato è $z_{i,p}=(y_{i,p}-g)\oslash\tilde s_g$.
 
-[PositionalMemoryBuilder](../src/main/java/org/vaimee/vsa/anomalib/memory/PositionalMemoryBuilder.java)
+[PositionalMemoryBuilder](../src/main/java/io/github/antctrlwin/anomalib4j/memory/PositionalMemoryBuilder.java)
 accumula $B_p=\sum_i z_{i,p}$ e produce l'archetipo direzionale
 $A_p=B_p/\|B_p\|$, nel caso non degenere.
 
@@ -122,8 +122,8 @@ W_p&=R^Tq_p/\sqrt D,\qquad b_p=-g^Tq_p.
 $
 
 Qui $q_p$ ha D componenti, $W_p$ ha C componenti e $b_p$ è uno scalare.
-[AdjointCompiler](../src/main/java/org/vaimee/vsa/anomalib/adjoint/AdjointCompiler.java)
-costruisce pesi e bias; [PatchScoreKernel](../src/main/java/org/vaimee/vsa/anomalib/inference/PatchScoreKernel.java)
+[AdjointCompiler](../src/main/java/io/github/antctrlwin/anomalib4j/adjoint/AdjointCompiler.java)
+costruisce pesi e bias; [PatchScoreKernel](../src/main/java/io/github/antctrlwin/anomalib4j/inference/PatchScoreKernel.java)
 valuta direttamente:
 
 $
@@ -153,7 +153,7 @@ $
 Z_p=\frac{r_p-a_p}{\max(t_p,10^{-6})}.
 $
 
-[PositionalRawCalibration](../src/test/java/org/vaimee/vsa/anomalib/evaluation/PositionalRawCalibration.java)
+[PositionalRawCalibration](../src/test/java/io/github/antctrlwin/anomalib4j/evaluation/PositionalRawCalibration.java)
 implementa questa calibrazione nel percorso di valutazione. Le immagini di
 calibrazione non partecipano al fitting di statistiche, archetipi e filtri.
 
@@ -323,7 +323,7 @@ Lo stato minimo double di scoring M0 comprende $P(C+1)$ valori:
 con archetipi e media/std globale conta 15,840,000 byte per questi array.
 Sono conteggi di payload, non memoria del processo; escludono encoder, R,
 overhead e buffer. Il benchmark conserva anche stato serializzato e verifica
-il reload mediante [ComparisonModel](../src/test/java/org/vaimee/vsa/anomalib/evaluation/ComparisonModel.java).
+il reload mediante [ComparisonModel](../src/test/java/io/github/antctrlwin/anomalib4j/evaluation/ComparisonModel.java).
 
 Il timing Python M0/M3 dell'ablazione cronometra un unico loop con proiezione
 condivisa e calcolo di entrambi gli score. I due campi riportano quel medesimo
@@ -377,7 +377,7 @@ python tools/prerun/local_memory_ablation.py
 
 Questi comandi eseguono analisi e scrivono risultati derivati; non sono smoke
 test e non sono stati eseguiti per la ristrutturazione documentale.
-Il [feature dump Java](../src/test/java/org/vaimee/vsa/anomalib/evaluation/PositionalVarianceFeatureDump.java)
+Il [feature dump Java](../src/test/java/io/github/antctrlwin/anomalib4j/evaluation/PositionalVarianceFeatureDump.java)
 può riestrarre le feature quando la cache non è disponibile.
 Gli script riusano cache esistenti: conservarle insieme ai manifest coerenti.
 

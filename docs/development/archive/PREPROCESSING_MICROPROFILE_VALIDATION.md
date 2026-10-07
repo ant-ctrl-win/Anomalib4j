@@ -42,7 +42,7 @@ mvn -B -Pbenchmark "-Dtest=*Test,!BottleTrainingTest,!BottleRealEvaluationTest" 
 if ($LASTEXITCODE -ne 0) { throw 'Compilation/tests failed' }
 New-Item -ItemType Directory -Force target/benchmark | Out-Null
 $benchmarkCp = "target/test-classes;target/classes;" + (Get-Content -Raw target/benchmark-classpath.txt).Trim()
-java -cp $benchmarkCp org.openjdk.jmh.Main 'org.vaimee.vsa.anomalib.onnx.PreprocessingMicroprofile.*' -foe true -rf json -rff target/benchmark/preprocessing-microprofile.json -o target/benchmark/preprocessing-microprofile.txt
+java -cp $benchmarkCp org.openjdk.jmh.Main 'io.github.antctrlwin.anomalib4j.onnx.PreprocessingMicroprofile.*' -foe true -rf json -rff target/benchmark/preprocessing-microprofile.json -o target/benchmark/preprocessing-microprofile.txt
 if ($LASTEXITCODE -ne 0) { throw 'JMH failed' }
 ```
 
@@ -53,7 +53,7 @@ After the compilation/classpath preparation above, run separately:
 ```powershell
 $benchmarkCp = "target/test-classes;target/classes;" + (Get-Content -Raw target/benchmark-classpath.txt).Trim()
 New-Item -ItemType Directory -Force target/benchmark/preprocessing-jfr | Out-Null
-java -cp $benchmarkCp org.openjdk.jmh.Main 'org.vaimee.vsa.anomalib.onnx.PreprocessingMicroprofile.fullPreprocessing' -foe true -prof 'jfr:dir=target/benchmark/preprocessing-jfr;configName=profile;stackDepth=128' -rf json -rff target/benchmark/preprocessing-jfr.json -o target/benchmark/preprocessing-jfr.txt
+java -cp $benchmarkCp org.openjdk.jmh.Main 'io.github.antctrlwin.anomalib4j.onnx.PreprocessingMicroprofile.fullPreprocessing' -foe true -prof 'jfr:dir=target/benchmark/preprocessing-jfr;configName=profile;stackDepth=128' -rf json -rff target/benchmark/preprocessing-jfr.json -o target/benchmark/preprocessing-jfr.txt
 if ($LASTEXITCODE -ne 0) { throw 'JFR run failed' }
 Get-ChildItem target/benchmark/preprocessing-jfr -Recurse -Filter *.jfr | ForEach-Object { jfr summary $_.FullName }
 ```

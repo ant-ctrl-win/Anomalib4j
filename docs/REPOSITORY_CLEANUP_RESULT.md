@@ -26,10 +26,10 @@ recoverable from history).
 Tracked, already modified before this pass (left as-is):
 
 - `pom.xml`
-- `src/main/java/org/vaimee/vsa/anomalib/onnx/ImageNetPreprocessor.java`
-- `src/test/java/org/vaimee/vsa/anomalib/evaluation/BottleEvaluation.java`
-- `src/test/java/org/vaimee/vsa/anomalib/evaluation/LocalizationMaps.java`
-- `src/test/java/org/vaimee/vsa/anomalib/evaluation/Spatial28Evaluation.java` (Javadoc path only)
+- `src/main/java/io/github/antctrlwin/anomalib4j/onnx/ImageNetPreprocessor.java`
+- `src/test/java/io/github/antctrlwin/anomalib4j/evaluation/BottleEvaluation.java`
+- `src/test/java/io/github/antctrlwin/anomalib4j/evaluation/LocalizationMaps.java`
+- `src/test/java/io/github/antctrlwin/anomalib4j/evaluation/Spatial28Evaluation.java` (Javadoc path only)
 
 All four heatmap sources were verified to exist before copying, with expected
 sizes, and `docs/PROJECT_STATE.md` was verified complete (25,306 bytes, valid

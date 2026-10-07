@@ -106,14 +106,14 @@ La compilazione trasferisce lo score nello spazio CNN: non ricostruisce un vetto
 
 | Stato | Componenti | Collocazione relativa a `src/` |
 | --- | --- | --- |
-| IMPLEMENTED | GridShape, ModelDescriptor, NormalizationPolicy | `main/java/org/vaimee/vsa/anomalib/model/` |
-| IMPLEMENTED | ProjectionStrategy, DenseRademacherProjection, NormalizedPatchProjection | `main/java/org/vaimee/vsa/anomalib/projection/` |
-| IMPLEMENTED | Welford, ProjectionStatistics, PositionalMemoryBuilder/Bank | `main/java/org/vaimee/vsa/anomalib/memory/` |
-| IMPLEMENTED | AdjointCompiler/FilterBank, PatchScoreKernel | `main/java/org/vaimee/vsa/anomalib/{adjoint,inference}/` |
-| IMPLEMENTED | HeatmapEngine/Result/Calibration, HeatmapCalibrator | `main/java/org/vaimee/vsa/anomalib/{inference,calibration}/` |
-| IMPLEMENTED | Encoder, preprocessing, NormalImageTrainer, scorer esplicito e diagnostica rho | `main/java/org/vaimee/vsa/anomalib/{onnx,training,validation}/` |
-| IMPLEMENTED | Metriche, maschere, overlay, positional Z, held-out e multi-seed | `test/java/org/vaimee/vsa/anomalib/evaluation/` |
-| IMPLEMENTED | PerformanceBaseline, EncoderMicroprofile, PreprocessingMicroprofile, equivalenza OLD/NEW | `jmh/java/org/vaimee/vsa/anomalib/` |
+| IMPLEMENTED | GridShape, ModelDescriptor, NormalizationPolicy | `main/java/io/github/antctrlwin/anomalib4j/model/` |
+| IMPLEMENTED | ProjectionStrategy, DenseRademacherProjection, NormalizedPatchProjection | `main/java/io/github/antctrlwin/anomalib4j/projection/` |
+| IMPLEMENTED | Welford, ProjectionStatistics, PositionalMemoryBuilder/Bank | `main/java/io/github/antctrlwin/anomalib4j/memory/` |
+| IMPLEMENTED | AdjointCompiler/FilterBank, PatchScoreKernel | `main/java/io/github/antctrlwin/anomalib4j/{adjoint,inference}/` |
+| IMPLEMENTED | HeatmapEngine/Result/Calibration, HeatmapCalibrator | `main/java/io/github/antctrlwin/anomalib4j/{inference,calibration}/` |
+| IMPLEMENTED | Encoder, preprocessing, NormalImageTrainer, scorer esplicito e diagnostica rho | `main/java/io/github/antctrlwin/anomalib4j/{onnx,training,validation}/` |
+| IMPLEMENTED | Metriche, maschere, overlay, positional Z, held-out e multi-seed | `test/java/io/github/antctrlwin/anomalib4j/evaluation/` |
+| IMPLEMENTED | PerformanceBaseline, EncoderMicroprofile, PreprocessingMicroprofile, equivalenza OLD/NEW | `jmh/java/io/github/antctrlwin/anomalib4j/` |
 
 **VERIFIED, distinzione importante:** la positional Z scientifica e implementata da `PositionalRawCalibration` negli helper di test e riutilizzata dai benchmark. Non e la `HeatmapCalibration` di produzione. `HeatmapEngine` conserva il raw, ma produce anche un buffer visivo clamped [0,1], con soglie globali se fornite. Il protocollo scientifico usa raw/Z senza clamp; non va sostituito con quel buffer visivo.
 

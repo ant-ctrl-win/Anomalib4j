@@ -229,7 +229,7 @@ source commit. Full prerequisites are in the
 
 Script: `tools/prerun/positional_global_variance_diagnostic.py`
 (reads frozen inputs and writes derived outputs; requires Python 3.11+ and `numpy`). Feature harness:
-`src/test/java/org/vaimee/vsa/anomalib/evaluation/PositionalVarianceFeatureDump.java`.
+`src/test/java/io/github/antctrlwin/anomalib4j/evaluation/PositionalVarianceFeatureDump.java`.
 
 ```
 powershell -NoProfile -File tools/comparison/bootstrap.ps1

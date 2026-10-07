@@ -22,9 +22,9 @@ Le date riportate sono quelle di filesystem osservate (anno 2026).
 
 | File | Timestamp | Dimensione | Natura |
 | --- | --- | --- | --- |
-| `src/test/java/org/vaimee/vsa/anomalib/evaluation/BottleEvaluation.java` | 29/09/2026 16:05:57 | 5.777 B | NUOVO, helper di test |
-| `src/test/java/org/vaimee/vsa/anomalib/evaluation/BottleEvaluationTest.java` | 29/09/2026 16:05:57 | 1.992 B | NUOVO, test unitari puri |
-| `src/test/java/org/vaimee/vsa/anomalib/evaluation/BottleRealEvaluationTest.java` | 29/09/2026 16:08:31 | 10.950 B | NUOVO, valutazione reale |
+| `src/test/java/io/github/antctrlwin/anomalib4j/evaluation/BottleEvaluation.java` | 29/09/2026 16:05:57 | 5.777 B | NUOVO, helper di test |
+| `src/test/java/io/github/antctrlwin/anomalib4j/evaluation/BottleEvaluationTest.java` | 29/09/2026 16:05:57 | 1.992 B | NUOVO, test unitari puri |
+| `src/test/java/io/github/antctrlwin/anomalib4j/evaluation/BottleRealEvaluationTest.java` | 29/09/2026 16:08:31 | 10.950 B | NUOVO, valutazione reale |
 | `.idea/workspace.xml` | 29/09/2026 16:11:34 | 5.005 B | stato IDE (non e codice) |
 
 `BottleRealEvaluationTest.java` e l'ultimo sorgente modificato (16:08), seguito solo dallo stato IDE (16:11): compatibile con un'interruzione subito dopo la scrittura del test, prima di una sua esecuzione.

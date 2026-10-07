@@ -27,10 +27,10 @@ mean/std ImageNet, layout NCHW e identificatore del preprocessing. Nessuna modif
 modello ONNX, VSA, Adjoint, calibrazione, evaluation o localization; nessuna API pubblica nuova.
 
 File modificato:
-- src/main/java/org/vaimee/vsa/anomalib/onnx/ImageNetPreprocessor.java
+- src/main/java/io/github/antctrlwin/anomalib4j/onnx/ImageNetPreprocessor.java
 
 File creati:
-- src/jmh/java/org/vaimee/vsa/anomalib/onnx/PreprocessingOptimizationIT.java
+- src/jmh/java/io/github/antctrlwin/anomalib4j/onnx/PreprocessingOptimizationIT.java
 - PREPROCESSING_OPTIMIZATION_VALIDATION.md
 
 Artefatti di verifica sotto target/benchmark:
@@ -111,7 +111,7 @@ mvn -B -Pbenchmark "-Dtest=*Test,PreprocessingOptimizationIT,!BottleTrainingTest
 if ($LASTEXITCODE -ne 0) { throw 'Equivalence or compilation failed' }
 New-Item -ItemType Directory -Force target/benchmark | Out-Null
 $benchmarkCp = "target/test-classes;target/classes;" + (Get-Content -Raw target/benchmark-classpath.txt).Trim()
-$benchmarks = 'org.vaimee.vsa.anomalib.(onnx.PreprocessingMicroprofile.fullPreprocessing|onnx.EncoderMicroprofile.fullExtract|evaluation.PerformanceBaseline.detectionInference|evaluation.PerformanceBaseline.localizationInference)$'
+$benchmarks = 'io.github.antctrlwin.anomalib4j.(onnx.PreprocessingMicroprofile.fullPreprocessing|onnx.EncoderMicroprofile.fullExtract|evaluation.PerformanceBaseline.detectionInference|evaluation.PerformanceBaseline.localizationInference)$'
 java -cp $benchmarkCp org.openjdk.jmh.Main $benchmarks -foe true -rf json -rff target/benchmark/preprocessing-optimized-full.json -o target/benchmark/preprocessing-optimized-full.txt
 if ($LASTEXITCODE -ne 0) { throw 'JMH failed' }
 ```

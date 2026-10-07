@@ -59,7 +59,7 @@ mvn -B -Pbenchmark "-Dtest=*Test,!BottleTrainingTest,!BottleRealEvaluationTest" 
 if ($LASTEXITCODE -ne 0) { throw 'Benchmark compilation/tests failed' }
 New-Item -ItemType Directory -Force target/benchmark | Out-Null
 $benchmarkCp = "target/test-classes;target/classes;" + (Get-Content -Raw target/benchmark-classpath.txt).Trim()
-java -cp $benchmarkCp org.openjdk.jmh.Main 'org.vaimee.vsa.anomalib.evaluation.PerformanceBaseline.*' -foe true -rf json -rff target/benchmark/baseline.json -o target/benchmark/baseline.txt
+java -cp $benchmarkCp org.openjdk.jmh.Main 'io.github.antctrlwin.anomalib4j.evaluation.PerformanceBaseline.*' -foe true -rf json -rff target/benchmark/baseline.json -o target/benchmark/baseline.txt
 if ($LASTEXITCODE -ne 0) { throw 'JMH run failed' }
 ```
 

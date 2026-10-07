@@ -24,7 +24,7 @@ In every case the 14x14 map is upsampled to original resolution with the same bi
 half-pixel border-replicate routine (`LocalizationMaps.upsample`) before overlay.
 
 All three call the **same rendering routine**: `LocalizationMaps.overlay(...)`
-(`src/test/java/org/vaimee/vsa/anomalib/evaluation/LocalizationMaps.java:39`).
+(`src/test/java/io/github/antctrlwin/anomalib4j/evaluation/LocalizationMaps.java:39`).
 
 ---
 
@@ -213,7 +213,7 @@ from the repository.
 
 ## 8. Provenance / reproducibility
 
-- Renderer: `src/test/java/org/vaimee/vsa/anomalib/evaluation/LocalizationMaps.java` (`overlay`, `blend`).
+- Renderer: `src/test/java/io/github/antctrlwin/anomalib4j/evaluation/LocalizationMaps.java` (`overlay`, `blend`).
 - Generators: `BottleLocalizationIT.java`, `BottlePositionalCalibrationIT.java`,
   `BottleHeldOutCalibrationIT.java`.
 - Maps: `target/bottle-raw-heatmaps.csv` (RAW),

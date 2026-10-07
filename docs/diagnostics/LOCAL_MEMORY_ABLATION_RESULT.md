@@ -430,7 +430,7 @@ in the publication commit.
   verified LCG Rademacher signs and learning-state reader from
   `positional_global_variance_diagnostic`, and the validated evaluator port from
   `metal_nut_pose_diagnostic`).
-- Feature harness: `src/test/java/org/vaimee/vsa/anomalib/evaluation/PositionalVarianceFeatureDump.java`
+- Feature harness: `src/test/java/io/github/antctrlwin/anomalib4j/evaluation/PositionalVarianceFeatureDump.java`
   (production `OnnxMobileNetV4Encoder`, `SPATIAL_14`).
 - Encoder: `src/main/resources/models/mobilenetv4_spatial_14x14.onnx`
   SHA256 `48DA88A8DA5F1F1F1CE2308D19128C0F302498AA1889882263620CAD21BDD26E`.

@@ -11,17 +11,17 @@ mvn -B -Pbenchmark "-Dtest=*Test,!BottleTrainingTest,!BottleRealEvaluationTest" 
 
 New-Item -ItemType Directory -Force target/benchmark | Out-Null
 $benchmarkCp = "target/test-classes;target/classes;" + (Get-Content -Raw target/benchmark-classpath.txt).Trim()
-java -cp $benchmarkCp org.openjdk.jmh.Main 'org.vaimee.vsa.anomalib.onnx.PreprocessingMicroprofile.*' -foe true -rf json -rff target/benchmark/preprocessing-microprofile.json -o target/benchmark/preprocessing-microprofile.txt
+java -cp $benchmarkCp org.openjdk.jmh.Main 'io.github.antctrlwin.anomalib4j.onnx.PreprocessingMicroprofile.*' -foe true -rf json -rff target/benchmark/preprocessing-microprofile.json -o target/benchmark/preprocessing-microprofile.txt
 
 New-Item -ItemType Directory -Force target/benchmark/preprocessing-jfr | Out-Null
-java -cp $benchmarkCp org.openjdk.jmh.Main 'org.vaimee.vsa.anomalib.onnx.PreprocessingMicroprofile.fullPreprocessing' -foe true -prof 'jfr:dir=target/benchmark/preprocessing-jfr;configName=profile;stackDepth=128' -rf json -rff target/benchmark/preprocessing-jfr.json -o target/benchmark/preprocessing-jfr.txt
+java -cp $benchmarkCp org.openjdk.jmh.Main 'io.github.antctrlwin.anomalib4j.onnx.PreprocessingMicroprofile.fullPreprocessing' -foe true -prof 'jfr:dir=target/benchmark/preprocessing-jfr;configName=profile;stackDepth=128' -rf json -rff target/benchmark/preprocessing-jfr.json -o target/benchmark/preprocessing-jfr.txt
 ```
 
 Fase di build: **BUILD SUCCESS** — 85 test, 0 failures/0 errors/0 skipped.
 JMH `PreprocessingMicroprofile.*`: exit 0, `# Run complete. Total time: 00:06:14`.
 JMH JFR `fullPreprocessing`: exit 0, `# Run complete. Total time: 00:01:04`.
 
-Benchmark class: `org.vaimee.vsa.anomalib.onnx.PreprocessingMicroprofile`
+Benchmark class: `io.github.antctrlwin.anomalib4j.onnx.PreprocessingMicroprofile`
 (6 `@Benchmark` metodi: `sourceRgbExtraction`, `rgbImageMaterialization`, `bicubicResize`,
 `resizedRgbExtraction`, `scalingNormalizationNchw`, `fullPreprocessing`).
 
@@ -86,7 +86,7 @@ p99 21135.360 (valori con overhead del profiler, quindi più alti della run JMH 
 | java.awt.image.BufferedImage.setRGB(int, int, int, int, int[], int, int) | 63 | 6.40% |
 | java.awt.image.ComponentColorModel.getRGB(Object) | 24 | 2.44% |
 | java.awt.image.PackedColorModel.equals(Object) | 15 | 1.52% |
-| org.vaimee.vsa.anomalib.onnx.ImageNetPreprocessor.preprocess(BufferedImage) | 2 | 0.20% |
+| io.github.antctrlwin.anomalib4j.onnx.ImageNetPreprocessor.preprocess(BufferedImage) | 2 | 0.20% |
 
 Il tempo campionato è concentrato in chiamate AWT/BufferedImage
 (`getRGB`/`setRGB`/raster/ColorModel). Il metodo applicativo `ImageNetPreprocessor.preprocess`
@@ -108,7 +108,7 @@ Per sito di allocazione:
 | --- | --- |
 | java.awt.image.BufferedImage.getRGB(int, int, int, int, int[], int, int) | 64.23% |
 | java.awt.image.DataBufferInt.<init>(int) | 30.21% |
-| org.vaimee.vsa.anomalib.onnx.ImageNetPreprocessor.preprocess(BufferedImage) | 5.51% |
+| io.github.antctrlwin.anomalib4j.onnx.ImageNetPreprocessor.preprocess(BufferedImage) | 5.51% |
 
 ### GC
 

@@ -81,7 +81,7 @@ def checked_command(command: list[str], log: Path) -> None:
 def java_command(main: str, arguments: list[str]) -> list[str]:
     dependency_cp = (ROOT / "target/comparison-classpath.txt").read_text(encoding="utf-8").strip()
     classpath = os.pathsep.join([str(ROOT / "target/test-classes"), str(ROOT / "target/classes"), dependency_cp])
-    return ["java", "-Xmx2g", "-cp", classpath, "org.vaimee.vsa.anomalib.evaluation." + main, *arguments]
+    return ["java", "-Xmx2g", "-cp", classpath, "io.github.antctrlwin.anomalib4j.evaluation." + main, *arguments]
 
 
 def initialize(run: Path, smoke: bool) -> None:

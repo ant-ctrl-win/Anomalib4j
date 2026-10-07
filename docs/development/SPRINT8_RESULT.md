@@ -58,7 +58,7 @@ mvn -B "-Dtest=*Test,BottleLocalizationIT,!BottleTrainingTest,!BottleRealEvaluat
 
 Come previsto dalla convenzione, `BottleTrainingTest` e `BottleRealEvaluationTest` sono stati esclusi; `BottleLocalizationIT` e stato incluso esplicitamente ed eseguito (non parte del normale `mvn test` in quanto classe `*IT`).
 
-- Report Surefire: `target/surefire-reports/org.vaimee.vsa.anomalib.evaluation.BottleLocalizationIT.txt` e `.../TEST-...BottleLocalizationIT.xml`
+- Report Surefire: `target/surefire-reports/io.github.antctrlwin.anomalib4j.evaluation.BottleLocalizationIT.txt` e `.../TEST-...BottleLocalizationIT.xml`
 
 ### Verifica convenzioni vs `LOCALIZATION_CONVENTIONS.md`
 
@@ -144,8 +144,8 @@ Ogni overlay contiene 3 pannelli (`Original`, `Ground truth (red)`, `Raw bilinea
 
 Report Surefire prodotti:
 
-- `target/surefire-reports/org.vaimee.vsa.anomalib.evaluation.BottleLocalizationIT.txt`
-- `target/surefire-reports/TEST-org.vaimee.vsa.anomalib.evaluation.BottleLocalizationIT.xml`
+- `target/surefire-reports/io.github.antctrlwin.anomalib4j.evaluation.BottleLocalizationIT.txt`
+- `target/surefire-reports/TEST-io.github.antctrlwin.anomalib4j.evaluation.BottleLocalizationIT.xml`
 
 Input fidato dello Sprint 7 usato (non rigenerato): `target/bottle-raw-heatmaps.csv` (844.255 B, 2026-09-29 16:22:42).
 
@@ -190,7 +190,7 @@ Diff `pom.xml`:
 | File | Scope atteso |
 | --- | --- |
 | `LOCALIZATION_CONVENTIONS.md` | documentazione |
-| `src/test/java/org/vaimee/vsa/anomalib/evaluation/BottleLocalizationIT.java` | IT localizzazione |
+| `src/test/java/io/github/antctrlwin/anomalib4j/evaluation/BottleLocalizationIT.java` | IT localizzazione |
 | `.../evaluation/DatasetNinjaMasks.java` | ground truth |
 | `.../evaluation/DatasetNinjaMasksTest.java` | unit test |
 | `.../evaluation/LocalizationArtifacts.java` | lettura CSV raw |

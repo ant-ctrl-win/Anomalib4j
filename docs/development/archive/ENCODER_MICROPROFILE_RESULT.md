@@ -10,13 +10,13 @@ mvn -B -Pbenchmark "-Dtest=*Test,!BottleTrainingTest,!BottleRealEvaluationTest" 
 
 New-Item -ItemType Directory -Force target/benchmark | Out-Null
 $benchmarkCp = "target/test-classes;target/classes;" + (Get-Content -Raw target/benchmark-classpath.txt).Trim()
-java -cp $benchmarkCp org.openjdk.jmh.Main 'org.vaimee.vsa.anomalib.onnx.EncoderMicroprofile.*' -foe true -rf json -rff target/benchmark/encoder-microprofile.json -o target/benchmark/encoder-microprofile.txt
+java -cp $benchmarkCp org.openjdk.jmh.Main 'io.github.antctrlwin.anomalib4j.onnx.EncoderMicroprofile.*' -foe true -rf json -rff target/benchmark/encoder-microprofile.json -o target/benchmark/encoder-microprofile.txt
 ```
 
 Build phase result: **BUILD SUCCESS** — 84 tests, 0 failures/errors/skipped.
 JMH phase exit 0, `# Run complete. Total time: 00:05:13`.
 
-Benchmark class: `org.vaimee.vsa.anomalib.onnx.EncoderMicroprofile`
+Benchmark class: `io.github.antctrlwin.anomalib4j.onnx.EncoderMicroprofile`
 (5 `@Benchmark` methods: `preprocessing`, `tensorCreateAndClose`, `sessionRunAndClose`,
 `outputExtractionCopy`, `fullExtract`).
 
@@ -110,5 +110,5 @@ Retained in `target/benchmark/`:
 ## Source changes
 
 None. The validation did not modify any source file. `pom.xml` and
-`src/test/java/org/vaimee/vsa/anomalib/evaluation/LocalizationMaps.java` were already
+`src/test/java/io/github/antctrlwin/anomalib4j/evaluation/LocalizationMaps.java` were already
 modified before this task.
