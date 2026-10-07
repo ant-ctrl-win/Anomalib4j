@@ -1,0 +1,51 @@
+{
+  "status": "source_defaults_and_small_smoke_verified_not_final_results",
+  "source_commit": "cc5f400a4a4b1b14b5a3ee5078063c250a8f522e",
+  "anomalib_version": "2.6.2",
+  "device": "cpu",
+  "seed": 42,
+  "categories": ["bottle", "metal_nut"],
+  "inference_batch_size": 1,
+  "native_preprocessing": {
+    "decoded_input": "PIL RGB in RAM",
+    "tensor_conversion": "torchvision v2 to_image then to_dtype(float32, scale=True)",
+    "api": "module.pre_processor.transform (native Lightning callback transform)",
+    "resize": [256, 256],
+    "interpolation": "bilinear",
+    "antialias": true,
+    "mean": [0.485, 0.456, 0.406],
+    "std": [0.229, 0.224, 0.225],
+    "crop": null,
+    "padding": null,
+    "aspect_ratio": "entire image resized to tuple; rectangular inputs warped",
+    "export_transform": "not used; disables antialias"
+  },
+  "raw_api": "module.model.eval()(preprocessed_batch) returns InferenceBatch before PostProcessor",
+  "native_map": {"shape": [1, 1, 256, 256], "dtype": "float32", "higher_is_anomalous": true},
+  "evaluation_map": {"dtype": "float64", "interpolation": "bilinear", "align_corners": false, "borders": "replicate", "antialias": false, "bottle_shape": [900, 900], "metal_nut_shape": [700, 700]},
+  "padim": {
+    "backbone": "resnet18", "layers": ["layer1", "layer2", "layer3"],
+    "pre_trained": true, "n_features_argument": null, "n_features_effective": 100,
+    "embedding_channels_original": 448, "embedding_shape": [100, 64, 64],
+    "weight_id": "timm/resnet18.a1_in1k", "precision": "float32",
+    "score": "maximum of native smoothed map", "score_shape": [1, 1],
+    "map_resize": "bilinear align_corners=False", "gaussian_sigma": 4, "gaussian_kernel": [33, 33],
+    "gaussian_padding": "reflect same", "covariance_regularization": "0.01 I then 1e-5 I before inversion"
+  },
+  "patchcore": {
+    "backbone": "wide_resnet50_2", "layers": ["layer2", "layer3"],
+    "pre_trained": true, "coreset_sampling_ratio": 0.1, "num_neighbors": 9, "precision": "float32",
+    "weight_id": "timm/wide_resnet50_2.racm_in1k", "embedding_shape": [1536, 32, 32],
+    "pooling": "AvgPool2d(3,1,1)", "coreset": "native KCenterGreedy with SparseRandomProjection eps=0.9",
+    "nearest_neighbor_backend": "brute-force PyTorch Euclidean matmul; no FAISS",
+    "query_chunk_size": 1024, "patch_search_k": 1,
+    "score": "max nearest-neighbor patch distance weighted using up to 9 support neighbors",
+    "score_shape": [1], "map_resize": "nearest (F.interpolate default)",
+    "gaussian_sigma": 4, "gaussian_kernel": [33, 33], "gaussian_padding": "reflect same"
+  },
+  "fitting": {
+    "native_datamodule_defaults_source_only": {"train_batch_size": 32, "num_workers": 8, "val_split_mode": "SAME_AS_TEST"},
+    "full_harness_policy": "No automatic test validation or learned PostProcessor. Ordered train-good manifests; fitting batch 32 as native default; data-loading concurrency and in-RAM boundary to record in Phase 2.",
+    "smoke_only": "two mixed-category train-good images, sequential batch 1; no final model or metrics"
+  }
+}

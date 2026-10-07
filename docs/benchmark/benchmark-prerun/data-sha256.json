@@ -1,0 +1,34 @@
+﻿[
+    {
+        "Path":  "docs\\benchmark-prerun\\data\\bottle\\anomalib4j-calibration.txt",
+        "Hash":  "FDFA2FC3E8CF73D84F043886F549A0B3B975667D34A1BF61A21493AB7B699CE1"
+    },
+    {
+        "Path":  "docs\\benchmark-prerun\\data\\bottle\\anomalib4j-fit.txt",
+        "Hash":  "209366B3F3E88A6E894B30732442B1F7C54ED5F8236D2698C43C372F84587772"
+    },
+    {
+        "Path":  "docs\\benchmark-prerun\\data\\bottle\\competitor-fit.txt",
+        "Hash":  "BF01B2BC971DBAB3BEA76DD59B5E85323F36F57ED73F6D3313211C435651BDDA"
+    },
+    {
+        "Path":  "docs\\benchmark-prerun\\data\\bottle\\test.txt",
+        "Hash":  "70A343C13AEDD9DB24A02CE11EA0FF709FCE940A22062FBBAFDEC2CD51B81337"
+    },
+    {
+        "Path":  "docs\\benchmark-prerun\\data\\metal_nut\\anomalib4j-calibration.txt",
+        "Hash":  "4B091A33018857C74E64EA4024698E5F077F833BA444B27B48D7F4AD55C8DA61"
+    },
+    {
+        "Path":  "docs\\benchmark-prerun\\data\\metal_nut\\anomalib4j-fit.txt",
+        "Hash":  "15313BEAA075AD232A12582CE0E30F8DE69DB528BD917AD3E0329567C26CF7D4"
+    },
+    {
+        "Path":  "docs\\benchmark-prerun\\data\\metal_nut\\competitor-fit.txt",
+        "Hash":  "01F26A67DDA502C4050F0566B31EA02332D42AB828D48122EA7E77CD3F0F19AA"
+    },
+    {
+        "Path":  "docs\\benchmark-prerun\\data\\metal_nut\\test.txt",
+        "Hash":  "5B1B115FABD2F76BC141A906A0F0373DEBCCCF98B688FEE1F0A120D05B44AD76"
+    }
+]

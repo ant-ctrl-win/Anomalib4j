@@ -1,0 +1,13 @@
+{
+  "format": "npy+json/v1",
+  "filename": "bottle_broken_large_012.png",
+  "geometry_id": "bottle-900x900-256x256",
+  "score_kind": "native",
+  "dtype": "float32",
+  "shape": [
+    4,
+    5
+  ],
+  "array": "native_4x5.npy",
+  "sha256": "4ac4c29597e104baa8549f76fc6a1c1246a7bf34e0bc6e0d01ca8e12dd490e48"
+}

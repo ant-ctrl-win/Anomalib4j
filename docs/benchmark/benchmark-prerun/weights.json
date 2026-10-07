@@ -1,0 +1,113 @@
+{
+  "models": [
+    {
+      "method": "Padim",
+      "backbone": "resnet18",
+      "pretrained_cfg": {
+        "url": "https://github.com/huggingface/pytorch-image-models/releases/download/v0.1-rsb-weights/resnet18_a1_0-d63eafa0.pth",
+        "hf_hub_id": "timm/resnet18.a1_in1k",
+        "architecture": "resnet18",
+        "tag": "a1_in1k",
+        "custom_load": false,
+        "input_size": [
+          3,
+          224,
+          224
+        ],
+        "test_input_size": [
+          3,
+          288,
+          288
+        ],
+        "fixed_input_size": false,
+        "interpolation": "bicubic",
+        "crop_pct": 0.95,
+        "test_crop_pct": 1.0,
+        "crop_mode": "center",
+        "mean": [
+          0.485,
+          0.456,
+          0.406
+        ],
+        "std": [
+          0.229,
+          0.224,
+          0.225
+        ],
+        "pool_size": [
+          7,
+          7
+        ],
+        "first_conv": "conv1",
+        "license": "apache-2.0",
+        "origin_url": "https://github.com/huggingface/pytorch-image-models",
+        "paper_ids": "arXiv:2110.00476"
+      },
+      "transform": "Compose(\n      Resize(size=[256, 256], interpolation=bilinear, antialias=True)\n      Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225], inplace=False)\n)",
+      "export_transform_not_used": "Compose(\n      Resize(size=[256, 256], interpolation=bilinear, antialias=False)\n      Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225], inplace=False)\n)",
+      "parameter_dtypes": [
+        "torch.float32"
+      ]
+    },
+    {
+      "method": "Patchcore",
+      "backbone": "wide_resnet50_2",
+      "pretrained_cfg": {
+        "url": "https://github.com/rwightman/pytorch-image-models/releases/download/v0.1-weights/wide_resnet50_racm-8234f177.pth",
+        "hf_hub_id": "timm/wide_resnet50_2.racm_in1k",
+        "architecture": "wide_resnet50_2",
+        "tag": "racm_in1k",
+        "custom_load": false,
+        "input_size": [
+          3,
+          224,
+          224
+        ],
+        "test_input_size": [
+          3,
+          288,
+          288
+        ],
+        "fixed_input_size": false,
+        "interpolation": "bicubic",
+        "crop_pct": 0.875,
+        "test_crop_pct": 0.95,
+        "crop_mode": "center",
+        "mean": [
+          0.485,
+          0.456,
+          0.406
+        ],
+        "std": [
+          0.229,
+          0.224,
+          0.225
+        ],
+        "pool_size": [
+          7,
+          7
+        ],
+        "first_conv": "conv1",
+        "license": "apache-2.0",
+        "origin_url": "https://github.com/huggingface/pytorch-image-models"
+      },
+      "transform": "Compose(\n      Resize(size=[256, 256], interpolation=bilinear, antialias=True)\n      Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225], inplace=False)\n)",
+      "export_transform_not_used": "Compose(\n      Resize(size=[256, 256], interpolation=bilinear, antialias=False)\n      Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225], inplace=False)\n)",
+      "parameter_dtypes": [
+        "torch.float32"
+      ]
+    }
+  ],
+  "files": [
+    {
+      "path": "target\\prerun\\weights\\huggingface\\hub\\models--timm--resnet18.a1_in1k\\snapshots\\491b427b45c94c7fb0e78b5474cc919aff584bbf\\model.safetensors",
+      "bytes": 46807446,
+      "sha256": "80c49dee3da4822c009c5a7fe591e9223c5a2cfcf95a4067ca4dfb5a7b89c612"
+    },
+    {
+      "path": "target\\prerun\\weights\\huggingface\\hub\\models--timm--wide_resnet50_2.racm_in1k\\snapshots\\30f73aceaaa1911830a9795b83ab1908dba18719\\model.safetensors",
+      "bytes": 275835296,
+      "sha256": "03b71d65fb2c73bb0de079a1781009f27a782ec481d2f64ab3bde9b1cdec3000"
+    }
+  ]
+}

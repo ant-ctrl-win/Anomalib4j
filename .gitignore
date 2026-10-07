@@ -1,0 +1,10 @@
+target/
+.idea/
+*.iml
+*.log
+Thumbs.db
+.DS_Store
+__pycache__/
+*.pyc
+session-*.md
+CHAT_HANDOFF.md

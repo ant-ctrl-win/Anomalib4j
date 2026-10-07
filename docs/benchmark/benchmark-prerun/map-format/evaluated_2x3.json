@@ -1,0 +1,13 @@
+{
+  "format": "npy+json/v1",
+  "filename": "metal_nut_flip_003.png",
+  "geometry_id": "metal_nut-700x700-256x256",
+  "score_kind": "evaluated",
+  "dtype": "float64",
+  "shape": [
+    2,
+    3
+  ],
+  "array": "evaluated_2x3.npy",
+  "sha256": "0ef2c6fce7d15b374a0dd5e87f327aece01137ca74a2063125f86d1bd2dfa3f7"
+}

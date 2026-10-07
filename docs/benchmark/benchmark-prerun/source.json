@@ -1,0 +1,7 @@
+﻿{
+    "tag":  "lib/v2.6.2",
+    "commit":  "cc5f400a4a4b1b14b5a3ee5078063c250a8f522e",
+    "uv_lock_sha256":  "F33FF8DFF6F60CD3E6F7FD23C854D661F474804F465BCAACBEFCDE612309A103",
+    "uv_version":  "uv 0.11.16 (135a36367 2026-05-21 x86_64-pc-windows-msvc)",
+    "source":  "https://github.com/open-edge-platform/anomalib.git"
+}
