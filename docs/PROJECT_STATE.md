@@ -4,6 +4,30 @@ Riconciliazione tecnica del 2026-10-02; aggiornamento del perimetro benchmark de
 
 Questo documento descrive il workspace ispezionato, inclusi file non ancora versionati. Sostituisce come fotografia corrente il vecchio `PROJECT_STATE.md` nella radice; non modifica il contratto di `AGENTS.md`. Codice, test e artefatti prevalgono sulla memoria dell'handoff locale (non pubblicato). I report storici restano riferimenti dei singoli esperimenti.
 
+## Stato corrente (riconciliazione finale, 2026-10-07)
+
+**DECIDED / VERIFIED:** fase scientifica chiusa; presentazione portfolio e panoramica tecnica consolidate il 2026-10-07. Pubblicazione/commit restano separati.
+
+- **benchmark comparativo completato** (`final-comparison-20261003`, congelato e invariato);
+- **indagine post-hoc mirata completata** (due diagnosi verificate, interne e post-hoc);
+- **riconciliazione finale della documentazione / presentazione portfolio** completata; nessun commit o push in questa attivita.
+
+Nessun ulteriore esperimento scientifico e richiesto per questa fase. **M2 e una baseline sperimentale alternativa, non il modello di produzione v2 selezionato.** Il benchmark congelato resta invariato.
+
+### Sintesi A / B / C
+
+**A. Compilazione dello score.** Il contributo validato resta: apprendere una memoria VSA, compilare algebricamente il suo score affine e valutare lo scorer equivalente direttamente nello spazio delle feature CNN. Score VSA esplicito e scorer compilato restano numericamente equivalenti entro l'errore floating-point documentato.
+
+**B. Modello M0.** Il detector del benchmark e una baseline di prova volutamente semplice. Il suo archetipo posizionale codifica una direzione media posizionale standardizzata rispetto alla popolazione globale pooled; **non** modella esplicitamente la dispersione nominale entro posizione. E una scelta di modellazione, non un errore della compilazione Adjoint.
+
+**C. Risultato post-hoc M2.** Su feature CNN congelate e sugli split esistenti, l'ablazione interna verificata ha trovato che M2 (media locale CNN piu deviazione standard per posizione/coordinata) migliora la localizzazione su Bottle e Metal Nut. Dopo la calibrazione Z posizionale, M1 controlla gia la distanza isotropa dalla media non unitaria; la differenza M1-Z vs M2-Z sostiene quindi l'utilita della pesatura anisotropa per coordinata nelle condizioni misurate. E un risultato interno, post-hoc e su categorie gia osservate: **non** e prova indipendente di generalizzazione e **non** sostituisce il benchmark congelato.
+
+Supporto canonico: [POSITIONAL_GLOBAL_VARIANCE_DIAGNOSTIC.md](diagnostics/POSITIONAL_GLOBAL_VARIANCE_DIAGNOSTIC.md) e [LOCAL_MEMORY_ABLATION_RESULT.md](diagnostics/LOCAL_MEMORY_ABLATION_RESULT.md). Riconciliazione: [FINAL_POSTHOC_RECONCILIATION.md](development/FINAL_POSTHOC_RECONCILIATION.md).
+
+**Nota sulle affermazioni storiche.** I passaggi sotto che descrivono il benchmark come \"da eseguire\", il perimetro come \"una sola categoria\" o la domanda \"VSA vs memoria CNN diretta\" come completamente non verificata sono **fotografie di fasi precedenti**, superate dal run finale e dall'indagine post-hoc. Restano come storia del progetto; lo stato corrente e quello sopra.
+
+La gerarchia di lettura corrente e [README italiano](../README.md), [traduzione inglese](../README.en.md), [panoramica tecnica](TECHNICAL_OVERVIEW.md), poi report di evidenza. Le note storiche su Git, persistenza e vecchie priorita non descrivono il workspace attuale.
+
 ## Significato degli stati
 
 - **VERIFIED:** riscontro nel codice o negli artefatti conservati. Per misure storiche significa verifica documentale, non nuova esecuzione.
@@ -16,7 +40,7 @@ Questo documento descrive il workspace ispezionato, inclusi file non ancora vers
 - **PROPOSED / TO VERIFY:** configurazione candidata da verificare e congelare prima dell'esecuzione.
 - **FUTURE_WORK:** escluso dalla chiusura di questa fase, salvo necessita documentata del benchmark.
 
-## Obiettivo e attivita corrente
+## Obiettivo e decisioni storiche — HISTORICAL / SUPERSEDED ove indicato
 
 **DECIDED:** esplorare `CNN -> VSA learning/memory -> compiled CNN-space scoring`, preservando l'equivalenza numerica tra confronto esplicito VSA e filtro Adjoint. Java/ONNX e la separazione tra apprendimento e inferenza fanno parte dell'implementazione corrente.
 
@@ -24,7 +48,7 @@ Questo documento descrive il workspace ispezionato, inclusi file non ancora vers
 
 **DECIDED, conferma esplicita dell'utente del 2026-10-02:** il task corrente canonico e **definire ed eseguire il primo benchmark comparativo CPU sullo stesso hardware di Anomalib4j contro baseline esistenti appropriate, inizialmente PaDiM/PatchCore, senza ulteriori ottimizzazioni interne preventive**. L'ottimizzazione interna e stata completata e il filone performance interno e chiuso per questa fase. Il benchmark comparativo non viene eseguito in questo aggiornamento documentale.
 
-Questa decisione e successiva a `POST_BENCHMARK_STRATEGY.md` e ne supera l'ordine operativo proposto. E coerente con le sezioni 11.7 e 16.4 dell'handoff locale (non pubblicato). **OPEN / DEFERRED:** `VSA vs direct latent-space memory/prototype` resta una questione di ricerca, non il task corrente ne un prerequisito al confronto esterno.
+Questa decisione e successiva a `POST_BENCHMARK_STRATEGY.md` e ne supera l'ordine operativo proposto. E coerente con le sezioni 11.7 e 16.4 dell'handoff locale (non pubblicato). **OPEN / DEFERRED (poi parzialmente testata):** `VSA vs direct latent-space memory/prototype` resta una questione di ricerca, non il task corrente ne un prerequisito al confronto esterno. L'ablazione post-hoc di questa fase ha misurato baseline CNN locali dirette (M1/M2) e dispersione dopo proiezione VSA (M3) e le ha confrontate con M0 sulle stesse feature congelate; si veda [LOCAL_MEMORY_ABLATION_RESULT.md](diagnostics/LOCAL_MEMORY_ABLATION_RESULT.md).
 
 **DECIDED, 2026-10-03:** il benchmark finale comprende esclusivamente `bottle` e `metal_nut`, Anomalib4j e le implementazioni candidate PaDiM/PatchCore di Anomalib 2.6.2. Confronto primario Native/System CPU: preprocessing, backbone, detector e runtime propri, configurazioni congelate prima dei risultati e uguali fra categorie. Il confronto controllato resta SECONDARY / DEFERRED. Specifica in [BENCHMARK_CONTRACT.md](benchmark/BENCHMARK_CONTRACT.md).
 
@@ -112,7 +136,7 @@ Output/contratto: [ONNX_MODEL_CONTRACT.md](architecture/ONNX_MODEL_CONTRACT.md) 
 
 **REJECTED:** rendering diretto indiscriminato su tutti i tipi: 1.331.179 float differenti, maxAbsDiff 4.464285850524902; incompatibilita su alpha/grayscale. Il fallback fa parte della correttezza, non e lavoro residuo.
 
-**OPEN:** non e presente un formato persistente completo per il detector Bottle addestrato. Gli asset ONNX sono encoder; archetipi, statistiche, filtri e calibrazione vengono costruiti dai runner. I CSV di score non sono modelli serializzati con identita verificabile.
+**HISTORICAL / SUPERSEDED:** la precedente assenza di persistenza completa e superata dal percorso ComparisonModel del benchmark: stato serializzato e reload con RAW/Z identici sono documentati nel [risultato finale, sezione 8](benchmark/BENCHMARK_FINAL_RESULT.md). Gli asset ONNX restano gli encoder; il modello appreso e conservato separatamente negli artefatti locali del run.
 
 ## Evidenze scientifiche
 
@@ -169,7 +193,7 @@ Hardware/runtime documentati: AMD Ryzen AI 9 HX 370, Windows 11, Temurin Java 21
 
 **OPEN / limiti:** un thread JMH non impone un solo worker nativo ORT; session options correnti non fissano intra/inter-op a 1. I percentili sono del workload ripetuto, non un SLA o throughput sostenuto. Non sommare/sottrarre mediane isolate per stimare il costo puro della CNN. Nessuna equivalenza statistica formale fra i vecchi 13 us e JMH 12 us.
 
-## Test, riproducibilita e stato Git
+## Test, riproducibilita e stato Git — fotografia storica
 
 **VERIFIED:** test presenti per algebra, proiezione/trasposta, Welford, builder/compiler, contratti, encoder/preprocessing, calibrazione, metriche e split. [PREPROCESSING_OPTIMIZATION_RESULT.md](development/archive/PREPROCESSING_OPTIMIZATION_RESULT.md) riporta 86 test passati nell'esecuzione selezionata. Gli XML Surefire attualmente conservati contengono 33 suite/93 test, zero failure/error/skipped; possono mescolare esecuzioni diverse e non certificano una singola run da 93 test. Nessun test rieseguito in questa riconciliazione.
 
@@ -181,9 +205,9 @@ mvn -B -Pbenchmark "-Dtest=*Test,!BottleTrainingTest,!BottleRealEvaluationTest" 
 
 Il normale `mvn test` include `BottleTrainingTest` e `BottleRealEvaluationTest`: non considerarlo uno smoke rapido. Gli esperimenti `*IT` sono opt-in. Comandi completi nei rispettivi file `*_VALIDATION.md`, in particolare [ottimizzazione](development/archive/PREPROCESSING_OPTIMIZATION_VALIDATION.md), [benchmark](development/archive/PERFORMANCE_BENCHMARK_VALIDATION.md), [held-out](benchmark/HELDOUT_CALIBRATION_VALIDATION.md). Non eseguire `clean` per semplice consultazione: `target/` contiene evidenze generate, non sostituisce un archivio versionato.
 
-**VERIFIED:** HEAD `83c4197f8771e5ec21db1bcd53508e0d00a4add6`, branch main, tag `sprint9-spatial28-comparison`. Tag Sprint 7 sul commit `5caca96`; commit `8f0820178392e8c42736f9cd554e6311bc6dc01c` del 2026-09-30, `docs: add repository-first agent workflow`, e antenato di HEAD. Verificati con `git log`, `git show-ref`, `git merge-base --is-ancestor` e `git show`.
+**HISTORICAL / SUPERSEDED, fotografia del 2026-10-02:** HEAD `83c4197f8771e5ec21db1bcd53508e0d00a4add6`, branch main, tag `sprint9-spatial28-comparison`. Tag Sprint 7 sul commit `5caca96`; commit `8f0820178392e8c42736f9cd554e6311bc6dc01c` del 2026-09-30, `docs: add repository-first agent workflow`, e antenato di HEAD. Verificati con `git log`, `git show-ref`, `git merge-base --is-ancestor` e `git show`.
 
-**VERIFIED:** prima di questa attivita risultavano modificati `pom.xml`, `ImageNetPreprocessor.java`, `LocalizationMaps.java`; non versionati numerosi report, `src/jmh/` e gli helper/test di calibrazione. HEAD non ricostruisce quindi da solo i risultati correnti. Questa attivita aggiunge soltanto i due documenti in `docs/`; nessun commit.
+**HISTORICAL / SUPERSEDED, workspace del 2026-10-02:** prima di quella attivita risultavano modificati `pom.xml`, `ImageNetPreprocessor.java`, `LocalizationMaps.java`; non versionati numerosi report, `src/jmh/` e gli helper/test di calibrazione. HEAD non ricostruisce quindi da solo i risultati correnti. Questa attivita aggiunge soltanto i due documenti in `docs/`; nessun commit.
 
 ## Discrepanze, limiti e informazioni non verificabili
 
@@ -191,17 +215,17 @@ Il normale `mvn test` include `BottleTrainingTest` e `BottleRealEvaluationTest`:
 2. **DECIDED, discrepanza di roadmap risolta:** l'utente ha confermato il 2026-10-02 la decisione successiva a `POST_BENCHMARK_STRATEGY.md`: chiusura del filone performance interno, poi benchmark comparativo CPU same-hardware inizialmente PaDiM/PatchCore. L'ablazione VSA/CNN resta OPEN / DEFERRED. L'ordine e deciso; l'esecuzione del confronto resta da svolgere.
 3. **VERIFIED, perimetro API:** il divieto di clamp riguarda lo score scientifico; l'API visuale di produzione fa clamp. La Z posizionale non e ancora un'API pubblica di produzione.
 4. **VERIFIED, terminologia benchmark:** `sessionRunAndClose` chiude il Result a ogni operazione, non la sessione; questa viene chiusa in teardown. La descrizione del report encoder va letta con questa correzione.
-5. **OPEN, provenienza:** ONNX locale identificato dagli hash; export/checkpoint originale non completamente attestato. Nessun detector addestrato serializzato completo verificato.
+5. **OPEN, provenienza:** ONNX locale identificato dagli hash; export/checkpoint originale non completamente attestato. La precedente assenza di detector serializzato verificato e **SUPERSEDED** dal reload del benchmark finale (sezione 8).
 6. **OPEN, memoria esterna:** risultati storici PlantVillage/Android, motivazioni professionali e revisione HDC in un'altra chat sono raccontati dall'handoff; questa ispezione non li ha verificati con sorgenti esterni al repository. L'attribuzione delle esecuzioni a una specifica persona/agente non e provata dal solo artefatto. La priorita operativa, invece, e stata confermata direttamente dall'utente.
-7. **OPEN, validita esterna:** una sola categoria valutata; nessun confronto locale contro sistemi esterni, nessuna prova di few-shot/continual learning o invarianza alla posa. Le scelte ripetute sul test Bottle limitano le conclusioni di generalizzazione.
+7. **OPEN, validita esterna (affermazione storica superata):** la fotografia precedente parlava di una sola categoria valutata, nessun confronto locale contro sistemi esterni, nessuna prova di few-shot/continual learning o invarianza alla posa. Il confronto esterno con PaDiM/PatchCore su Bottle e Metal Nut e stato eseguito ([risultato](benchmark/BENCHMARK_FINAL_RESULT.md)); few-shot/continual e invarianza alla posa restano non dimostrati. La generalizzazione oltre le categorie osservate resta non stabilita.
 
-## Ipotesi aperte e prossimi passi
+## Ipotesi e priorita storiche — fase corrente chiusa
 
-- **OPEN / DEFERRED:** `VSA vs direct latent-space memory/prototype` resta una questione scientifica aperta e rinviata. Nessuna nuova conclusione scientifica viene introdotta da questo aggiornamento; non e il task corrente.
+- **OPEN / DEFERRED, ora parzialmente misurata:** `VSA vs direct latent-space memory/prototype` resta una questione scientifica aperta e rinviata. L'ablazione post-hoc ha pero misurato baseline CNN locali dirette sulle stesse feature congelate, fornendo un primo confronto interno (non indipendente, su categorie gia osservate); si veda [LOCAL_MEMORY_ABLATION_RESULT.md](diagnostics/LOCAL_MEMORY_ABLATION_RESULT.md).
 - **HYPOTHESIS / FUTURE_WORK:** eventuali rimedi di alignment restano esclusi. Metal Nut e stata scelta prima del benchmark per osservare il comportamento con maggiore variabilita di posa, senza tuning dedicato.
 - **DECIDED:** filone performance interno chiuso per questa fase; nessuna ulteriore ottimizzazione preventiva prima del confronto esterno.
 - **FUTURE_WORK / DEFERRED:** fine-tuning, fusion 14+28, alignment, nuovi metodi di calibrazione, CLI e nuovi formati di persistenza non indispensabili al benchmark. README e preparazione repository sono invece previsti dopo il confronto.
 - **DECIDED, task di progetto:** benchmark comparativo CPU same-hardware Bottle/Metal Nut contro PaDiM/PatchCore, secondo [BENCHMARK_CONTRACT.md](benchmark/BENCHMARK_CONTRACT.md). Phase 1 chiude fonti/configurazioni 2.6.2, export raw, mapping geometrico, pesi, ambiente, split e strategia memoria. **Preparazione Phase 2 chiusa:** equivalenza resize, parser categoria/difetto, percorso fit competitor verificato, gate offline/hash, formato mappe `npy+json/v1` e cattura identita workspace ([report](benchmark/BENCHMARK_PHASE2_PREPARATION.md)). **Implementazione Phase 2 chiusa:** runner comparativo e adattatori per i sei casi cablati e verificati con smoke; sintesi con `null`+reason; classificazione READY_FOR_FINAL_RUN ([implementazione](benchmark/BENCHMARK_PHASE2_IMPLEMENTATION.md), [audit](benchmark/BENCHMARK_PHASE2_COMPLETION_AUDIT.md)). **Run finale COMPLETE:** eseguito `final-comparison-20261003` a budget pieno senza tuning; [risultato](benchmark/BENCHMARK_FINAL_RESULT.md). **Prossimo passo:** sintesi, README e preparazione repository, quindi chiusura della fase. EfficientAD e altre categorie sono FUTURE_WORK.
-- **OPEN, conservazione:** rendere durevoli sorgenti e risultati oggi non versionati e decidere come archiviare evidenze in `target/`; richiede un successivo intervento autorizzato. Recuperare eventuali fonti/export e conclusioni della revisione esterna prima di chiudere definitivamente la vecchia chat.
+- **Stato di pubblicazione corrente:** includere documenti e sorgenti post-hoc nel successivo commit autorizzato; `target/`, dataset, sessioni e handoff restano esclusi. La dipendenza dagli artefatti locali e descritta nella panoramica tecnica. Nessuna nuova indagine e richiesta per la release.
 
 Le decisioni gia sostenute da codice/protocolli sono raccolte in [DECISION_LOG.md](DECISION_LOG.md). L'handoff rimane memoria consultabile, non fonte capace di sovrascrivere queste evidenze.

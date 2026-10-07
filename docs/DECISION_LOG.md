@@ -4,6 +4,8 @@ Registro riconciliato il 2026-10-02. La data e quella della registrazione, non d
 
 Aggiornamento del 2026-10-03: decisioni D10-D14 dalla nuova richiesta esplicita dell'utente; contract documentale, nessuna nuova esecuzione.
 
+Aggiornamento del 2026-10-07: decisione D15 di riconciliazione finale post-hoc; nessuna modifica a codice di produzione ne al benchmark congelato.
+
 ## D01 - Compilare il confronto VSA nello spazio CNN
 
 **DECIDED / IMPLEMENTED.** Apprendimento in VSA, inferenza con `W^T x_n + b`, `W = R^T(A/sigma)/sqrt(D)`, `b = -mu^T(A/sigma)`.
@@ -124,3 +126,20 @@ Aggiornamento del 2026-10-03: decisioni D10-D14 dalla nuova richiesta esplicita 
 - Motivazione: rendere interpretabili i sei casi metodo/categoria senza equiparare thread chiamanti e worker nativi o heap e memoria processo.
 - Evidenza: limiti JMH/ORT gia documentati; protocollo futuro in [BENCHMARK_CONTRACT.md](benchmark/BENCHMARK_CONTRACT.md).
 - Alternative: nessuna falsa garanzia single-thread, nessun tempo ready-to-infer ricavato dalla somma di mediane. Se una misura necessaria manca, segnalare OPEN/incompletezza invece di dichiarare il benchmark concluso.
+
+## D15 - Accettare le diagnosi post-hoc e chiudere il ramo per questa release
+
+**DECIDED, 2026-10-07, riconciliazione finale.** Accettare le due diagnosi post-hoc verificate entro il loro perimetro dichiarato e chiudere il ramo di ricerca post-hoc per la release corrente.
+
+- **Accettazione documentale:** [POSITIONAL_GLOBAL_VARIANCE_DIAGNOSTIC.md](diagnostics/POSITIONAL_GLOBAL_VARIANCE_DIAGNOSTIC.md) e [LOCAL_MEMORY_ABLATION_RESULT.md](diagnostics/LOCAL_MEMORY_ABLATION_RESULT.md) sono accettate come supporto canonico, interne e post-hoc, sulle categorie gia osservate.
+- **Benchmark M0 preservato:** il benchmark congelato `final-comparison-20261003` e la baseline M0 restano invariati; nessuna metrica, configurazione o artefatto frozen viene modificato.
+- **M2 registrata come baseline sperimentale:** M2 (media locale CNN piu deviazione standard per posizione/coordinata) dimostra l'utilita della dispersione nominale locale e della pesatura anisotropa per coordinata nelle condizioni misurate. Dopo la calibrazione Z posizionale, M1-Z vs M2-Z isola questo contributo anisotropo rispetto al solo centroide/livello isotropo.
+- **Nessuna promozione automatica:** M2 non diventa automaticamente una nuova architettura di produzione v2; resta una baseline alternativa sperimentale.
+- **Ramo chiuso:** il filone post-hoc e chiuso per la release corrente. Lavoro su tangent space, statistica direzionale, modelli di covarianza ricchi o nuove categorie richiede una fase futura con perimetro autorizzato separatamente.
+- **Motivazione:** consolidare un risultato verificato senza riscrivere retroattivamente D01-D14, preservando la validita della compilazione dello score e del benchmark.
+- **Evidenza:** i due report diagnostici e i relativi script/harness di sola lettura su produzione e artefatti congelati.
+- **Alternative:** promuovere subito M2 a v2, o riaprire nuove categorie/tangent-space senza nuovo perimetro, non adottate.
+
+### Registrazione della presentazione portfolio — 2026-10-07
+
+Su richiesta dell'autore: README.md italiano come ingresso principale, README.en.md traduzione completa, README.it.md rimando compatibile; docs/TECHNICAL_OVERVIEW.md raccoglie la spiegazione tecnica. M2 e presentato come miglior detector attuale per localizzazione nelle categorie misurate, separato dalla pipeline e dai tempi M0. La data di D15 e quella confermata per la riconciliazione/registrazione finale; non retrodata il benchmark del 2026-10-03. Nessun nuovo esperimento, cambio alla produzione, commit o push.

@@ -2,6 +2,8 @@
 
 Data: 2026-10-04. Stato: **DESIGN / FUTURE_WORK**, senza autorizzazione implicita a implementare o eseguire esperimenti.
 
+La fase post-hoc e chiusa. Le raccomandazioni sotto conservano il loro ruolo di proposte storiche per una fase futura separata, non di prerequisiti alla release. Il percorso di lettura corrente parte dalla [panoramica tecnica](../TECHNICAL_OVERVIEW.md).
+
 ## Raccomandazione
 
 Usare **B come strumento di diagnosi controllata** e **A come candidata di prodotto a bassa latenza**. Prima di costruire una gerarchia completa, separare tre domande: quanto perde il max, quanto manca alla rappresentazione e quanto perde il detector con un solo archetipo. Unire subito nuovi layer, pooling, fine-tuning e crop impedirebbe di rispondere.
@@ -20,6 +22,8 @@ La candidata v2 da portare eventualmente in Java e una sola MobileNetV4 con ramo
 
 Fonti del progetto: [PROJECT_STATE](../PROJECT_STATE.md), [benchmark finale](../benchmark/BENCHMARK_FINAL_RESULT.md), [posa Metal Nut](../diagnostics/METAL_NUT_POSITION_ROTATION_DIAGNOSTIC.md), [RAW/Z Metal Nut](../diagnostics/METAL_NUT_RAW_VS_Z_DIAGNOSTIC.md), [audit spaziale](../diagnostics/SPATIAL_EDGE_ARTIFACT_AUDIT.md), [diagnostica Bottle](../diagnostics/BOTTLE_SYMMETRIC_DIAGNOSTIC.md), [sensibilita all'esclusione del bordo](../diagnostics/BORDER_EXCLUSION_SENSITIVITY.md). Sono stati letti anche il contratto ONNX e i sorgenti locali dei competitor. Nessun modello, benchmark, configurazione, codice o artefatto frozen e stato modificato; viene creato soltanto questo documento.
 
+**Nota di riconciliazione (2026-10-07).** Alcune domande qui marcate OPEN sono state **parzialmente testate** da un'ablazione post-hoc interna sulle stesse feature CNN congelate: M1/M2/M3 sono ora baseline interne misurate e la modellazione diretta della memoria locale CNN non e piu puramente ipotetica. Nessuna e stata adottata come v2 e il benchmark congelato resta invariato. Dettagli in [LOCAL_MEMORY_ABLATION_RESULT.md](../diagnostics/LOCAL_MEMORY_ABLATION_RESULT.md) e [POSITIONAL_GLOBAL_VARIANCE_DIAGNOSTIC.md](../diagnostics/POSITIONAL_GLOBAL_VARIANCE_DIAGNOSTIC.md). Le idee di tangent space e statistica direzionale restano FUTURE / OPTIONAL, non lavoro corrente.
+
 ## 1. Verified limitations
 
 ### Qualita del sistema attuale
@@ -37,7 +41,7 @@ Valori del modello held-out effettivamente usato nel run finale, non della prece
 
 **INFERENCE:** esiste segnale locale per `bent`, ma Pixel AUROC 0.85 non equivale a localizzazione risolta: AUPRO 0.48 resta modesta. Il divario Image/Pixel motiva un test dell'aggregazione, non prova che manchi esclusivamente un global descriptor. Le due metriche ordinano popolazioni diverse, immagini e pixel.
 
-**VERIFIED:** nessun ramo globale esplicito, nessun fine-tuning industriale, un archetipo per posizione e image score max. **OPEN:** non e ancora separato il contributo di backbone, singolo archetipo, normalizzazione L2, standardizzazione VSA, posizione e pooling. Dire che il limite e pre-Z non identifica automaticamente il backbone come unica causa.
+**VERIFIED:** nessun ramo globale esplicito, nessun fine-tuning industriale, un archetipo per posizione e image score max. **OPEN:** non e ancora separato il contributo di backbone, singolo archetipo, normalizzazione L2, standardizzazione VSA, posizione e pooling. Dire che il limite e pre-Z non identifica automaticamente il backbone come unica causa. L'ablazione post-hoc successiva ha pero mostrato che cambiare il solo modello di memoria/statistica, con **le stesse feature congelate**, puo cambiare materialmente la localizzazione; backbone, posa e struttura globale restano contributori possibili, ma non gli unici ([LOCAL_MEMORY_ABLATION_RESULT.md](../diagnostics/LOCAL_MEMORY_ABLATION_RESULT.md)).
 
 ### Posa, bordo e riflessi
 
@@ -315,7 +319,7 @@ Il test e gia stato osservato e ha motivato l'ipotesi: l'esito e **esplorativo p
 
 E1 usa esattamente i 100 canali e gli indici PaDiM salvati, stesso fit 167/176 per entrambi; E2 usa i 1536 descriptor PatchCore. Protocolli e controlli come sezioni 6-7. Confronto primario controllato RAW; la positional Z e una seconda dimensione, con held-out 42/44. I riferimenti nativi finali restano in una tabella distinta.
 
-Per il confronto VSA-specifico, un prototipo diretto CNN e indispensabile: un readout compilato e gia affine nelle feature normalizzate. Un eventuale vantaggio operativo di VSA puo risiedere in apprendimento, composizione o aggiornamenti della memoria, ma non e provato dalla sola possibilita di scrivere lo stesso filtro W nello spazio CNN.
+Per il confronto VSA-specifico, un prototipo diretto CNN e indispensabile: un readout compilato e gia affine nelle feature normalizzate. Un eventuale vantaggio operativo di VSA puo risiedere in apprendimento, composizione o aggiornamenti della memoria, ma non e provato dalla sola possibilita di scrivere lo stesso filtro W nello spazio CNN. L'ablazione post-hoc ha ora misurato baseline CNN locali dirette (M1/M2) e dispersione dopo proiezione VSA (M3) sulle stesse feature congelate, riducendo la parte puramente ipotetica di questo confronto ([LOCAL_MEMORY_ABLATION_RESULT.md](../diagnostics/LOCAL_MEMORY_ABLATION_RESULT.md)).
 
 ### Criteri concreti, da congelare prima di future run
 
@@ -449,7 +453,7 @@ Dire che la fusione in **un solo filtro** non vale non significa perdere l'equiv
 
 **INFERENCE:** eliminato il costo della proiezione in inferenza, diventa particolarmente importante capire quali informazioni arrivano al readout. Aumentare da 96 a 10000 coordinate tramite una trasformazione lineare non crea informazione nuova sull'immagine. Se due osservazioni producono lo stesso descriptor, nessuno scorer deterministico di quel descriptor puo distinguerle. Se risultano distinte ma non separabili dal readout scelto, il problema puo essere la capacita del detector, non assenza di informazione.
 
-Bottle RAW separa bene; Metal Nut RAW separa male nell'attuale modello. **VERIFIED** come comportamento del sistema; **OPEN** come attribuzione esclusiva allo spazio CNN. Il RAW comprende normalizzazione, statistiche, archetipo e scoring. Un censimento deve quindi evitare la conclusione circolare: "le feature sono buone perche lo scorer che preferiamo funziona".
+Bottle RAW separa bene; Metal Nut RAW separa male nell'attuale modello. **VERIFIED** come comportamento del sistema; **OPEN** come attribuzione esclusiva allo spazio CNN. Il RAW comprende normalizzazione, statistiche, archetipo e scoring. Un censimento deve quindi evitare la conclusione circolare: "le feature sono buone perche lo scorer che preferiamo funziona". L'ablazione post-hoc ha mostrato che, con le stesse feature, cambiare il solo modello di memoria/statistica cambia la localizzazione: l'attribuzione esclusiva del limite Metal Nut allo spazio CNN non e quindi giustificata.
 
 Il problema progettuale e congiunto: **informazione presente, accessibilita al readout, stabilita ai fattori irrilevanti e costo per estrarla**. Uno spazio utile per classificare identita puo essere inadatto a rilevare microdifetti. Una feature sensibile all'illuminazione puo essere inutile per riconoscere la stessa persona, ma essenziale per distinguere un graffio o una superficie piegata. Nuisance significa variabile irrilevante **per il compito dichiarato**, non variazione visiva in generale.
 
