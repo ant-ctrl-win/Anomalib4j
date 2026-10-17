@@ -27,8 +27,7 @@ class EvaluationLabelsTest {
 
     @Test void rejectsUnknownCategoryDefectAndMalformedNames() {
         for (String filename : new String[]{
-                "cable_good_000.png",
-                "bottle_scratch_000.png",
+                "bottle__scratch_000.png",
                 "bottle_good_.png",
                 "bottle_good_000.jpg",
                 "bottle_good_000",
@@ -38,7 +37,7 @@ class EvaluationLabelsTest {
             assertThrows(IllegalArgumentException.class, () -> EvaluationLabels.defect(filename), filename);
         }
         assertThrows(IllegalArgumentException.class, () -> EvaluationLabels.defect(null));
-        assertThrows(IllegalArgumentException.class, () -> EvaluationLabels.category("cable_good_000.png"));
+        assertThrows(IllegalArgumentException.class, () -> EvaluationLabels.category("unknown_good_000.png"));
     }
 
     @Test void bottleEvaluationDelegatesToGenericParser() {

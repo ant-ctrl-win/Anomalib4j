@@ -2,7 +2,16 @@
 
 Documento di riferimento per l'integrazione ONNX Runtime in Java.
 Generato per **sola ispezione**: nessun file di codice, `pom.xml`, modello o risorsa è stato modificato.
-Unico file creato/sovrascritto: `ONNX_MODEL_CONTRACT.md`.
+Unico file creato/sovrascritto nell'ispezione originale: `ONNX_MODEL_CONTRACT.md`.
+
+**Riconciliazione 2026-10-16:** le osservazioni di grafo e ambiente sotto sono
+storiche. Il preprocessing Java e implementato: RGB, resize bicubic dell'intera
+immagine a 224x224 (senza crop/letterbox), /255, mean `[0.485,0.456,0.406]`,
+std `[0.229,0.224,0.225]`, NCHW float32. Identita:
+`imagenet-rgb-resize224-bicubic-v1`. Vedere
+[ImageNetPreprocessor.java](../../src/main/java/io/github/antctrlwin/anomalib4j/onnx/ImageNetPreprocessor.java)
+e [stato corrente](../PROJECT_STATE.md). La provenienza esatta checkpoint/export
+rimane aperta; non e un blocco all'implementazione del contratto gia adottato.
 
 ---
 
@@ -78,8 +87,9 @@ Proprietà comuni del modello ONNX (lette dal file):
 ### 2.3 Assenza di preprocessing nel grafo (verificata)
 In entrambi i grafi **non esistono** nodi di normalizzazione (`Sub`/`Mul`/`Div`/`Normalize`), né di
 resize/crop (`Resize`, `Crop`), né `BatchNormalization`. Le op presenti sono solo `Conv`, `Relu`,
-`Add`, `Transpose`. Conseguenza: **resize, crop e normalizzazione devono essere eseguiti esternamente**
-dal runtime Java; l'input atteso è già un tensore FLOAT NCHW normalizzato.
+`Add`, `Transpose`. Conseguenza: resize e normalizzazione sono eseguiti esternamente dal runtime Java;
+il contratto implementato non include crop. L'input atteso è già un tensore FLOAT
+NCHW normalizzato.
 
 ### 2.4 BatchNorm fusa (evidenza dagli initializer)
 Ogni `Conv` ha esattamente 2 initializer (pesi + bias); non esiste alcun initializer di tipo
@@ -183,6 +193,8 @@ locale:
 Trasformazione di inferenza standard timm per input 224 (dedotta dalla config): resize del lato corto
 a `round(224 / 0.875) = 256` con interpolazione **bicubic**, **center crop** a 224×224, conversione a
 tensore FLOAT, normalizzazione per canale con la `mean`/`std` indicate, poi layout NCHW.
+Questa trasformazione timm descritta storicamente non e il preprocessing Java:
+la baseline ridimensiona l'intera immagine direttamente a 224x224, senza center crop.
 
 ### 4.2 Verifica dell'affermazione `pixel / 127.5 - 1.0`
 
@@ -195,9 +207,9 @@ tensore FLOAT, normalizzazione per canale con la `mean`/`std` indicate, poi layo
 
 **Esito**: l'informazione proveniente dall'export originale ("normalizzazione = `pixel/127.5 - 1.0`")
 **non è confermata né dal file ONNX né dalla configurazione timm del tag**; risulta anzi in
-**conflitto** con la config timm pubblicata. Va **confermata con l'autore dell'export** prima di
-implementare il preprocessing in Java (una scelta errata di mean/std degrada le feature e quindi il
-punteggio di anomalia).
+**conflitto** con la config timm pubblicata. Questa affermazione resta una questione
+irrisolta di provenienza dell'export. Il contratto Java implementato usa invece
+bicubic/ImageNet come indicato sopra; non richiede una nuova scelta di preprocessing.
 
 > Nota: la config timm è la fonte corretta *se* i pesi dell'export sono quelli timm
 > `mobilenetv4_conv_small.e2400_r224_in1k`. Poiché i due modelli condividono pesi coerenti tra loro e
@@ -254,7 +266,7 @@ punteggio di anomalia).
 | Quale preprocessing sia stato realmente applicato in export | Da confermare (non desumibile dal file ONNX) |
 | Corrispondenza con indice/stage PyTorch-timm *denominato* | `NON VERIFICABILE DAL SOLO GRAFO ONNX` |
 | Verifica dei pesi contro il checkpoint timm | Non eseguita (`timm`/checkpoint non disponibili localmente) |
-| Uso previsto dei due modelli (combinati o alternativi) | Da confermare dal design |
+| Uso dei due modelli (risolto dall'implementazione corrente) | SPATIAL_14 baseline; SPATIAL_28 alternativa sperimentale, non fusione |
 | Tolleranza numerica ONNX Runtime ↔ feature attese | Da definire |
 | Supporto input a risoluzioni diverse da 224×224 | Escluso dai grafi (dimensioni fisse) |
 
@@ -262,13 +274,13 @@ punteggio di anomalia).
 
 ## 6. Sintesi operativa per l'integrazione Java
 
-1. Input a ONNX Runtime: tensore FLOAT **NCHW** `[1,3,224,224]`, **già preprocessato** (resize/crop/
-   normalizzazione esterni al grafo).
+1. Input a ONNX Runtime: tensore FLOAT **NCHW** `[1,3,224,224]`, **già preprocessato** (resize e
+   normalizzazione esterni al grafo, nessun crop).
 2. Output: tensore FLOAT **NHWC** — 28×28 `[1,28,28,64]`, 14×14 `[1,14,14,96]` (si veda il contratto
    HWC già atteso dal core Anomalib4j).
-3. Preprocessing da implementare in Java **dipende dalla decisione su mean/std**: il valore
-   `pixel/127.5 - 1.0` dichiarato dall'export è **in conflitto** con la config timm
-   (`mean=[0.485,0.456,0.406]`, `std=[0.229,0.224,0.225]`). **Blocco da chiarire prima di scrivere il
-   codice.**
+3. Preprocessing Java **implementato**: RGB, resize bicubic diretto a 224x224,
+   /255 e ImageNet `mean=[0.485,0.456,0.406]`, `std=[0.229,0.224,0.225]`.
+   Nessun crop o letterbox. Il precedente blocco implementativo e superato;
+   la verifica del checkpoint e della catena di export resta irrisolta.
 4. I due modelli sono due **tagli di profondità** della stessa backbone (fine `blocks[1]` → 28×28×64;
    fine `blocks[2]` → 14×14×96), con pesi condivisi.

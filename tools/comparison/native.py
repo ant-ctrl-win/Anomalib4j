@@ -66,7 +66,6 @@ class NativeModel:
         self.module.model.eval()
 
     def fit(self, case: Case) -> None:
-        from common import DATASET
         names = case.names("competitor-fit.txt")
         self.module.model.train()
         phase(case.directory, "fitting")
@@ -74,7 +73,7 @@ class NativeModel:
             for start in range(0, len(names), 32):
                 batch = []
                 for name in names[start:start + 32]:
-                    with Image.open(DATASET / "train/img" / name) as source:
+                    with Image.open(case.dataset / "train/img" / name) as source:
                         batch.append(self.preprocess(source.convert("RGB")))
                 self.module.model(torch.stack(batch))
             self.module.model.eval()

@@ -59,11 +59,21 @@ Preprocessing: imagenet-rgb-resize224-bicubic-v1
 - Reports/results belong in Markdown files when requested.
 - Anomalib is a benchmark/reference, not the architecture being reproduced.
 
-## Canonical supporting documents
+## Canonical reading order
 
-- docs/PROJECT_STATE.md
-- docs/architecture/ONNX_MODEL_CONTRACT.md
-- docs/benchmark/MVTEC_DATASET_CENSUS.md
-- docs/development/SPRINT7_RESULT.md
+For a fresh Codex/OpenCode session:
 
-Read only the documents needed for the current task.
+1. [AGENTS.md](AGENTS.md): invariants and working rules.
+2. [docs/PROJECT_STATE.md](docs/PROJECT_STATE.md): current implementation and active phase.
+3. [docs/EXPERIMENT_INDEX.md](docs/EXPERIMENT_INDEX.md): generations, retained evidence and reproducibility status.
+4. The relevant benchmark or diagnostic report linked from the index.
+5. [docs/TECHNICAL_OVERVIEW.md](docs/TECHNICAL_OVERVIEW.md) and implementation when needed.
+
+[docs/DECISION_LOG.md](docs/DECISION_LOG.md) records dated decisions and supersession.
+The encoder contract and dataset census are linked from the current state and index.
+Read only the detailed documents needed for the task.
+
+Repository code and evidence are authoritative. Chat history, ignored handoff files
+and stale session notes are not authoritative and must not be required to resume.
+Historical reports describe their recorded run, not the current workflow.
+M0 is the current Java baseline; M2 is a retained Python experiment.

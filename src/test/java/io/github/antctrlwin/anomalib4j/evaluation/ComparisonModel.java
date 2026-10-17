@@ -47,6 +47,9 @@ final class ComparisonModel {
         ModelDescriptor descriptor = ComparisonArtifacts.JSON.readValue(directory.resolve("descriptor.json").toFile(), ModelDescriptor.class);
         int dimensions = descriptor.vsaDimensions();
         int cells = descriptor.grid().cells();
+        long archiveBytes = Files.size(directory.resolve("learning-state.bin"));
+        if (dimensions <= 0 || cells <= 0 || (long) dimensions * cells > archiveBytes / 8)
+            throw new IOException("Descriptor exceeds archive dimensions");
         try (var in = new DataInputStream(new BufferedInputStream(Files.newInputStream(directory.resolve("learning-state.bin"))))) {
             if (!in.readUTF().equals("anomalib4j-comparison-learning/v1") || in.readInt() != dimensions) throw new IOException("Invalid model archive");
             double[] mean = doubles(in, dimensions);
@@ -57,11 +60,16 @@ final class ComparisonModel {
             long[] counts = new long[cells];
             for (int p = 0; p < cells; p++) {
                 counts[p] = in.readLong();
+                if (counts[p] <= 0) throw new IOException("Invalid sample count");
                 for (int d = 0; d < dimensions; d++) archetypes[p * dimensions + d] = in.readDouble();
             }
             var memory = new PositionalMemoryBank(descriptor, descriptor.grid(), dimensions, archetypes, counts, statistics);
             int calibrationCount = in.readInt();
-            if (calibrationCount < 2 || calibrationCount > 44) throw new IOException("Invalid calibration count");
+            long headerBytes = 2L + "anomalib4j-comparison-learning/v1".length() + 4 + 16L * dimensions
+                    + 4 + (8L + 8L * dimensions) * cells + 4;
+            long calibrationBytes = 8L * cells * calibrationCount;
+            if (calibrationCount < 2 || headerBytes + calibrationBytes != archiveBytes)
+                throw new IOException("Invalid calibration count or truncated/trailing archive data");
             var rawMaps = new ArrayList<double[]>();
             for (int n = 0; n < calibrationCount; n++) rawMaps.add(doubles(in, cells));
             if (in.read() != -1) throw new IOException("Trailing archive data");
@@ -73,7 +81,10 @@ final class ComparisonModel {
 
     private static double[] doubles(DataInputStream in, int count) throws IOException {
         double[] values = new double[count];
-        for (int i = 0; i < count; i++) values[i] = in.readDouble();
+        for (int i = 0; i < count; i++) {
+            values[i] = in.readDouble();
+            if (!Double.isFinite(values[i])) throw new IOException("Nonfinite archive value");
+        }
         return values;
     }
 }

@@ -15,6 +15,8 @@ final class BottleEvaluation {
     private BottleEvaluation() { }
 
     static String defect(String filename) {
+        if (!List.of("bottle", "metal_nut").contains(EvaluationLabels.category(filename)))
+            throw new IllegalArgumentException("Historical diagnostic requires Bottle or Metal Nut");
         return EvaluationLabels.defect(filename);
     }
 

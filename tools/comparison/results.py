@@ -19,8 +19,11 @@ METRIC_FIELDS = ["n_good", "n_anomaly", "image_auroc", "pixel_auroc", "aupro030"
 def summarize_run(run: Path) -> None:
     if not (run / "manifest.json").is_file():
         raise ContractError(f"Not an initialized comparison run: {run}")
-    methods = ["anomalib4j", "padim", "patchcore"]
-    categories = ["bottle", "metal_nut"]
+    manifest = json.loads((run / "manifest.json").read_text(encoding="utf-8"))
+    methods = manifest.get("method_order", ["anomalib4j", "padim", "patchcore"])
+    categories = manifest.get("categories")
+    if categories is None:
+        categories = sorted({path.name for method in methods for path in (run / method).glob("*") if path.is_dir()})
     rows = []
     for method in methods:
         for category in categories:

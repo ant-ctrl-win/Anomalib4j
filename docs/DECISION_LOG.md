@@ -6,6 +6,8 @@ Aggiornamento del 2026-10-03: decisioni D10-D14 dalla nuova richiesta esplicita 
 
 Aggiornamento del 2026-10-07: decisione D15 di riconciliazione finale post-hoc; nessuna modifica a codice di produzione ne al benchmark congelato.
 
+Aggiornamento del 2026-10-16: [D16](#d16---repository-first-preparation-for-the-new-experimental-phase) definisce la nuova fase attiva. Le voci precedenti conservano lo stato al momento della registrazione.
+
 ## D01 - Compilare il confronto VSA nello spazio CNN
 
 **DECIDED / IMPLEMENTED.** Apprendimento in VSA, inferenza con `W^T x_n + b`, `W = R^T(A/sigma)/sqrt(D)`, `b = -mu^T(A/sigma)`.
@@ -143,3 +145,55 @@ Aggiornamento del 2026-10-07: decisione D15 di riconciliazione finale post-hoc; 
 ### Registrazione della presentazione portfolio — 2026-10-07
 
 Su richiesta dell'autore: README.md italiano come ingresso principale, README.en.md traduzione completa, README.it.md rimando compatibile; docs/TECHNICAL_OVERVIEW.md raccoglie la spiegazione tecnica. M2 e presentato come miglior detector attuale per localizzazione nelle categorie misurate, separato dalla pipeline e dai tempi M0. La data di D15 e quella confermata per la riconciliazione/registrazione finale; non retrodata il benchmark del 2026-10-03. Nessun nuovo esperimento, cambio alla produzione, commit o push.
+
+## D16 - Repository-first preparation for the new experimental phase
+
+**DECIDED, 2026-10-16, explicit user request.** Resume with repository/infrastructure
+preparation for a fresh full-dataset M0 baseline and controlled spatial and
+illumination/reflection robustness evaluation, preserving the CPU inference
+advantage as an objective to measure.
+
+- **Current implementation:** M0 remains the Java baseline. M2 is the strongest
+  retained localization experiment on Bottle and Metal Nut, implemented in Python;
+  it is not the current Java detector or a selected production v2.
+- **Supersession:** D09-D15's previous-phase workflow/closure and two-category
+  scope do not constrain the new preparation phase. Their scientific results,
+  frozen splits and benchmark contract remain historical evidence unchanged.
+  No retrospective promotion of M2 or renaming of M1/M2/M3 is intended.
+- **Next task:** make evaluation infrastructure category-agnostic and capable of
+  running unchanged M0 across all 15 MVTec AD categories. No full-dataset run
+  or controlled robustness campaign is complete. This reconciliation implements
+  documentation only, not infrastructure or experiments.
+- **Canonical hierarchy:** AGENTS -> current PROJECT_STATE -> EXPERIMENT_INDEX ->
+  relevant report -> TECHNICAL_OVERVIEW/code as needed. README is a public
+  introduction. Chat history and ignored handoff/session files are not authoritative.
+- **Reproduction boundary:** frozen source identity differs from current HEAD;
+  local ignored artifacts and the external dataset are prerequisites, not clone
+  contents. Exact ONNX checkpoint/export provenance remains unresolved.
+  Implemented bicubic/ImageNet preprocessing is established and is not an
+  unresolved implementation blocker.
+- **History preservation:** the former mixed state/history document is retained
+  as [historical snapshot](development/archive/PROJECT_STATE_20261007.md).
+  Earlier log statements about uncommitted files, future execution or closure
+  describe their recording time, not current status.
+- **Evidence:** [current snapshot](PROJECT_STATE.md), [experiment index](EXPERIMENT_INDEX.md),
+  [frozen result](benchmark/BENCHMARK_FINAL_RESULT.md) and
+  [local-memory ablation](diagnostics/LOCAL_MEMORY_ABLATION_RESULT.md).
+  No algorithm, numerical result, saved artifact or benchmark execution changes.
+
+## D17 - Category-agnostic M0 evaluation infrastructure
+
+Date: 2026-10-16. Infrastructure preparation, not a performance experiment.
+M0 remains the Java baseline; M2 remains the retained Python localization experiment.
+The core comparison workflow uses the shared 15-category resource, DatasetNinja
+metadata and original image geometry. Historical diagnostics remain scoped to
+their original categories. New campaigns generate their own manifests and never
+overwrite frozen evidence.
+
+Use lexical ordering followed by Java Random seeded shuffle, with fit count
+`floor(4*N/5)` clamped to `[1,N-2]`; reject fewer than three normal images.
+At seed 42 this reproduces the retained Bottle/Metal Nut manifests exactly.
+Keep at least two calibration observations for sample variance. Projection seed,
+preprocessing, scoring, interpolation and metric definitions remain unchanged.
+See [execution contract](benchmark/FULL_DATASET_EXECUTION.md). The active next task
+is dataset validation and a fresh full-dataset baseline; no such run is claimed here.

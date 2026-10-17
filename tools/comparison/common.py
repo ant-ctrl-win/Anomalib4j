@@ -21,6 +21,8 @@ PRERUN: Final = ROOT / "docs/benchmark/benchmark-prerun"
 UPSTREAM: Final = ROOT / "target/prerun/anomalib-2.6.2"
 PYTHON: Final = UPSTREAM / ".venv/Scripts/python.exe"
 DATASET: Final = ROOT.parent / "Anomalib4j_md/mvtec-ad-DatasetNinja"
+CATEGORIES: Final = tuple((ROOT / "src/test/resources/mvtec-categories.txt").read_text(encoding="utf-8").split())
+METHODS: Final = ("anomalib4j", "padim", "patchcore")
 Json: TypeAlias = str | int | float | bool | None | list["Json"] | dict[str, "Json"]
 sys.path.insert(0, str(ROOT / "tools/prerun"))
 from workspace_identity import capture
@@ -47,8 +49,16 @@ class Case:
         return self.run / "data" / self.category
 
     @property
-    def size(self) -> int:
-        return {"bottle": 900, "metal_nut": 700}[self.category]
+    def dataset(self) -> Path:
+        manifest = json.loads((self.run / "manifest.json").read_text(encoding="utf-8"))
+        return Path(manifest["dataset"])
+
+    def fixture(self) -> Path:
+        names = self.names("competitor-fit.txt" if self.smoke else "test.txt")
+        normal = sorted(name for name in names if name.startswith(self.category + "_good_"))
+        if not normal:
+            raise ContractError(f"No normal timing fixture: {self.category}")
+        return self.dataset / ("train" if self.smoke else "test") / "img" / normal[0]
 
     def names(self, manifest: str) -> list[str]:
         names = (self.manifests / manifest).read_text(encoding="utf-8-sig").splitlines()
@@ -84,41 +94,6 @@ def java_command(main: str, arguments: list[str]) -> list[str]:
     return ["java", "-Xmx2g", "-cp", classpath, "io.github.antctrlwin.anomalib4j.evaluation." + main, *arguments]
 
 
-def initialize(run: Path, smoke: bool) -> None:
-    if run.exists():
-        raise ContractError(f"Use an absent run directory: {run}")
-    run.mkdir(parents=True)
-    capture(run / "workspace")
-    shutil.copy2(ROOT / "docs/benchmark/BENCHMARK_CONTRACT.md", run / "contract.md")
-    shutil.copytree(PRERUN / "data", run / "data")
-    shutil.copytree(PRERUN, run / "environment/prerun")
-    sources = sorted({*ROOT.glob("src/main/**/*.java"), *ROOT.glob("src/test/**/*.java"),
-                      *ROOT.glob("src/jmh/**/*.java"), *ROOT.glob("tools/comparison/*.*"),
-                      *ROOT.glob("tools/prerun/*.*"), *ROOT.glob("src/main/resources/models/*.onnx"),
-                      ROOT / "pom.xml", ROOT / "docs/benchmark/BENCHMARK_CONTRACT.md", ROOT / "docs/benchmark/benchmark-prerun/configurations.json"})
-    checksums = {str(path.relative_to(ROOT)): sha256_file(path) for path in sources}
-    write_json(run / "source-hashes.json", checksums)
-    write_json(run / "manifest.json", {"format": "comparison-run/v1", "smoke": smoke,
-               "created_at": datetime.now(timezone.utc).isoformat(), "seed": 42,
-               "dataset": str(DATASET), "method_order": ["anomalib4j", "padim", "patchcore"],
-               "second_process_order": ["patchcore", "padim", "anomalib4j"],
-               "execution": "serial; one method/category per command; operator follows frozen order"})
-    capture_hardware(run / "hardware.json")
-    validate_manifests(run)
-    data_hashes = {}
-    for category in ["bottle", "metal_nut"]:
-        case = Case(run, "anomalib4j", category, False)
-        for role, names in [("train", case.names("competitor-fit.txt")), ("test", case.names("test.txt"))]:
-            for name in names:
-                paths = [DATASET / role / "img" / name]
-                if role == "test":
-                    paths.append(DATASET / role / "ann" / (name + ".json"))
-                for path in paths:
-                    data_hashes[path.relative_to(DATASET).as_posix()] = sha256_file(path)
-    write_json(run / "dataset-hashes.json", data_hashes)
-    (run / "checksums.sha256").write_text("".join(f"{digest}  {relative}\n" for relative, digest in checksums.items()), encoding="utf-8")
-
-
 def capture_hardware(output: Path) -> None:
     script = "$c=Get-CimInstance Win32_Processor; $s=Get-CimInstance Win32_ComputerSystem; "
     script += "$o=Get-CimInstance Win32_OperatingSystem; "
@@ -130,29 +105,40 @@ def capture_hardware(output: Path) -> None:
 
 
 def validate_manifests(run: Path) -> None:
-    declared = json.loads((PRERUN / "data-sha256.json").read_text(encoding="utf-8-sig"))
-    for entry in declared:
-        suffix = entry["Path"].replace("\\", "/").split("/data/", 1)[1]
-        path = run / "data" / suffix
-        if sha256_file(path).upper() != entry["Hash"]:
-            raise ContractError(f"Manifest hash mismatch: {path}")
-    for category, fit_count, calibration_count, test_count in [("bottle", 167, 42, 83), ("metal_nut", 176, 44, 115)]:
+    generated = run / "manifest-hashes.json"
+    if generated.exists():
+        declared = json.loads(generated.read_text(encoding="utf-8"))
+        for relative, digest in declared.items():
+            if sha256_file(run / relative) != digest:
+                raise ContractError(f"Manifest hash mismatch: {relative}")
+        manifest = json.loads((run / "manifest.json").read_text(encoding="utf-8"))
+        categories = manifest["categories"]
+    else:
+        declared = json.loads((PRERUN / "data-sha256.json").read_text(encoding="utf-8-sig"))
+        for entry in declared:
+            suffix = entry["Path"].replace("\\", "/").split("/data/", 1)[1]
+            if sha256_file(run / "data" / suffix).upper() != entry["Hash"]:
+                raise ContractError(f"Manifest hash mismatch: {suffix}")
+        categories = sorted(path.name for path in (run / "data").iterdir() if path.is_dir())
+    for category in categories:
+        if category not in CATEGORIES:
+            raise ContractError(f"Unknown category: {category}")
         case = Case(run, "anomalib4j", category, False)
         fit = case.names("anomalib4j-fit.txt")
         calibration = case.names("anomalib4j-calibration.txt")
         competitor = case.names("competitor-fit.txt")
         test = case.names("test.txt")
-        if (len(fit), len(calibration), len(test)) != (fit_count, calibration_count, test_count):
-            raise ContractError(f"Wrong cardinality: {category}")
+        if not fit or len(calibration) < 2 or not test:
+            raise ContractError(f"Insufficient split cardinality: {category}")
         if set(fit) & set(calibration) or set(fit + calibration) != set(competitor):
             raise ContractError(f"Wrong split membership: {category}")
         if any(not name.startswith(category + "_good_") for name in competitor):
             raise ContractError(f"Anomalous fit input: {category}")
-        for names, role in [(competitor, "train"), (test, "test")]:
+        for names in (fit, calibration, competitor, test):
             if len(names) != len(set(names)):
-                raise ContractError(f"Duplicate names: {category}/{role}")
+                raise ContractError(f"Duplicate names: {category}")
             for name in names:
-                if Path(name).name != name or not (DATASET / role / "img" / name).is_file():
+                if Path(name).name != name or "/" in name or "\\" in name:
                     raise ContractError(f"Invalid image name: {name}")
 
 
@@ -160,6 +146,8 @@ def require_run(case: Case) -> None:
     manifest = json.loads((case.run / "manifest.json").read_text(encoding="utf-8"))
     if manifest["smoke"] != case.smoke:
         raise ContractError("Smoke and final artifacts must use distinct run directories")
+    if case.category not in manifest.get("categories", CATEGORIES) or case.method not in manifest["method_order"]:
+        raise ContractError("Case not selected at run initialization")
     hashes = json.loads((case.run / "source-hashes.json").read_text(encoding="utf-8"))
     for relative, digest in hashes.items():
         if sha256_file(ROOT / relative) != digest:
@@ -167,7 +155,7 @@ def require_run(case: Case) -> None:
     validate_manifests(case.run)
     data_hashes = json.loads((case.run / "dataset-hashes.json").read_text(encoding="utf-8"))
     for relative, digest in data_hashes.items():
-        if Path(relative).name.startswith(case.category + "_") and sha256_file(DATASET / relative) != digest:
+        if (relative == "meta.json" or Path(relative).name.startswith(case.category + "_")) and sha256_file(case.dataset / relative) != digest:
             raise ContractError(f"Dataset changed after initialization: {relative}")
 
 
@@ -175,6 +163,8 @@ def prepare_case(case: Case) -> None:
     case.directory.mkdir(parents=True, exist_ok=False)
     configuration = json.loads((PRERUN / "configurations.json").read_text(encoding="utf-8"))
     write_json(case.directory / "config.json", {"method": case.method, "category": case.category,
+               "run_settings": json.loads((case.run / "manifest.json").read_text(encoding="utf-8")),
+               "split_counts": {name: len(case.names(name)) for name in ("anomalib4j-fit.txt", "anomalib4j-calibration.txt", "competitor-fit.txt", "test.txt")},
                "smoke": case.smoke, "frozen_configuration": configuration, "fit_batch": 32 if case.method != "anomalib4j" else 1,
                "fit_loader": "ordered manifests; synchronous decode (0 worker processes)", "map_format": "npy+json/v1"})
     (case.directory / "validation.md").write_text("# Validation\n\nStatus: implementation smoke only. Final metrics and final latency are separate opt-in commands.\n" if case.smoke else "# Validation\n\nConfiguration frozen. Inspect phase logs and status artifacts; absence of an output is not a zero result.\n", encoding="utf-8")

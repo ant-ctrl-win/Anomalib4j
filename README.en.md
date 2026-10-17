@@ -16,7 +16,7 @@ The project addresses two main aspects: reducing the cost of comparison against 
 - **M0 performance:** about **12 µs for 196 positions** in the JMH kernel measurement; on Bottle, **3.723 ms p50** for detection and **9.486 ms p50** for full localization.
 - **Same-hardware benchmark:** v1 compared with PaDiM and PatchCore, quality evaluated using common conventions and execution costs documented.
 
-**M2 metrics and M0 latencies belong to different detector versions.**
+**M2 metrics and M0 latencies belong to different detector versions.** M0 remains the current Java implementation; M2 is a retained Python experiment. No full 15-category MVTec AD validation has been completed.
 
 ## The project at a glance
 

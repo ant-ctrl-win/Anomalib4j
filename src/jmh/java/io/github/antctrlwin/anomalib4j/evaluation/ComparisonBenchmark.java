@@ -28,7 +28,7 @@ public class ComparisonBenchmark {
         public void setup() throws Exception {
             model = ComparisonModel.load(Path.of(caseDirectory));
             encoder = new OnnxMobileNetV4Encoder(OnnxMobileNetV4Encoder.Variant.SPATIAL_14);
-            image = ComparisonRunner.read(Path.of(dataset).resolve((smoke ? "train" : "test") + "/img/" + category + "_good_000.png"));
+            image = ComparisonRunner.read(DatasetManifests.fixture(Path.of(dataset), Path.of(caseDirectory).getParent().getParent().resolve("data").resolve(category), smoke));
             ComparisonArtifacts.json(Path.of(caseDirectory).resolve("runtime-jmh-" + ProcessHandle.current().pid() + ".json"),
                     java.util.Map.of("pid", ProcessHandle.current().pid(), "process_affinity", ComparisonArtifacts.affinity(), "java", System.getProperty("java.version"),
                             "heap_max_bytes", Runtime.getRuntime().maxMemory(), "ort_workers", "unknown: default SessionOptions",

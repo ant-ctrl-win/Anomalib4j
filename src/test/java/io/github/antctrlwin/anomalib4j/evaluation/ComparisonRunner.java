@@ -24,8 +24,7 @@ public final class ComparisonRunner {
         Path manifests = Path.of(args[3]);
         String category = args[4];
         boolean smoke = Boolean.parseBoolean(args[5]);
-        int size = switch (category) { case "bottle" -> 900; case "metal_nut" -> 700;
-            default -> throw new IllegalArgumentException("Unsupported category"); };
+        MvtecCategories.require(category);
         if (args.length > 6) {
             Path gate = Path.of(args[6]);
             while (!Files.exists(gate)) Thread.sleep(20);
@@ -33,12 +32,12 @@ public final class ComparisonRunner {
         Files.createDirectories(directory);
         switch (action) {
             case "fit" -> fit(dataset, directory, manifests, category, smoke);
-            case "infer" -> infer(dataset, directory, manifests, category, size, smoke);
+            case "infer" -> infer(dataset, directory, manifests, category, smoke);
             case "memory" -> {
                 fit(dataset, directory, manifests, category, smoke);
                 ComparisonModel.Loaded model = ComparisonModel.load(directory);
                 try (var encoder = new OnnxMobileNetV4Encoder(OnnxMobileNetV4Encoder.Variant.SPATIAL_14)) {
-                    BufferedImage image = read(dataset.resolve((smoke ? "train" : "test") + "/img/" + category + "_good_000.png"));
+                    BufferedImage image = read(DatasetManifests.fixture(dataset, manifests, smoke));
                     ComparisonArtifacts.phase(directory, "warmup");
                     repeat(model, encoder, image, smoke ? .1 : 10);
                     ComparisonArtifacts.phase(directory, "steady");
@@ -93,16 +92,20 @@ public final class ComparisonRunner {
         }
     }
 
-    static void infer(Path dataset, Path directory, Path manifests, String category, int size, boolean smoke) throws Exception {
+    static void infer(Path dataset, Path directory, Path manifests, String category, boolean smoke) throws Exception {
         var model = ComparisonModel.load(directory);
         List<Path> images = paths(dataset, manifests.resolve(smoke ? "competitor-fit.txt" : "test.txt"), smoke ? "train" : "test", smoke);
         String runId = directory.getParent().getParent().getFileName().toString();
-        String geometry = category + "-" + size + "x" + size + "-14x14";
+        var metadata = new DatasetMetadata(dataset);
         var csv = new StringBuilder("run_id,method,category,filename,label,defect,image_score,score_kind,native_map_path,eval_map_path,dtype,shape,geometry_id,image_sha256\n");
         try (var encoder = new OnnxMobileNetV4Encoder(OnnxMobileNetV4Encoder.Variant.SPATIAL_14)) {
             for (Path path : images) {
                 BufferedImage image = read(path);
-                if (image.getWidth() != size || image.getHeight() != size) throw new IllegalArgumentException("Unexpected image geometry");
+                var info = metadata.inspect(smoke ? "train" : "test", path.getFileName().toString());
+                if (!info.category().equals(category)) throw new IllegalArgumentException("Wrong category");
+                int width = image.getWidth();
+                int height = image.getHeight();
+                String geometry = category + "-" + width + "x" + height + "-14x14";
                 var scores = HeldOutBottleCalibration.score(model.filters(), encoder.extract(image), model.calibration());
                 String filename = path.getFileName().toString();
                 String stem = filename.replace(".png", "");
@@ -110,7 +113,7 @@ public final class ComparisonRunner {
                 Path evaluatedPath = Path.of("maps", stem + ".evaluated.npy");
                 ComparisonArtifacts.writeMap(directory.resolve(nativePath), scores.z(), 14, 14, filename, geometry, "native");
                 ComparisonArtifacts.writeMap(directory.resolve("maps/" + stem + ".raw.npy"), scores.raw(), 14, 14, filename, geometry, "native");
-                ComparisonArtifacts.writeMap(directory.resolve(evaluatedPath), LocalizationMaps.upsample(scores.z(), 14, 14, size, size), size, size, filename, geometry, "evaluated");
+                ComparisonArtifacts.writeMap(directory.resolve(evaluatedPath), LocalizationMaps.upsample(scores.z(), 14, 14, width, height), height, width, filename, geometry, "evaluated");
                 String defect = EvaluationLabels.defect(filename);
                 csv.append(String.join(",", runId, "anomalib4j", category, filename, defect.equals("good") ? "good" : "anomaly", defect,
                         Double.toString(BottleEvaluation.summarize(scores.z()).max()), "positional_z", nativePath.toString().replace('\\', '/'),
@@ -123,7 +126,7 @@ public final class ComparisonRunner {
 
     static List<Path> paths(Path dataset, Path manifest, String role, boolean smoke) throws Exception {
         List<String> names = Files.readAllLines(manifest).stream().filter(s -> !s.isBlank()).toList();
-        if (smoke) names = names.subList(0, 2);
+        if (smoke) names = names.subList(0, Math.min(2, names.size()));
         return names.stream().map(name -> dataset.resolve(role + "/img/" + name)).toList();
     }
 

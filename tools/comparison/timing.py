@@ -12,7 +12,7 @@ from collections.abc import Callable
 from dataclasses import dataclass
 from typing import Final, TypedDict
 
-from common import Case, ContractError, DATASET, phase, write_json
+from common import Case, ContractError, phase, write_json
 
 
 @dataclass(frozen=True, slots=True)
@@ -68,7 +68,7 @@ def latency_process(case: Case, model, process: int) -> None:
     import os
     import torch
     from PIL import Image
-    path = DATASET / ("train" if case.smoke else "test") / "img" / f"{case.category}_good_000.png"
+    path = case.fixture()
     with Image.open(path) as source:
         image = source.convert("RGB")
     schedule = SMOKE if case.smoke else DEFAULT
@@ -79,7 +79,7 @@ def latency_process(case: Case, model, process: int) -> None:
                 result = model.predict(image)
                 output = result.anomaly_map
                 if region == "full_resolution":
-                    output = torch.nn.functional.interpolate(output.double(), size=(case.size, case.size), mode="bilinear", align_corners=False)
+                    output = torch.nn.functional.interpolate(output.double(), size=(image.height, image.width), mode="bilinear", align_corners=False)
                 return float(result.score.item() + output[0, 0, output.shape[2] // 2, output.shape[3] // 2].item())
             rows.extend((process, os.getpid(), region, iteration, elapsed) for iteration, elapsed in sample(operation, schedule))
     with (case.directory / f"latency-process-{process}.csv").open("x", newline="", encoding="utf-8") as stream:
@@ -91,7 +91,7 @@ def latency_process(case: Case, model, process: int) -> None:
 def memory_workload(case: Case, model) -> None:
     import torch
     from PIL import Image
-    with Image.open(DATASET / ("train" if case.smoke else "test") / "img" / f"{case.category}_good_000.png") as source:
+    with Image.open(case.fixture()) as source:
         image = source.convert("RGB")
     with torch.no_grad():
         for name, seconds in [("warmup", .1 if case.smoke else 10), ("steady", .2 if case.smoke else 10)]:
@@ -99,8 +99,8 @@ def memory_workload(case: Case, model) -> None:
             until = time.perf_counter_ns() + int(seconds * 1e9)
             while time.perf_counter_ns() < until:
                 result = model.predict(image)
-                full = torch.nn.functional.interpolate(result.anomaly_map.double(), size=(case.size, case.size), mode="bilinear", align_corners=False)
+                full = torch.nn.functional.interpolate(result.anomaly_map.double(), size=(image.height, image.width), mode="bilinear", align_corners=False)
                 float(result.score.item() + full[0, 0, 0, 0].item())
     phase(case.directory, "complete")
     write_json(case.directory / "memory-input.json", {"decoded_image": "one RGB PIL image in RAM",
-               "logical_rgb_bytes": case.size * case.size * 3, "region": "full_resolution"})
+               "logical_rgb_bytes": image.width * image.height * 3, "region": "full_resolution"})

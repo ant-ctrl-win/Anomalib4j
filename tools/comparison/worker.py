@@ -12,7 +12,7 @@ import time
 from pathlib import Path
 from typing import Literal, assert_never
 
-from common import Case, ContractError, DATASET, phase, process_affinity, write_json
+from common import Case, ContractError, phase, process_affinity, write_json
 
 
 def main() -> None:
@@ -54,19 +54,17 @@ def main() -> None:
                                  "native_map_path", "eval_map_path", "dtype", "shape", "geometry_id", "image_sha256"])
                 with torch.no_grad():
                     for name in names:
-                        path = DATASET / role / "img" / name
+                        path = case.dataset / role / "img" / name
                         with Image.open(path) as source:
                             image = source.convert("RGB")
-                        if image.size != (case.size, case.size):
-                            raise ContractError(f"Unexpected input geometry: {name}")
                         result = model.predict(image)
                         if result.anomaly_map.shape != (1, 1, 256, 256) or not torch.isfinite(result.anomaly_map).all() or not torch.isfinite(result.score).all():
                             raise ContractError(f"Invalid native output: {name}")
-                        mapped = torch.nn.functional.interpolate(result.anomaly_map.double(), size=(case.size, case.size), mode="bilinear", align_corners=False)
+                        mapped = torch.nn.functional.interpolate(result.anomaly_map.double(), size=(image.height, image.width), mode="bilinear", align_corners=False)
                         stem = Path(name).stem
                         native_path = Path("maps") / (stem + ".native.npy")
                         evaluated_path = Path("maps") / (stem + ".evaluated.npy")
-                        geometry = f"{category}-{case.size}x{case.size}-256x256"
+                        geometry = f"{category}-{image.width}x{image.height}-256x256"
                         save_map(case.directory / native_path, result.anomaly_map[0, 0].numpy(), filename=name, geometry_id=geometry, score_kind="native", dtype="float32")
                         save_map(case.directory / evaluated_path, mapped[0, 0].numpy(), filename=name, geometry_id=geometry, score_kind="evaluated", dtype="float64")
                         defect = stem.removeprefix(category + "_").rsplit("_", 1)[0]
