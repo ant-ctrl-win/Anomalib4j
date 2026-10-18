@@ -19,6 +19,7 @@ All listed detector experiments use projection seed 42 where applicable.
 | `m0-all15-baseline-20261016` | Unchanged Java M0; workspace and source hashes in run | All 15; deterministic seed-42 held-out manifests, floor(0.8*N) fit with small-set clamp | 0.818690 / 0.807989 / 0.575592 | `target/comparison/m0-all15-baseline-20261016`; completed retained baseline |
 | `local-models-20261017` | Python C1/exact V1/M2, shared Java features/evaluator; source hashes in run | All 15; same baseline manifests; separate held-out Z per candidate | C1 0.831351 / 0.866853 / 0.682340; V1 0.830704 / 0.866527 / 0.681510; M2 0.871803 / 0.931016 / 0.805887 | `target/ablation/local-models-20261017/{RESULT.md,comparison.csv,macro-summary.csv}`; M2 selected; [frozen plan](experiments/LOCAL_MODEL_ABLATION_PLAN.md) |
 | `java-m2-20261018-validated` | Separate Java M2; source snapshot and input hashes in run | Bottle/Metal Nut/Hazelnut retained fit/calibration/test features; no new all-15 run | All three metrics reproduce retained Python M2 with zero reported deltas | `target/ablation/java-m2-20261018-validated`; [parity/performance report](benchmark/JAVA_M2_RESULT_20261018.md); implementation regression, not independent scientific evidence |
+| `m2-controlled-20261018` | Unchanged Java M2; test-only transforms, source/input hashes retained | All 15; 467 normal test images; same FIT/held-out manifests, calibration-max diagnostic reference | 19,147 paired observations; no AUROC. +5 degree macro median-delta mean 17.780 Z; brightness .8 Bottle median delta 2209.086 Z | `target/robustness/m2-controlled-20261018`; [robustness result](benchmark/M2_ROBUSTNESS_RESULT_20261018.md), [frozen protocol](experiments/M2_ROBUSTNESS_PLAN.md); completed controlled diagnostic evidence, exact identity parity, not corrected model or production FPR |
 
 ### Earlier evidence (historical status at its recorded date)
 
@@ -67,8 +68,9 @@ Historical commit references above are references recorded by the
   Their historical workflow labels do not establish current Git status.
 - ONNX byte identity is recorded in the [contract](architecture/ONNX_MODEL_CONTRACT.md);
   exact checkpoint/export provenance is still unresolved.
-- Full 15-category M0 and local-model runs now exist as listed above. No controlled
-  robustness campaign has been completed. The [census](benchmark/MVTEC_DATASET_CENSUS.md)
+- Full 15-category M0, local-model and normal-image controlled M2 robustness runs
+  now exist as listed above. No robustness correction has been implemented.
+  The [census](benchmark/MVTEC_DATASET_CENSUS.md)
   inventories categories, not results.
 - Reproduction commands and prerequisites belong to each linked report and the
   [technical overview](TECHNICAL_OVERVIEW.md); unverified source identity,

@@ -52,7 +52,8 @@ are retained in [EXPERIMENT_INDEX.md](EXPERIMENT_INDEX.md).
 
 Java M2 regression on retained Bottle, Metal Nut and Hazelnut descriptors
 reproduced Python M2's three quality metrics with zero reported differences.
-No new all-15 Java M2 scientific campaign has been launched.
+No new all-15 Java M2 anomaly-quality campaign has been launched; the separate
+normal-image robustness measurement is described below.
 
 ## Reproducibility boundaries and limitations
 
@@ -67,11 +68,18 @@ No new all-15 Java M2 scientific campaign has been launched.
 - M0 and M2 remain strictly positional: a displaced normal feature can encounter
   the wrong cell's reference. No spatial tolerance, registration, rotation/scale
   handling, illumination augmentation, full covariance or clustering was added.
-  Controlled robustness remains unmeasured.
+  The [controlled normal-image robustness run](benchmark/M2_ROBUSTNESS_RESULT_20261018.md)
+  now measures translation, rotation, scale, brightness, contrast and gamma on
+  467 normal tests across all 15 categories. Rotation/scale sensitivity is broad;
+  Bottle has a severe photometric response concentrated in outer-grid scores.
+  Reflections, local glare and corrective mechanisms remain untested.
 
 ## Active phase
 
-Java M2 parity and CPU computational-cost validation before another scientific
-campaign. Use the Java report for measurement status and the future all-15 command.
+Java M2 parity, matched CPU-cost validation and the controlled robustness campaign
+are complete. The [robustness report](benchmark/M2_ROBUSTNESS_RESULT_20261018.md)
+recommends one next rotation/scale alignment ablation; it has not been implemented.
+The experiment measured the unchanged detector, not a robustness correction.
+Use the Java report for timing and the future all-15 quality command.
 M2 does not inherit historical M0 latency. Public README claims await a separate
 update. [DECISION_LOG.md](DECISION_LOG.md) records supersession and history.

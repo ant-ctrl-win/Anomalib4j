@@ -216,3 +216,23 @@ Measure matched Java M0/M2 and separate stages on CPU; do not transfer M0's
 historical latency to M2. Do not launch a new all-15 scientific campaign here.
 See [the Java M2 report](benchmark/JAVA_M2_RESULT_20261018.md) for exact evidence,
 execution-provider verification, commands and measurement status.
+
+## D19 - Measure frozen Java M2 robustness before selecting a correction
+
+Date: 2026-10-18. Explicit user authorization to measure controlled geometry and
+photometry, superseding D18's active validation-only scope. Production M2 and M0
+remain unchanged. The [pre-run protocol](experiments/M2_ROBUSTNESS_PLAN.md) fixes
+all transforms, replication/bilinear sampling, calibration-maximum diagnostic
+reference, paired summaries and the sole interior-ring diagnostic.
+
+Completed all 15 categories, 467 normal tests, 19,147 image/level pairs, with
+bit-identical identity maps and Java/Python calibration parity. No anomaly-quality
+campaign or JMH rerun. [Result](benchmark/M2_ROBUSTNESS_RESULT_20261018.md) records
+broad rotation/scale sensitivity, translation sensitivity and severe category-specific
+photometric responses, especially Bottle. No operational FPR claim follows from
+the diagnostic reference, whose original-normal exceedance is already substantial.
+
+The evidence recommends exactly one subsequent rotation/scale canonicalization
+ablation. This is a recommendation, not an implemented correction or an approved
+multifix program; Bottle's photometric limitation remains explicit. No claim of
+reflection robustness, alignment efficacy or changed CPU performance is made.
