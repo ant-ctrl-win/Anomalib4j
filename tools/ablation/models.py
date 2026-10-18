@@ -15,12 +15,8 @@ CENTROID_GUARD: Final = 1e-12
 FLOOR: Final = 1e-6
 
 
-@dataclass(frozen=True, slots=True)
 class ModelError(RuntimeError):
-    reason: str
-
-    def __str__(self) -> str:
-        return self.reason
+    """Invalid experimental inputs; traceback attributes remain writable by Python."""
 
 
 @dataclass(frozen=True, slots=True)

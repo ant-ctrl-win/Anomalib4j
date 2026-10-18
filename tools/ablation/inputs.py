@@ -63,7 +63,8 @@ def baseline_contract(baseline: Path, categories: tuple[str, ...], verify_data: 
     protected = ("LocalizationMaps.java", "LocalizationMetrics.java", "DatasetNinjaMasks.java",
                  "ComparisonEvaluator.java", "PositionalVarianceFeatureDump.java", "ImageNetPreprocessor.java")
     sources = json.loads((baseline / "source-hashes.json").read_text())
-    required = [p.relative_to(ROOT).as_posix() for p in (ROOT / "src/main").rglob("*") if p.is_file()]
+    required = [p.relative_to(ROOT).as_posix() for p in (ROOT / "src/main").rglob("*")
+                if p.is_file() and "anomalib4j/m2/" not in p.as_posix()]
     required += [p.relative_to(ROOT).as_posix() for p in (ROOT / "src/test").rglob("*.java") if p.name in protected]
     for relative in required:
         if sources.get(relative) != sha256_file(ROOT / relative):

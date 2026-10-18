@@ -1,8 +1,8 @@
 # Experiment index
 
-Canonical evidence index, reconciled **2026-10-16**. Current implementation and
+Canonical evidence index, updated **2026-10-18**. Current implementation and
 active work are defined in [PROJECT_STATE.md](PROJECT_STATE.md).
-No experiments were rerun for this index. Values below summarize retained reports
+Values below summarize retained reports
 and local CSVs; they do not certify a fresh execution.
 
 **Metric order: Image AUROC / Pixel AUROC / AUPRO@0.30.** Values are rounded
@@ -11,6 +11,19 @@ B = Bottle, N = Metal Nut. A fit/calibration split uses training-good images onl
 All listed detector experiments use projection seed 42 where applicable.
 
 ## Detector generations
+
+### Latest completed campaigns
+
+| ID | Implementation / source | Coverage and split | Macro Image / Pixel / AUPRO | Evidence and status |
+|---|---|---|---|---|
+| `m0-all15-baseline-20261016` | Unchanged Java M0; workspace and source hashes in run | All 15; deterministic seed-42 held-out manifests, floor(0.8*N) fit with small-set clamp | 0.818690 / 0.807989 / 0.575592 | `target/comparison/m0-all15-baseline-20261016`; completed retained baseline |
+| `local-models-20261017` | Python C1/exact V1/M2, shared Java features/evaluator; source hashes in run | All 15; same baseline manifests; separate held-out Z per candidate | C1 0.831351 / 0.866853 / 0.682340; V1 0.830704 / 0.866527 / 0.681510; M2 0.871803 / 0.931016 / 0.805887 | `target/ablation/local-models-20261017/{RESULT.md,comparison.csv,macro-summary.csv}`; M2 selected; [frozen plan](experiments/LOCAL_MODEL_ABLATION_PLAN.md) |
+| `java-m2-20261018-validated` | Separate Java M2; source snapshot and input hashes in run | Bottle/Metal Nut/Hazelnut retained fit/calibration/test features; no new all-15 run | All three metrics reproduce retained Python M2 with zero reported deltas | `target/ablation/java-m2-20261018-validated`; [parity/performance report](benchmark/JAVA_M2_RESULT_20261018.md); implementation regression, not independent scientific evidence |
+
+### Earlier evidence (historical status at its recorded date)
+
+Descriptions of M2 as Python-only or not selected below describe the older
+two-category generation, superseded by the campaigns above.
 
 | ID / classification | Implementation and source status | Coverage / split / calibration | Principal metrics | Report and retained artifact location | Reproducibility status |
 |---|---|---|---|---|---|
@@ -54,8 +67,9 @@ Historical commit references above are references recorded by the
   Their historical workflow labels do not establish current Git status.
 - ONNX byte identity is recorded in the [contract](architecture/ONNX_MODEL_CONTRACT.md);
   exact checkpoint/export provenance is still unresolved.
-- No full 15-category run or controlled robustness campaign has been completed.
-  The [census](benchmark/MVTEC_DATASET_CENSUS.md) inventories categories, not results.
+- Full 15-category M0 and local-model runs now exist as listed above. No controlled
+  robustness campaign has been completed. The [census](benchmark/MVTEC_DATASET_CENSUS.md)
+  inventories categories, not results.
 - Reproduction commands and prerequisites belong to each linked report and the
   [technical overview](TECHNICAL_OVERVIEW.md); unverified source identity,
   unavailable inputs or partial local tooling must remain explicit.

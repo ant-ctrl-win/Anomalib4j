@@ -1,147 +1,77 @@
 # Current project state
 
-Reconciled: **2026-10-16**. Source inspected: `b2cbe9e44b219850abd6657a3baa18d802d63f29`.
-This is the current snapshot, not an experiment log. Repository code and retained
-artifacts establish implementation and evidence; chat history and ignored
-handoff/session files are not authoritative. Infrastructure validation uses synthetic/unit tests;
-no fresh real-data benchmark has been run.
+Updated **2026-10-18**. Repository code and retained evidence are authoritative;
+chat history and ignored handoffs are not needed to resume.
 
-## Current implementation: M0
+## Selected candidate: M2
 
-**M0 is the current Java detector.** Java 21 / Maven / ONNX Runtime 1.30.0
-implement CNN observation -> VSA learning/memory -> compiled CNN-space scoring.
+The completed all-15 local-model ablation selected **M2, positional diagonal
+Mahalanobis in normalized CNN space**. A separate Java M2 path now exists in
+`src/main/java/io/github/antctrlwin/anomalib4j/m2/`. M0 remains the unchanged
+Java VSA/Adjoint baseline, with its invariant preserved. Historical M1/M2/M3 names
+remain unchanged.
 
-- Frozen MobileNetV4, declared ID `mobilenetv4_conv_small.e2400_r224_in1k`.
-  Default `SPATIAL_14`: float32 NHWC `1x14x14x96`, flattened HWC.
-- Input: RGB whole-image bicubic resize to 224x224, /255 and ImageNet
-  mean/std, float32 NCHW. Contract: `imagenet-rgb-resize224-bicubic-v1`.
-  No crop, alignment or letterboxing.
-- Fit normals, pass 1: CNN L2 normalization (epsilon 1e-6), dense Rademacher
-  projection (D=10000, Java Random seed 42), pooled statistics across images
-  and positions (Welford sample variance, standard-deviation floor 1e-8).
-- Pass 2: standardize projected descriptors with those global statistics,
-  sum separately at each position, L2-normalize each sum. One continuous
-  archetype per cell; no explicit within-position dispersion model.
-- Compile the fixed score into 96 weights plus bias per cell. Inference
-  reuses the ONNX session, normalizes CNN descriptors and evaluates those filters.
+Common encoder: frozen MobileNetV4 `mobilenetv4_conv_small.e2400_r224_in1k`,
+SPATIAL_14, float32 NHWC 1x14x14x96, HWC flattening. Input uses whole-image RGB
+bicubic resize to 224x224, /255, ImageNet mean/std and float32 NCHW.
+Preprocessing ID: `imagenet-rgb-resize224-bicubic-v1`. No crop or letterboxing.
 
-The invariant in [AGENTS.md](../AGENTS.md) remains binding:
+M2: finite `u=x/||x||`, rejecting norm below 1e-6. FIT normals provide local
+per-position/channel mean and sample std, floored at 1e-6.
+`raw=mean_channels(((u-mu)/effectiveStd)^2)`. Separate HELD-OUT normals provide
+per-position raw mean and sample std, floored at 1e-6.
+`Z=(raw-alpha)/beta`; image score is max over 196 native cells. No clamp.
+Interpolation and metrics use the existing [evaluation conventions](benchmark/LOCALIZATION_CONVENTIONS.md).
+M2 has no VSA projection/statistics or Adjoint compilation.
 
-```text
-u = x / max(||x||, 1e-6)
-y = R u / sqrt(D)
-z = (y - mu) / sigma
-explicit = A[p]^T z
-q[p] = A[p] / sigma
-W[p] = R^T q[p] / sqrt(D)
-b[p] = -mu^T q[p]
-compiled = W[p]^T u + b[p]
-raw[p] = 1 - compiled
-```
+Java M2 persists only encoder SHA-256, preprocessing/geometry, local means and
+effective stds, calibration means and effective stds. See the
+[Java M2 validation/performance report](benchmark/JAVA_M2_RESULT_20261018.md)
+for architecture, parity, commands and benchmark status.
+M0 architecture remains in [AGENTS.md](../AGENTS.md) and the
+[technical overview](TECHNICAL_OVERVIEW.md).
 
-The scientific benchmark path fits positional raw-score mean/sample std on
-held-out normals: `Z[p]=(raw[p]-mean[p])/max(std[p],1e-6)`.
-Image score is the maximum of the 196 native Z values. Localization upsamples
-Z with half-pixel bilinear interpolation and replicated borders.
-Raw/Z scores are unclamped and are not probabilities.
+## Current retained evidence
 
-The Java core is in `src/main/java/io/github/antctrlwin/anomalib4j/`.
-Positional Z, benchmark persistence/reload, dataset evaluation and full-resolution
-map generation are in `src/test/java/.../evaluation/`; JMH is in `src/jmh/`.
-Production `HeatmapCalibration` is a separate global visual mapping to [0,1],
-not the scientific positional Z. See [technical overview](TECHNICAL_OVERVIEW.md)
-and [localization conventions](benchmark/LOCALIZATION_CONVENTIONS.md).
+Both campaigns completed locally; artifacts are ignored and absent from a clone:
 
-## Retained experiments and coverage
+- `target/comparison/m0-all15-baseline-20261016`: unchanged M0, all 15 categories.
+- `target/ablation/local-models-20261017`: C1/exact V1/M2, all 15, shared baseline
+  manifests/features/evaluator; M0 metrics consumed from the preceding campaign.
 
-**M2 is a retained Python local-memory experiment, not the current Java
-implementation or a selected production v2.** It learns per-position CNN means
-and per-channel dispersion on the same frozen features. It has the strongest
-retained localization results on the two observed categories, without independent
-generalization evidence or M0's Java latency measurements.
+| Macro metric | M0 | C1 | V1 | M2 |
+|---|---:|---:|---:|---:|
+| Image AUROC | 0.818690 | 0.831351 | 0.830704 | 0.871803 |
+| Pixel AUROC | 0.807989 | 0.866853 | 0.866527 | 0.931016 |
+| AUPRO@0.30 | 0.575592 | 0.682340 | 0.681510 | 0.805887 |
 
-Verified comparative evaluation exists only for **Bottle and Metal Nut**:
-`final-comparison-20261003`, M0 versus Anomalib 2.6.2 PaDiM/PatchCore.
-M0 uses 167+42 fit/calibration normals for Bottle and 176+44 for Metal Nut;
-test counts are 83 and 115. Competitors fit all 209/220 normals.
-**No full 15-category MVTec AD run has been completed.**
+V1 did not outperform C1 on these macro metrics; this does not assert every
+category has that ordering or statistical significance. Definitions remain in
+[the frozen plan](experiments/LOCAL_MODEL_ABLATION_PLAN.md); older generations
+are retained in [EXPERIMENT_INDEX.md](EXPERIMENT_INDEX.md).
 
-The [experiment index](EXPERIMENT_INDEX.md) separates RAW, in-sample Z,
-held-out, split-sensitivity, SPATIAL_28, frozen comparison, performance and
-post-hoc evidence. Detailed results remain in the linked reports and retained
-local artifacts. M0 benchmark latency is a whole-system comparison with different
-backbones/runtime/budgets, not an isolated Adjoint speedup.
+Java M2 regression on retained Bottle, Metal Nut and Hazelnut descriptors
+reproduced Python M2's three quality metrics with zero reported differences.
+No new all-15 Java M2 scientific campaign has been launched.
 
-## Reproducibility boundaries
+## Reproducibility boundaries and limitations
 
-- Frozen benchmark source identity is **not byte-identical to current HEAD**.
-  The run preserves `workspace/`, `source-hashes.json` and environment records.
-  Later package/document relocation and tool changes prevent treating today's
-  checkout as the exact frozen source. The [namespace report](development/PACKAGE_NAMESPACE_REFACTOR.md)
-  documents the mechanical Java rename; it is not a fresh scientific rerun.
-- Models, predictions, maps and derived results are retained under ignored
-  `target/comparison/final-comparison-20261003/`; a fresh clone does not contain
-  that archive. Do not run `mvn clean` as a preparation shortcut.
-- The earlier audit recorded the expected dataset as absent. The resumed
-  2026-10-16 infrastructure check found
-  `../Anomalib4j_md/mvtec-ad-DatasetNinja` present, with metadata, annotation
-  directories and train/test PNGs for all 15 categories. The subsequent
-  [campaign preflight](benchmark/M0_ALL15_PREFLIGHT_20261016.md) validated all
-  input metadata/geometry and test masks, generated prospective splits, and
-  hashed every dataset file. No inference was performed. The prepared competitor
-  Python environment has not been revalidated.
-- Both checked-in ONNX hashes match the [encoder contract](architecture/ONNX_MODEL_CONTRACT.md).
-  **Exact checkpoint/export provenance remains unresolved.** Implemented
-  bicubic/ImageNet preprocessing is established; it is not blocked by that
-  separate provenance question.
-- Historical passing tests and numerical equivalence reports remain evidence
-  of their recorded executions, not certification of a new current-HEAD run.
-  Default `mvn test` includes expensive real-data tests; `*IT` experiments are
-  opt-in. Quick-suite instructions are in the technical overview/reports.
+- Historical `final-comparison-20261003` source is not byte-identical to current
+  HEAD. Its measurements remain historical evidence, not today's timing.
+- Newer runs retain workspace/source hashes, manifests and outputs. Java M2 is
+  additive; original production M0 and encoder sources are unchanged.
+- Dataset path is recorded in campaign manifests. Dataset and ignored evidence
+  require separate restoration. **Do not use `mvn clean`** as preparation.
+- Exact ONNX checkpoint/export provenance remains unresolved. Byte identity and
+  implemented preprocessing are established in the [encoder contract](architecture/ONNX_MODEL_CONTRACT.md).
+- M0 and M2 remain strictly positional: a displaced normal feature can encounter
+  the wrong cell's reference. No spatial tolerance, registration, rotation/scale
+  handling, illumination augmentation, full covariance or clustering was added.
+  Controlled robustness remains unmeasured.
 
-## Robustness limitations
+## Active phase
 
-The memory and score calibration are strictly positional: a displaced normal
-feature is compared with the destination cell's reference. There is no
-neighbor-reference search, registration or training augmentation in M0.
-M2 is also positional. CNN receptive fields overlap; displayed cells are not
-independent cropped patches.
-
-The [pose diagnostic](diagnostics/METAL_NUT_POSITION_ROTATION_DIAGNOSTIC.md)
-did not support pose as the principal explanation of the observed Metal Nut
-failures. It does not establish robustness under controlled translations or
-rotations. The [edge audit](diagnostics/SPATIAL_EDGE_ARTIFACT_AUDIT.md) records
-padding/background effects and correct indexing. Illumination/reflection
-causality and systematic robustness remain unmeasured; ImageNet normalization
-and CNN L2 normalization do not establish invariance.
-
-## Active phase and next task
-
-**Repository/infrastructure preparation for a fresh full-dataset M0 baseline
-and controlled spatial/illumination robustness evaluation.**
-[D16](DECISION_LOG.md#d16---repository-first-preparation-for-the-new-experimental-phase)
-supersedes the previous release's closure as the active workflow, while retaining
-its frozen evidence.
-
-The evaluation infrastructure now accepts all 15 categories through one shared
-category resource, DatasetNinja metadata validation, actual image geometry and
-generated deterministic fit/calibration manifests. The loader accepts structurally
-valid calibration sets above 44. Serial fail-fast orchestration, configurable dataset
-paths and M0-only execution are available. See the
-[execution contract](benchmark/FULL_DATASET_EXECUTION.md) for commands and boundaries.
-
-The [2026-10-16 preflight](benchmark/M0_ALL15_PREFLIGHT_20261016.md) passed dataset,
-split-regression, dry-run and estimated resource checks. Proposed campaign:
-`m0-all15-baseline-20261016`. The worktree is still dirty: a source snapshot is
-retained, but a stable release/archive must be designated before launch. This is
-preflight-complete with source freeze pending, not unqualified campaign-ready.
-
-Next task: freeze the reviewed source identity, recheck resources and obtain
-approval to execute the unchanged M0 baseline across all 15 categories. No full
-campaign or robustness intervention has been executed. Preserve preprocessing,
-scoring, compilation equivalence, evaluation conventions and CPU measurement boundaries.
-
-Historical workflow details are preserved in the
-[archived pre-reconciliation snapshot](development/archive/PROJECT_STATE_20261007.md);
-decisions remain in [DECISION_LOG.md](DECISION_LOG.md). Neither archive nor
-roadmap overrides this current snapshot.
+Java M2 parity and CPU computational-cost validation before another scientific
+campaign. Use the Java report for measurement status and the future all-15 command.
+M2 does not inherit historical M0 latency. Public README claims await a separate
+update. [DECISION_LOG.md](DECISION_LOG.md) records supersession and history.

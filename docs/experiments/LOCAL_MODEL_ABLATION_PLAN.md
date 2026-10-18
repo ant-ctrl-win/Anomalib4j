@@ -1,7 +1,8 @@
 # First local-model quality ablation
 
-Frozen definitions: 2026-10-17. Status: implementation/validation only; the
-15-category C1/V1/M2 experiment has not been launched. M0 is the unchanged,
+Frozen definitions: 2026-10-17. Status updated 2026-10-18: the
+15-category C1/V1/M2 experiment completed in `target/ablation/local-models-20261017`;
+M2 was selected (see [current state](../PROJECT_STATE.md)). M0 is the unchanged,
 already-measured Java reference in `target/comparison/m0-all15-baseline-20261016`.
 Its metrics are consumed, never retrained by this runner. Existing M1/M2/M3
 historical experiment names and artifacts remain untouched.

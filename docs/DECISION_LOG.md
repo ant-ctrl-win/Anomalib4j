@@ -197,3 +197,22 @@ Keep at least two calibration observations for sample variance. Projection seed,
 preprocessing, scoring, interpolation and metric definitions remain unchanged.
 See [execution contract](benchmark/FULL_DATASET_EXECUTION.md). The active next task
 is dataset validation and a fresh full-dataset baseline; no such run is claimed here.
+
+## D18 - Completed all-15 ablation selects M2; separate Java implementation
+
+Date: 2026-10-18. Supersedes D17's active next-task and Python-only M2 status.
+The local `m0-all15-baseline-20261016` and `local-models-20261017` campaigns are
+complete. M2 leads the retained macro Image/Pixel/AUPRO results; exact V1 does
+not outperform C1 on those macro metrics. Select M2 for Java implementation and
+CPU-cost validation. This selection is based on the observed benchmark, not an
+independent new generalization test or a robustness claim.
+
+Preserve M0, its VSA/Adjoint invariant and historical results. Implement M2 in a
+separate package, with FIT local diagonal statistics, HELD-OUT positional Z,
+native max and unchanged localization/evaluation. Persist only inference state.
+Require Python/Java fit, score and reload parity before timing; retained Bottle,
+Metal Nut and Hazelnut satisfy that gate with zero quality-metric deltas.
+Measure matched Java M0/M2 and separate stages on CPU; do not transfer M0's
+historical latency to M2. Do not launch a new all-15 scientific campaign here.
+See [the Java M2 report](benchmark/JAVA_M2_RESULT_20261018.md) for exact evidence,
+execution-provider verification, commands and measurement status.

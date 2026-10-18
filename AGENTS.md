@@ -9,7 +9,7 @@ CNN latent features -> VSA learning/memory -> compiled CNN-space scoring.
 The VSA is the learning/memory space.
 The CNN latent space is the observation/runtime space.
 
-The current anomaly model learns positional VSA archetypes from normal CNN patches.
+The historical M0 anomaly model learns positional VSA archetypes from normal CNN patches.
 At inference, comparison against an archetype is compiled back into CNN feature space through the adjoint of the projection.
 
 ## Critical invariant
@@ -33,7 +33,7 @@ score_compiled = W^T x_n + b
 
 Do not change this mathematics unless the task explicitly requests it.
 
-## Current implementation
+## M0 baseline implementation (preserved)
 
 Language: Java
 Build: Maven
@@ -76,4 +76,9 @@ Read only the detailed documents needed for the task.
 Repository code and evidence are authoritative. Chat history, ignored handoff files
 and stale session notes are not authoritative and must not be required to resume.
 Historical reports describe their recorded run, not the current workflow.
-M0 is the current Java baseline; M2 is a retained Python experiment.
+M0 is the preserved Java VSA/Adjoint baseline. M2 is the selected candidate after
+the completed all-15 local-model ablation and now has a separate Java path.
+M2 uses normalized CNN descriptors, FIT local mean/sample std (floor 1e-6),
+mean squared standardized residuals, HELD-OUT positional Z (std floor 1e-6),
+and native max image score. Descriptor norm below 1e-6 is rejected. Do not route
+M2 through VSA/Adjoint or change either model's mathematics implicitly.
