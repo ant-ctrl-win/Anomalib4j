@@ -258,3 +258,30 @@ One recommended next step: a controlled round-trip resampling/boundary diagnosti
 on unchanged M2-P before implementing pose estimation. This is a recommendation,
 not an implemented next phase. Production, prior artifacts and historical numerical
 results remain unchanged; the older report's recommendation is preserved as history.
+
+## D21 - Metal Nut pilot and Java canonicalization Phase 1
+
+Date: 2026-10-19. Explicit user requests supersede D20's recommended diagnostic
+and the pilot's phase-closing recommendation as active workflow. Preserve their
+historical evidence. M2-P remains the selected detector; no N1/G continuation.
+
+The [Metal Nut pilot](benchmark/M2_METAL_NUT_CANONICALIZATION_RESULT_20261019.md)
+supports alignment plus refitting within its measured scope. Its12.308ms Python
+cost failed its frozen2ms gate; the subsequent user instruction states that this
+gate is not a product requirement. No retroactive change to the pilot's NO-GO,
+metrics, timing or artifacts is intended.
+
+Authorize only J0 geometry parity, J1-lite retained reference bridge and J2 scalar
+B/C/D tensor infrastructure/correctness from the
+[architecture review](experiments/JAVA_CANONICALIZATION_OPTIMIZATION_PLAN.md).
+The [Phase 1 checkpoint](experiments/JAVA_CANONICALIZATION_IMPLEMENTATION_PHASE1.md)
+passes all423 real geometry cases and eight retained encodings/four maps, with
+167 Java and40 Python tests passing. The prepared encoder seam preserves legacy
+outputs; M2 math, M0, preprocessing and historical scientific results are preserved.
+Strict historical source guards remain intact and reject changed source identity.
+
+Stop before refitting/scientifically selecting B/C/D, full Metal Nut/all-category
+quality runs, timing campaigns, production localization or commits. C/D scientific
+qualification is the next separately authorized task. Canonical bundle identity,
+fast detector integration and optional localization remain later checkpoints;
+the new preprocessing IDs alone do not make old archives compatible.

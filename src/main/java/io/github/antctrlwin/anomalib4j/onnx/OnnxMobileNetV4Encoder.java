@@ -69,10 +69,26 @@ public final class OnnxMobileNetV4Encoder implements AutoCloseable {
 
     /** Returns independent contiguous HWC features; calls and close are serialized per encoder. */
     public synchronized float[] extract(BufferedImage image) throws OrtException {
+        requireOpen();
+        return extractInput(ImageNetPreprocessor.preprocess(image));
+    }
+
+    /** Prepared NCHW float32 input is borrowed only until this synchronized call returns. */
+    public synchronized float[] extractPrepared(float[] nchw) throws OrtException {
+        requireOpen();
+        return extractInput(nchw);
+    }
+
+    private void requireOpen() {
         if (closed) {
             throw new IllegalStateException("Encoder is closed");
         }
-        float[] nchw = ImageNetPreprocessor.preprocess(image);
+    }
+
+    private float[] extractInput(float[] nchw) throws OrtException {
+        Objects.requireNonNull(nchw, "nchw");
+        if (nchw.length != 3*224*224) throw new IllegalArgumentException("Expected prepared NCHW [1,3,224,224]");
+        for (float value : nchw) if (!Float.isFinite(value)) throw new IllegalArgumentException("Nonfinite prepared input");
         try (OnnxTensor input = OnnxTensor.createTensor(environment, FloatBuffer.wrap(nchw), INPUT_SHAPE);
              OrtSession.Result result = session.run(Map.of(INPUT_NAME, input))) {
             var value = result.get(OUTPUT_NAME)

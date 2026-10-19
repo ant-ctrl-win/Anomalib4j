@@ -66,6 +66,33 @@ class OnnxMobileNetV4EncoderTest {
         }
     }
 
+    @Test
+    void preparedInputSharesLegacyExecutionAndOwnsIndependentOutput() throws Exception {
+        try (var encoder = new OnnxMobileNetV4Encoder()) {
+            BufferedImage source = image();
+            float[] prepared = ImageNetPreprocessor.preprocess(source), expectedInput = prepared.clone();
+            float[] legacy = encoder.extract(source), first = encoder.extractPrepared(prepared);
+            assertArrayEquals(legacy, first);
+            assertArrayEquals(expectedInput, prepared);
+            first[0] = Float.NaN;
+            assertArrayEquals(legacy, encoder.extractPrepared(prepared));
+        }
+    }
+
+    @Test
+    void preparedInputRejectsShapeNonfiniteAndClosedSession() throws Exception {
+        var encoder = new OnnxMobileNetV4Encoder();
+        try (encoder) {
+            assertThrows(NullPointerException.class, () -> encoder.extractPrepared(null));
+            assertThrows(IllegalArgumentException.class, () -> encoder.extractPrepared(new float[3]));
+            float[] input = new float[3*224*224]; input[123] = Float.NaN;
+            assertThrows(IllegalArgumentException.class, () -> encoder.extractPrepared(input));
+            input[123] = Float.POSITIVE_INFINITY;
+            assertThrows(IllegalArgumentException.class, () -> encoder.extractPrepared(input));
+        }
+        assertThrows(IllegalStateException.class, () -> encoder.extractPrepared(new float[3*224*224]));
+    }
+
     private static void assertFiniteAndNonTrivial(float[] values) {
         boolean nonZero = false;
         for (float value : values) {

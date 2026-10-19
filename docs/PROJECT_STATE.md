@@ -59,8 +59,9 @@ normal-image robustness measurement is described below.
 
 - Historical `final-comparison-20261003` source is not byte-identical to current
   HEAD. Its measurements remain historical evidence, not today's timing.
-- Newer runs retain workspace/source hashes, manifests and outputs. Java M2 is
-  additive; original production M0 and encoder sources are unchanged.
+- Newer runs retain workspace/source hashes, manifests and outputs. M0 and M2
+  scoring are preserved. The shared encoder now also accepts prepared NCHW input;
+  its legacy image path and prepared path have bit-identical output tests.
 - Dataset path is recorded in campaign manifests. Dataset and ignored evidence
   require separate restoration. **Do not use `mvn clean`** as preparation.
 - Exact ONNX checkpoint/export provenance remains unresolved. Byte identity and
@@ -72,7 +73,9 @@ normal-image robustness measurement is described below.
   now measures translation, rotation, scale, brightness, contrast and gamma on
   467 normal tests across all 15 categories. Rotation/scale sensitivity is broad;
   Bottle has a severe photometric response concentrated in outer-grid scores.
-  Reflections, local glare and corrective mechanisms remain untested.
+  Reflections and local glare remain untested. A separate Metal Nut alignment
+  pilot and Java preprocessing checkpoint are described below; default M2 remains
+  unaligned and strictly positional.
 
 ## Active phase
 
@@ -85,10 +88,24 @@ N1 recommendation; N1/G remain experiments, not production changes.
 The [oracle result](benchmark/M2_ORACLE_CANONICALIZATION_RESULT_20261019.md)
 is **B - PARTIALLY SUPPORTED**: 467 normals/all 15, 4,670 triples, exact identity
 and retained-score parity. Shrink/restore scale recovers well; texture rotations
-and enlargement round trips retain important errors. No real pose estimator or
-production canonicalizer exists. The single recommended next step is a controlled
-round-trip resampling/boundary diagnostic on unchanged M2-P before pose estimation.
-Use the Java report for detector timing and the future all-15 quality command;
-the oracle report measures only the inverse warp (about 1.03 ms), not a new pipeline.
+and enlargement round trips retain important errors. Its recommended follow-up
+was superseded by the user's Metal Nut pilot and Java-port authorization.
+
+The completed [Metal Nut pilot](benchmark/M2_METAL_NUT_CANONICALIZATION_RESULT_20261019.md)
+improved Image/Pixel/AUPRO to0.964321/0.886982/0.648731 after canonicalized fitting
+and inference. Its Python prototype measured12.308ms canonicalization and retained
+a procedural NO-GO under its frozen2ms gate. That gate is not a current product
+requirement; the subsequent [Java architecture review](experiments/JAVA_CANONICALIZATION_OPTIMIZATION_PLAN.md)
+defines the port independently of it. Historical numerical evidence is unchanged.
+
+[Java Phase 1](experiments/JAVA_CANONICALIZATION_IMPLEMENTATION_PHASE1.md) is complete:
+all423 geometry cases pass frozen Python parity; eight retained canonical
+encodings and four native maps reproduce exactly. Scalar B/C/D direct tensor
+samplers and a prepared encoder boundary pass correctness/regression tests.
+They are opt-in infrastructure, not a selected corrected detector. No B/C/D models
+were fitted or quality/timing campaigns run. The next checkpoint is separately
+authorized scientific C/D qualification; canonical persistence, detector integration
+and localization integration remain later work. Use the Java M2 report for
+retained detector timing; neither oracle nor pilot timing measures this new path.
 M2 does not inherit historical M0 latency. Public README claims await a separate
 update. [DECISION_LOG.md](DECISION_LOG.md) records supersession and history.

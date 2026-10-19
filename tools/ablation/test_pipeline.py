@@ -14,7 +14,7 @@ import numpy as np
 from PIL import Image
 import pytest
 
-from inputs import ROOT, java_command, read_split, sha256_file
+from inputs import ROOT, CATEGORIES, baseline_contract, java_command, read_split, sha256_file
 from models import ModelError, calibrate_fit, explicit_v1, fit, normalize, score
 
 sys.path.insert(0, str(ROOT / "tools/prerun"))
@@ -72,27 +72,29 @@ def test_split_overlap_is_rejected(tmp_path):
         read_split(tmp_path, "wood")
 
 
-def synthetic_baseline(root: Path) -> Path:
+def synthetic_baseline(root: Path, categories: tuple[str, ...] = ("wood",)) -> Path:
     baseline = root / "baseline"
     baseline.mkdir()
     dataset = root / "dataset"
     dataset.mkdir()
+    tags = [{"id": i+2, "name": category} for i, category in enumerate(categories)]
     (dataset / "meta.json").write_text(json.dumps({"classes": [{"id": 10, "title": "custom"}],
-        "tags": [{"id": 1, "name": "wood"}, {"id": 2, "name": "good"}]}))
+        "tags": [{"id": 1, "name": "good"}, *tags]}))
     rng = np.random.default_rng(55)
     mask = io.BytesIO()
     Image.new("RGBA", (1, 1), (255, 255, 255, 255)).save(mask, format="PNG")
-    for role, defect, index in [("train", "good", n) for n in range(5)] + [("test", "good", 7), ("test", "custom", 8)]:
-        name = f"wood_{defect}_{index:03d}.png"
-        (dataset / role / "img").mkdir(parents=True, exist_ok=True)
-        (dataset / role / "ann").mkdir(parents=True, exist_ok=True)
-        Image.fromarray(rng.integers(0, 256, size=(12, 17, 3), dtype=np.uint8)).save(dataset / role / "img" / name)
-        objects = [] if defect == "good" else [{"classId": 10, "classTitle": "custom", "geometryType": "bitmap",
-            "bitmap": {"origin": [0, 0], "data": base64.b64encode(mask.getvalue()).decode()}}]
-        (dataset / role / "ann" / (name + ".json")).write_text(json.dumps({"size": {"width": 17, "height": 12},
-            "tags": [{"tagId": 1, "name": "wood"}] + ([{"tagId": 2, "name": "good"}] if defect == "good" else []), "objects": objects}))
-    subprocess.run(java_command("DatasetManifests", [str(dataset), str(baseline / "data"), "42", "wood"]), check=True)
-    (baseline / "manifest.json").write_text(json.dumps({"dataset": str(dataset), "categories": ["wood"],
+    for category_index, category in enumerate(categories):
+        for role, defect, index in [("train", "good", n) for n in range(5)] + [("test", "good", 7), ("test", "custom", 8)]:
+            name = f"{category}_{defect}_{index:03d}.png"
+            (dataset / role / "img").mkdir(parents=True, exist_ok=True)
+            (dataset / role / "ann").mkdir(parents=True, exist_ok=True)
+            Image.fromarray(rng.integers(0, 256, size=(12, 17, 3), dtype=np.uint8)).save(dataset / role / "img" / name)
+            objects = [] if defect == "good" else [{"classId": 10, "classTitle": "custom", "geometryType": "bitmap",
+                "bitmap": {"origin": [0, 0], "data": base64.b64encode(mask.getvalue()).decode()}}]
+            (dataset / role / "ann" / (name + ".json")).write_text(json.dumps({"size": {"width": 17, "height": 12},
+                "tags": [{"tagId": category_index+2, "name": category}] + ([{"tagId": 1, "name": "good"}] if defect == "good" else []), "objects": objects}))
+    subprocess.run(java_command("DatasetManifests", [str(dataset), str(baseline / "data"), "42", ",".join(categories)]), check=True)
+    (baseline / "manifest.json").write_text(json.dumps({"dataset": str(dataset), "categories": categories,
         "smoke": False, "seed": 42, "projection_seed": 42}))
     (baseline / "manifest-hashes.json").write_text(json.dumps({p.relative_to(baseline).as_posix(): sha256_file(p)
         for p in (baseline / "data").rglob("*") if p.is_file()}))
@@ -100,11 +102,12 @@ def synthetic_baseline(root: Path) -> Path:
         for p in dataset.rglob("*") if p.is_file()}))
     (baseline / "source-hashes.json").write_text(json.dumps({p.relative_to(ROOT).as_posix(): sha256_file(p)
         for p in (ROOT / "src").rglob("*") if p.is_file()}))
-    metrics = baseline / "anomalib4j/wood"
-    metrics.mkdir(parents=True)
-    (metrics / "metrics-unified.json").write_text(json.dumps({"status": "verified", "category": "wood", "method": "anomalib4j",
-        "n_good": 1, "n_anomaly": 1, "image_auroc": .5, "pixel_auroc": .5, "aupro030": .5,
-        "dataset_manifest_sha256": sha256_file(baseline / "data/wood/test.txt"), "fixture": "synthetic, not measured M0"}))
+    for category in categories:
+        metrics = baseline / "anomalib4j" / category
+        metrics.mkdir(parents=True)
+        (metrics / "metrics-unified.json").write_text(json.dumps({"status": "verified", "category": category, "method": "anomalib4j",
+            "n_good": 1, "n_anomaly": 1, "image_auroc": .5, "pixel_auroc": .5, "aupro030": .5,
+            "dataset_manifest_sha256": sha256_file(baseline / "data" / category / "test.txt"), "fixture": "synthetic, not measured M0"}))
     return baseline
 
 
@@ -131,11 +134,11 @@ def test_cli_shared_pipeline_when_using_synthetic_images(tmp_path):
     assert before == {p.relative_to(baseline).as_posix(): sha256_file(p) for p in baseline.rglob("*") if p.is_file()}
 
 
-def test_cli_dry_run_when_selecting_all_categories(tmp_path):
-    # Given the retained baseline and a prospective output.
+def test_cli_dry_run_when_selecting_all_categories(tmp_path: Path) -> None:
+    baseline = synthetic_baseline(tmp_path, tuple(CATEGORIES))
     output = tmp_path / "planned"
     # When invoking the nonexecuting all-category CLI.
-    result = subprocess.run([sys.executable, str(ROOT / "tools/ablation/run.py"), "--output", str(output),
+    result = subprocess.run([sys.executable, str(ROOT / "tools/ablation/run.py"), "--baseline", str(baseline), "--output", str(output),
         "--all-categories", "--dry-run"], capture_output=True, text=True)
     # Then all canonical categories are selected once without creating output.
     assert result.returncode == 0, result.stderr
@@ -143,3 +146,15 @@ def test_cli_dry_run_when_selecting_all_categories(tmp_path):
     assert len(plan["categories"]) == len(set(plan["categories"])) == 15
     assert plan["methods"] == ["C1", "V1", "M2"]
     assert not output.exists()
+
+
+def test_source_identity_guard_still_rejects_changed_encoder(tmp_path: Path) -> None:
+    baseline = synthetic_baseline(tmp_path)
+    assert baseline_contract(baseline, ("wood",), verify_data=False).categories == ("wood",)
+    path = baseline / "source-hashes.json"
+    hashes = json.loads(path.read_text())
+    encoder = "src/main/java/io/github/antctrlwin/anomalib4j/onnx/OnnxMobileNetV4Encoder.java"
+    hashes[encoder] = "0"*64
+    path.write_text(json.dumps(hashes))
+    with pytest.raises(ModelError, match="M0 source/asset identity mismatch:.*OnnxMobileNetV4Encoder"):
+        baseline_contract(baseline, ("wood",), verify_data=False)
