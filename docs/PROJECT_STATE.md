@@ -1,6 +1,6 @@
 # Current project state
 
-Updated **2026-10-18**. Repository code and retained evidence are authoritative;
+Updated **2026-10-19**. Repository code and retained evidence are authoritative;
 chat history and ignored handoffs are not needed to resume.
 
 ## Selected candidate: M2
@@ -76,10 +76,19 @@ normal-image robustness measurement is described below.
 
 ## Active phase
 
-Java M2 parity, matched CPU-cost validation and the controlled robustness campaign
-are complete. The [robustness report](benchmark/M2_ROBUSTNESS_RESULT_20261018.md)
-recommends one next rotation/scale alignment ablation; it has not been implemented.
-The experiment measured the unchanged detector, not a robustness correction.
-Use the Java report for timing and the future all-15 quality command.
+Java M2 parity, matched CPU-cost validation, controlled robustness, spatial
+correspondence and oracle rotation/scale canonicalization experiments are complete.
+**M2-P remains selected.** The user's 2026-10-19 decision supersedes the
+[correspondence report](benchmark/M2_SPATIAL_CORRESPONDENCE_RESULT_20261018.md)'s
+N1 recommendation; N1/G remain experiments, not production changes.
+
+The [oracle result](benchmark/M2_ORACLE_CANONICALIZATION_RESULT_20261019.md)
+is **B - PARTIALLY SUPPORTED**: 467 normals/all 15, 4,670 triples, exact identity
+and retained-score parity. Shrink/restore scale recovers well; texture rotations
+and enlargement round trips retain important errors. No real pose estimator or
+production canonicalizer exists. The single recommended next step is a controlled
+round-trip resampling/boundary diagnostic on unchanged M2-P before pose estimation.
+Use the Java report for detector timing and the future all-15 quality command;
+the oracle report measures only the inverse warp (about 1.03 ms), not a new pipeline.
 M2 does not inherit historical M0 latency. Public README claims await a separate
 update. [DECISION_LOG.md](DECISION_LOG.md) records supersession and history.

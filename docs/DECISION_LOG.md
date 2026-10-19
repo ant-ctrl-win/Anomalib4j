@@ -236,3 +236,25 @@ The evidence recommends exactly one subsequent rotation/scale canonicalization
 ablation. This is a recommendation, not an implemented correction or an approved
 multifix program; Bottle's photometric limitation remains explicit. No claim of
 reflection robustness, alignment efficacy or changed CPU performance is made.
+
+## D20 - Keep M2-P; test oracle geometry before pose estimation
+
+Date: 2026-10-19. Explicit user instruction supersedes the retained
+[spatial-correspondence report](benchmark/M2_SPATIAL_CORRESPONDENCE_RESULT_20261018.md)'s
+recommendation to promote/refine N1. M2-P remains the selected Java detector;
+N1/G remain historical experiments. Do not continue them or alter M2 mathematics.
+Authorize only known rotation/scale perturbations followed by their exact inverse
+parameters, with the existing resampling contract, normal images and frozen models.
+No retraining, anomaly-quality rerun, JMH or real canonicalizer implementation.
+
+Completed [oracle experiment](benchmark/M2_ORACLE_CANONICALIZATION_RESULT_20261019.md):
+all 15 categories, 467 normals, 4,670 triples; 1,401 bit-exact identity maps and
+4,670 exact retained score pairs. Verdict **B - PARTIALLY SUPPORTED**. Shrink/restore
+scale recovers strongly, but texture rotations and enlargement round trips leave
+important residuals. Interior exclusion reduces many errors without removing them;
+simple RGB-error correlations do not establish border/resampling contributions.
+
+One recommended next step: a controlled round-trip resampling/boundary diagnostic
+on unchanged M2-P before implementing pose estimation. This is a recommendation,
+not an implemented next phase. Production, prior artifacts and historical numerical
+results remain unchanged; the older report's recommendation is preserved as history.

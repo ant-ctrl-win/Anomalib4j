@@ -1,6 +1,6 @@
 # Experiment index
 
-Canonical evidence index, updated **2026-10-18**. Current implementation and
+Canonical evidence index, updated **2026-10-19**. Current implementation and
 active work are defined in [PROJECT_STATE.md](PROJECT_STATE.md).
 Values below summarize retained reports
 and local CSVs; they do not certify a fresh execution.
@@ -20,6 +20,13 @@ All listed detector experiments use projection seed 42 where applicable.
 | `local-models-20261017` | Python C1/exact V1/M2, shared Java features/evaluator; source hashes in run | All 15; same baseline manifests; separate held-out Z per candidate | C1 0.831351 / 0.866853 / 0.682340; V1 0.830704 / 0.866527 / 0.681510; M2 0.871803 / 0.931016 / 0.805887 | `target/ablation/local-models-20261017/{RESULT.md,comparison.csv,macro-summary.csv}`; M2 selected; [frozen plan](experiments/LOCAL_MODEL_ABLATION_PLAN.md) |
 | `java-m2-20261018-validated` | Separate Java M2; source snapshot and input hashes in run | Bottle/Metal Nut/Hazelnut retained fit/calibration/test features; no new all-15 run | All three metrics reproduce retained Python M2 with zero reported deltas | `target/ablation/java-m2-20261018-validated`; [parity/performance report](benchmark/JAVA_M2_RESULT_20261018.md); implementation regression, not independent scientific evidence |
 | `m2-controlled-20261018` | Unchanged Java M2; test-only transforms, source/input hashes retained | All 15; 467 normal test images; same FIT/held-out manifests, calibration-max diagnostic reference | 19,147 paired observations; no AUROC. +5 degree macro median-delta mean 17.780 Z; brightness .8 Bottle median delta 2209.086 Z | `target/robustness/m2-controlled-20261018`; [robustness result](benchmark/M2_ROBUSTNESS_RESULT_20261018.md), [frozen protocol](experiments/M2_ROBUSTNESS_PLAN.md); completed controlled diagnostic evidence, exact identity parity, not corrected model or production FPR |
+
+Additional completed diagnostics:
+
+| ID | Implementation / source | Coverage / calibration | Principal finding | Evidence / status |
+|---|---|---|---|---|
+| `m2-spatial-correspondence-20261018` | Test-only Java P/N1/G; source hashes in run; production M2 unchanged | All-15 real test quality and 467 normals x 22 geometric levels; frozen local statistics, separate held-out Z for N1/G | N1/G improve geometric score stability but lose quality overall; user's subsequent decision keeps P selected | [Result](benchmark/M2_SPATIAL_CORRESPONDENCE_RESULT_20261018.md); `target/ablation/m2-spatial-correspondence-20261018`; completed exploratory evidence, report's N1 recommendation superseded by D20 |
+| `m2-oracle-canonicalization-20261019` | Test-only warp/inverse warp, unchanged M2-P; all 128 captured source/protocol hashes match | Same 467 normals/all 15, ten rotation/scale levels; archived models and calibration reused without fitting | B - partially supported: scale .90/.95 recovery 97.0/92.3%; +/-5 rotation 42.9/47.3%, important texture/enlargement residuals | [Result](benchmark/M2_ORACLE_CANONICALIZATION_RESULT_20261019.md), [protocol](experiments/M2_ORACLE_CANONICALIZATION_PLAN.md); `target/robustness/m2-oracle-canonicalization-20261019`; completed diagnostic evidence, no anomaly-quality or production-canonicalizer claim |
 
 ### Earlier evidence (historical status at its recorded date)
 
@@ -69,7 +76,8 @@ Historical commit references above are references recorded by the
 - ONNX byte identity is recorded in the [contract](architecture/ONNX_MODEL_CONTRACT.md);
   exact checkpoint/export provenance is still unresolved.
 - Full 15-category M0, local-model and normal-image controlled M2 robustness runs
-  now exist as listed above. No robustness correction has been implemented.
+  now exist as listed above. Test-only correspondence and oracle correction
+  experiments are retained; no production robustness correction is implemented.
   The [census](benchmark/MVTEC_DATASET_CENSUS.md)
   inventories categories, not results.
 - Reproduction commands and prerequisites belong to each linked report and the
