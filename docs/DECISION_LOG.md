@@ -285,3 +285,29 @@ quality runs, timing campaigns, production localization or commits. C/D scientif
 qualification is the next separately authorized task. Canonical bundle identity,
 fast detector integration and optional localization remain later checkpoints;
 the new preprocessing IDs alone do not make old archives compatible.
+
+## D22 - Metal Nut Phase 2 qualifies B/C/D and selects B
+
+Date: 2026-10-19. Explicit user request supersedes D21's stop before scientific
+qualification and permits B to win on evidence. Freeze the
+[Phase 2 protocol](experiments/JAVA_CANONICALIZATION_PHASE2_PROTOCOL.md) before
+evaluation, preserve all Phase 1 production definitions and fit/calibrate each
+candidate independently on176/44 normals, with115 tests and88 source rotations.
+
+[Completed result](experiments/JAVA_CANONICALIZATION_IMPLEMENTATION_PHASE2.md):
+all three pass the six full-precision gates. Select **B/fused bilinear** for the
+next Metal Nut canonical integration checkpoint. B/C meet the frozen practical
+near-equivalence margins; B is simpler and cheaper with slightly better AUPRO,
+coherence and aggregate rotation delta. C has a small Image AUROC advantage;
+D has tighter FIT distributions/lower signed median rotation shifts but higher
+cost, lower primary quality and a worse+10-degree tail. Preserve those tradeoffs.
+
+Measured total preprocessing medians are B6.729813,C8.847606,D20.321069ms,
+statistics of batch averages in an early matched three-JVM harness. They are not
+complete detector or JMH latency; no2ms gate or summed timing claim is applied.
+One CSV summary parsing error was repaired after all measurements, with original
+source versions/hashes retained. No scientific/timing body changed or reran.
+
+Production M0/M2 and default behavior remain unchanged. Recommend only the next
+separately authorized B canonical bundle/fast detector checkpoint. No production
+localization, optimization, other categories, new detector or commit is included.

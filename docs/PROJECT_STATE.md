@@ -102,10 +102,16 @@ defines the port independently of it. Historical numerical evidence is unchanged
 all423 geometry cases pass frozen Python parity; eight retained canonical
 encodings and four native maps reproduce exactly. Scalar B/C/D direct tensor
 samplers and a prepared encoder boundary pass correctness/regression tests.
-They are opt-in infrastructure, not a selected corrected detector. No B/C/D models
-were fitted or quality/timing campaigns run. The next checkpoint is separately
-authorized scientific C/D qualification; canonical persistence, detector integration
-and localization integration remain later work. Use the Java M2 report for
+The subsequent [Phase 2 qualification](experiments/JAVA_CANONICALIZATION_IMPLEMENTATION_PHASE2.md)
+independently fitted B/C/D on Metal Nut and evaluated the same115 tests/88 normal
+rotation pairs. All six frozen gates pass for all three. **B, fused bilinear, is
+selected for the next Metal Nut canonical integration**: Image/Pixel/AUPRO
+0.960899/0.886602/0.646812, aggregate rotation delta0.472908Z and measured total
+preprocessing median6.729813ms. C/D total medians are8.847606/20.321069ms;
+these are early batch-average timings, not complete detector/JMH latency.
+Canonical model persistence and the fast detector API are the next separately
+authorized checkpoint; production localization and optimizations remain later
+work. The default selected M2-P detector is unchanged. Use the Java M2 report for
 retained detector timing; neither oracle nor pilot timing measures this new path.
 M2 does not inherit historical M0 latency. Public README claims await a separate
 update. [DECISION_LOG.md](DECISION_LOG.md) records supersession and history.
