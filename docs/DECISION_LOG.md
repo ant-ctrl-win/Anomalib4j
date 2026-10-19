@@ -311,3 +311,36 @@ source versions/hashes retained. No scientific/timing body changed or reran.
 Production M0/M2 and default behavior remain unchanged. Recommend only the next
 separately authorized B canonical bundle/fast detector checkpoint. No production
 localization, optimization, other categories, new detector or commit is included.
+
+## D23 - Integrate qualified Metal Nut B with a distinct canonical M2 bundle
+
+Date: 2026-10-20, checkpoint authorized2026-10-19. Explicit user instruction
+supersedes D22's integration stop. B/fused bilinear is fixed for this checkpoint;
+C/D are not production integration candidates. Preserve geometry, sampling,
+encoder bytes, M2 equations, calibration and metrics. No optimization, production
+backprojection, all-15 run or commit is authorized here.
+
+[Completed integration](experiments/JAVA_CANONICAL_M2_INTEGRATION.md): a separate
+versioned Metal Nut canonical bundle validates every preprocessing field plus
+encoder/state hashes. FIT176/CAL44 and inference share the same Java B boundary.
+Fresh state, all115 native maps/fast scores and three quality metrics reproduce
+retained Phase 2 B exactly. The fast API returns native max; a second API owns
+only native Z, transform, dimensions and identity for deferred localization.
+Geometry failure throws before encoding; no stale tensor or unaligned fallback.
+Sequential workspaces require separate instances or external serialization for
+concurrent callers. Legacy M2 loading/default behavior and M0 remain unchanged.
+
+Matched warm-JVM CPU JMH directly measures fast-decision p50/mean/p95
+10.108928/10.042803/12.315034ms. Geometry p50 4.718592ms is the largest measured
+preprocessing component; B tensor p50 is1.404928ms. No summed-latency claim or
+arbitrary latency gate is applied. One preprocessing fork failed before measurement
+because Windows reused a PID; only that missing fork was replaced. Original
+results/source are retained; a later untimed evidence-directory fix plus regression
+test does not change measured bodies.180 Java/44 Python tests pass; node profiles
+verify CPU execution despite Azure appearing among available providers.
+
+Exactly one next optimization target: Metal Nut geometry, profiling its internal
+costs first under the frozen scientific contract. This is a recommendation for a
+separately authorized task, not an optimization implemented in this checkpoint.
+Production original-frame localization and other-category canonicalization remain
+deferred. ONNX export/checkpoint provenance remains unresolved.

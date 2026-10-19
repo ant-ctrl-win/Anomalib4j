@@ -1,6 +1,6 @@
 # Experiment index
 
-Canonical evidence index, updated **2026-10-19**. Current implementation and
+Canonical evidence index, updated **2026-10-20**. Current implementation and
 active work are defined in [PROJECT_STATE.md](PROJECT_STATE.md).
 Values below summarize retained reports
 and local CSVs; they do not certify a fresh execution.
@@ -30,6 +30,7 @@ Additional completed diagnostics:
 | `m2-metal-nut-canonicalization-20261019` | Python fourfold geometry/source700 warp + unchanged Java preprocessing/M2;133 run source/protocol hashes | Metal Nut176 FIT/44 CAL/115 TEST, same function on all roles, fresh B statistics/Z;22 normals x4 rotations | Image/Pixel/AUPRO0.964321/0.886982/0.648731; median std -26.91%; rotation median-delta summary9.012->0.569Z; Python canonicalization12.308ms | [Result](benchmark/M2_METAL_NUT_CANONICALIZATION_RESULT_20261019.md), [protocol](experiments/M2_METAL_NUT_CANONICALIZATION_PLAN.md); `target/experiments/m2-metal-nut-canonicalization-20261019`; exploratory pilot, positive scientific evidence, historical NO-GO under retired2ms gate; no production promotion |
 | `java-canonicalization-phase1-20261019` | Additive Java geometry/B/C/D tensor infrastructure and prepared encoder seam; current source differs from frozen campaigns | All335 original+88 rotated geometry references; eight retained canonical encodings/four native maps; no fit/calibration changes | Exact gray/component/mask parity; max angle error1.05e-13 degrees; bridge max descriptor/Z errors0;167 Java/40 Python tests pass | [Phase 1 report](experiments/JAVA_CANONICALIZATION_IMPLEMENTATION_PHASE1.md), [architecture](experiments/JAVA_CANONICALIZATION_OPTIMIZATION_PLAN.md); `target/experiments/java-canonicalization-phase1-20261019`; implementation/parity evidence only, no sampler quality/timing selection |
 | `java-canonicalization-phase2-20261019` | Frozen Java B/C/D geometry/samplers/encoder/M2; test-only campaign/timing; two post-measurement Python parser/test changes explicitly retained | Metal Nut176 FIT/44 CAL/115 TEST/88 source rotations per independently refitted candidate | B0.960899/0.886602/0.646812; C0.962854/0.886632/0.646657; D0.959433/0.883459/0.646510. All six gates pass; B selected. Total preprocessing medians B6.730/C8.848/D20.321ms | [Phase 2 result](experiments/JAVA_CANONICALIZATION_IMPLEMENTATION_PHASE2.md), [frozen protocol](experiments/JAVA_CANONICALIZATION_PHASE2_PROTOCOL.md); `target/experiments/java-canonicalization-phase2-20261019`; scientific sampler qualification/early timing only, no production integration or all-category claim |
+| `java-canonical-m2-integration-20261019-validated` | Separate Java Metal Nut B bundle/detector;144 captured source/resource identities; one post-measurement untimed evidence-path fix preserved with original source | Frozen176 FIT/44 CAL/115 TEST; exact Phase 2 B state/maps/scores/metrics; nine matched predecoded timing fixtures | Image/Pixel/AUPRO0.960899/0.886602/0.646812, zero integration deltas. Direct fast decision p50/mean/p95 10.108928/10.042803/12.315034ms; geometry p50 4.718592ms | [Integration result](experiments/JAVA_CANONICAL_M2_INTEGRATION.md); `target/experiments/java-canonical-m2-integration-20261019-validated`; completed implementation/parity/CPU timing evidence. One missing preprocessing fork replaced after setup PID collision; all other measurements preserved. Metal Nut only, deferred native map/A ownership; no production backprojection or all-category promotion |
 
 ### Earlier evidence (historical status at its recorded date)
 
@@ -80,7 +81,8 @@ Historical commit references above are references recorded by the
   exact checkpoint/export provenance is still unresolved.
 - Full 15-category M0, local-model and normal-image controlled M2 robustness runs
   now exist as listed above. Test-only correspondence and oracle correction
-  experiments are retained; no production robustness correction is implemented.
+  experiments are retained. The separate Metal Nut B canonical detector is now
+  integrated/validated as listed above; default unaligned M2 remains unchanged.
   The [census](benchmark/MVTEC_DATASET_CENSUS.md)
   inventories categories, not results.
 - Reproduction commands and prerequisites belong to each linked report and the

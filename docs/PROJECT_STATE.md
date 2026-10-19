@@ -1,6 +1,6 @@
 # Current project state
 
-Updated **2026-10-19**. Repository code and retained evidence are authoritative;
+Updated **2026-10-20**. Repository code and retained evidence are authoritative;
 chat history and ignored handoffs are not needed to resume.
 
 ## Selected candidate: M2
@@ -12,7 +12,7 @@ Java VSA/Adjoint baseline, with its invariant preserved. Historical M1/M2/M3 nam
 remain unchanged.
 
 Common encoder: frozen MobileNetV4 `mobilenetv4_conv_small.e2400_r224_in1k`,
-SPATIAL_14, float32 NHWC 1x14x14x96, HWC flattening. Input uses whole-image RGB
+SPATIAL_14, float32 NHWC 1x14x14x96, HWC flattening. Legacy input uses whole-image RGB
 bicubic resize to 224x224, /255, ImageNet mean/std and float32 NCHW.
 Preprocessing ID: `imagenet-rgb-resize224-bicubic-v1`. No crop or letterboxing.
 
@@ -66,9 +66,10 @@ normal-image robustness measurement is described below.
   require separate restoration. **Do not use `mvn clean`** as preparation.
 - Exact ONNX checkpoint/export provenance remains unresolved. Byte identity and
   implemented preprocessing are established in the [encoder contract](architecture/ONNX_MODEL_CONTRACT.md).
-- M0 and M2 remain strictly positional: a displaced normal feature can encounter
+- M0 and legacy unaligned M2 remain strictly positional: a displaced normal feature can encounter
   the wrong cell's reference. No spatial tolerance, registration, rotation/scale
-  handling, illumination augmentation, full covariance or clustering was added.
+  handling, illumination augmentation, full covariance or clustering was added
+  to those baseline paths.
   The [controlled normal-image robustness run](benchmark/M2_ROBUSTNESS_RESULT_20261018.md)
   now measures translation, rotation, scale, brightness, contrast and gamma on
   467 normal tests across all 15 categories. Rotation/scale sensitivity is broad;
@@ -109,9 +110,24 @@ selected for the next Metal Nut canonical integration**: Image/Pixel/AUPRO
 0.960899/0.886602/0.646812, aggregate rotation delta0.472908Z and measured total
 preprocessing median6.729813ms. C/D total medians are8.847606/20.321069ms;
 these are early batch-average timings, not complete detector/JMH latency.
-Canonical model persistence and the fast detector API are the next separately
-authorized checkpoint; production localization and optimizations remain later
-work. The default selected M2-P detector is unchanged. Use the Java M2 report for
-retained detector timing; neither oracle nor pilot timing measures this new path.
+The [canonical M2 integration](experiments/JAVA_CANONICAL_M2_INTEGRATION.md) is now
+complete for Metal Nut B: a separate versioned bundle binds the full preprocessing
+contract and encoder/state hashes; the same Java path fits176/calibrates44 normals
+and infers. All115 TEST native maps/scores and primary metrics reproduce Phase 2 B
+exactly. `CanonicalM2Detector.detectScore` returns a fast native-max decision;
+`inferWithMap` retains an owned native map, transform and identity for later use.
+Geometry failure throws before encoding; sequential workspaces never score stale
+input. Legacy M2 loading/default behavior and M0 remain unchanged.
+
+Matched two-fork JMH directly measured the canonical fast decision at
+10.108928ms p50,10.042803ms mean,12.315034ms p95. Geometry is the largest measured
+preprocessing component (4.718592ms p50; tensor B1.404928ms). One setup-only PID
+collision required replacing only the missing preprocessing fork; the report
+preserves all measurements and source identities. CPU node execution is verified;
+180 Java/44 Python tests pass. **Next target: profile/optimize Metal Nut geometry**
+under its frozen contract, in a separately authorized task. Production original-frame
+localization and other-category canonicalization remain later work. Use this new
+report for canonical timing and the Java M2 report for legacy unaligned timing;
+neither oracle nor Python pilot timing measures this integrated path.
 M2 does not inherit historical M0 latency. Public README claims await a separate
 update. [DECISION_LOG.md](DECISION_LOG.md) records supersession and history.
