@@ -31,7 +31,7 @@ public final class LocalAblationBridge {
     }
 
     static void evaluate(Path dataset, Path directory, Path manifest, String method, String category) throws Exception {
-        if (!java.util.List.of("C1", "V1", "M2").contains(method)) throw new IllegalArgumentException("Unknown local model");
+        if (!java.util.List.of("C1", "V1", "M2", "M2-P", "M2-N1", "M2-G").contains(method)) throw new IllegalArgumentException("Unknown local model");
         var names = Files.readAllLines(manifest);
         var maps = NpyMap.read(directory.resolve("native-z.npy"));
         if (maps.rows() != names.size() || maps.columns() != 196) throw new IllegalArgumentException("Native Z shape mismatch");
