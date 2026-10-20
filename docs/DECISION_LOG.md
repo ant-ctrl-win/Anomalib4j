@@ -470,3 +470,29 @@ localization, generalized registry or production source change occurred here.
 206 Java tests pass;165 source/resource hashes remain stable. D26's original
 generality findings and historical reports remain evidence for their recorded
 framing, not silently reinterpreted as safe-frame detector results.
+
+## D28 - Screw quality qualification is mixed despite aggregate gains
+
+Date:2026-10-20. The [full qualification](experiments/SCREW_CANONICAL_M2_QUALIFICATION.md)
+uses D27's exact safe framing, unchanged audited geometry, B, CNN and strict M2.
+Distinct test-only Screw preprocessing/bundle identity; no production architecture,
+Metal Nut loader, M0 or default M2 change. FIT/CAL attempted/usable/failed is
+256/253/3 and64/63/1, retaining the same source-border failures. TEST160/160/0,
+no clipping or four-pixel margin violations. Model/calibration/protocol were frozen
+before TEST; all169 source/resource entries remain unchanged through completion.
+
+Category Image/Pixel/AUPRO improves from retained.564870/.863996/.602107 to
+.663456/.961903/.845029. However scratch_head worsens on all three, AUPRO
+.784869->.713909, and overall image discrimination remains weak. Thread/neck
+localization gains are substantial but cannot hide that regression.
+**MIXED_RESULT**, not a second generally qualified production detector.
+This is a scientific outcome, not a reason to repair the frozen contract on TEST.
+215 Java tests pass; no timing benchmark or unrelated category run occurred.
+
+The normal cosine gain.469488->.784784 corresponds to aggregate quality gains,
+not uniform defect performance or pose-only causation. Whole-contract comparison
+also changes filtering and usable training coverage relative to the retained M2.
+Metal Nut remains the only integrated/qualified canonical category. Next is a
+separately preregistered matched B_IDENTITY M2 control using253/63 usable normals,
+the same source/filter/metric conventions and160 TEST names. Preserve the present
+result and investigate the head tradeoff before production generalization.
