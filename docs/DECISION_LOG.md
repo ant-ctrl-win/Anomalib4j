@@ -402,3 +402,41 @@ ownership optimization is explicitly deferred. Recommend only measuring remainin
 B tensor sampling within optimized preprocessing before selecting another change.
 Other-category canonicalization, localization and exact ONNX export/checkpoint
 provenance remain unresolved/deferred as previously recorded.
+
+## D26 - Screen category geometry before generalizing the canonical detector
+
+Date:2026-10-20. Explicit user instruction requests a six-category generality audit
+and defers D25's next performance investigation. No production optimization,
+sampler/CNN/M2/calibration/persistence change or new category integration is included.
+The [audit](experiments/CANONICALIZATION_GENERALITY_AUDIT.md) and
+[frozen protocol](experiments/CANONICALIZATION_GENERALITY_AUDIT_PROTOCOL.md)
+separate a reusable pose->B->encoder->strict-local architecture from the estimator,
+symmetry, failure and framing assumptions that remain category specific.
+
+Metal Nut H4 is GO/already qualified; all 176 FIT descriptors reproduce retained B
+exactly. Bottle center and Screw axis/polarity are MAYBE. Bottle is end-on/circular,
+not a side-view head-bottom silhouette; its centering gain is tiny and two anomalous
+contaminants trigger border failure. Screw has strong recovery, all160 trusted TEST
+poses and a paired cosine gain .469488->.782811, but every valid FIT silhouette
+clips under fixed scale1 centroid placement and four training sources touch the
+source border. Do not treat small clipped area as preservation of tip information.
+
+Tested Hazelnut center/axis, Cable rigid registration and whole-object Grid pose
+are NO-GO. Hazelnut centering worsens cosine .711013->.667944, adding AXIS worsens
+matched center .660303->.624708, and bright print can become the foreground. Cable
+has mostly weak axes, negligible centering gain and a defect-sensitive broken-ring
+anchor. Grid has no finite object centroid. A successful numeric pose and controlled
+equivariance do not prove correct semantic registration or anomaly preservation.
+
+One audit-adapter grayscale conversion discrepancy was diagnosed with a red/green
+logical-pixel identity test before features/TEST. The unsuffixed geometry-only run
+retains its original source/protocol/outputs; the corrected `-validated` run alone
+supports screening. Geometry rules were not tuned on TEST. Final evidence retains
+162 stable source/resource and 2,347 input hashes;197 Java tests pass. No new M2
+fit/calibration/score or anomaly metric was computed; M0 and production M2 remain.
+
+Immediate new M2 qualifications: none. Recommend exactly a **Screw FIT-only framing
+feasibility checkpoint**, keeping axis/polarity/B fixed and source-border cases
+accounted for, before separately authorizing full M2 qualification. Reject further
+rotation work for the audited near-radial/cross-section/texture strategies in this
+phase; no universal estimator/framework or production promotion is justified.

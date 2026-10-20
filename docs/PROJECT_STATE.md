@@ -146,11 +146,29 @@ Direct two-fork JMH fast decision p50/mean/p95 is now
 versus4.141056ms; geometry1.146880ms and preprocessing2.359296ms are directly
 measured, not summed. Per-fork variation and historical comparison are retained
 in the new report; approximately306KB/op downstream allocation remains unchanged
-in ownership and deferred. One next measurement target is the remaining B tensor
-sampling within optimized preprocessing, before any further optimization.
+in ownership and deferred. The remaining B tensor measurement recommendation is
+deferred while the scientific generality checkpoint below defines the next work.
 Production original-frame localization and other-category canonicalization remain
 later work. Use the BGR report for current canonical timing, the earlier reports
 for their historical contexts and the Java M2 report for legacy unaligned timing;
 neither oracle nor Python pilot timing measures this integrated path.
 M2 does not inherit historical M0 latency. Public README claims await a separate
 update. [DECISION_LOG.md](DECISION_LOG.md) records supersession and history.
+
+The [six-category generality audit](experiments/CANONICALIZATION_GENERALITY_AUDIT.md)
+is complete: unchanged Metal Nut H4 is GO/already qualified; Bottle centering and
+Screw axis/polarity are MAYBE; tested Hazelnut/Cable registration and whole-object
+Grid pose are NO-GO. All 176 Metal Nut FIT descriptors reproduce retained B exactly.
+Screw has strong geometry and a material paired cosine gain (.469488->.782811),
+but every valid FIT mask clips under the fixed scale1 mass-centered canvas.
+Hazelnut centering/axis worsen coherence; its print can become the selected region.
+No new M2 fitting, calibration, scoring, anomaly metrics, timing or production
+category support was added. Experimental grayscale conversion was corrected before
+CNN/TEST screening; both source/evidence versions remain explicitly separated.
+197 Java tests pass; the final run retains 162 source/resource and 2,347 input hashes.
+
+**No new category is recommended for immediate M2 refitting.** Next: a Screw
+FIT-only framing feasibility checkpoint with the audited axis/polarity and B fixed,
+source-border cases retained, and an explicit safe placement/canvas contract before
+separate full M2 qualification. Metal Nut remains the only integrated canonical
+Java detector; default unaligned M2, M0 and historical numerical results are unchanged.
