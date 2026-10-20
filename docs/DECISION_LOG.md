@@ -344,3 +344,27 @@ costs first under the frozen scientific contract. This is a recommendation for a
 separately authorized task, not an optimization implemented in this checkpoint.
 Production original-frame localization and other-category canonicalization remain
 deferred. ONNX export/checkpoint provenance remains unresolved.
+
+## D24 - Measure geometry composition before optimizing acquisition
+
+Date:2026-10-20. Explicit measurement-only request follows D23; no production
+geometry, sampler, encoder, M2, API or persistence change is authorized here.
+The [geometry profile](experiments/JAVA_CANONICAL_GEOMETRY_PROFILE.md) retains
+two-fork JMH controls/components, same9 BGR fixtures, JFR and all423 frozen
+geometry cases. Production source and all captured source/input hashes are
+unchanged;183 Java tests pass. No quality/all-category campaign or commit.
+
+Unchanged whole geometry p50/mean/p95 is5.537792/7.061223/16.363520ms under this
+campaign's conditions, with broad tails. Bulk getRGB p50 4.243456ms is the largest
+scope; luminance/BOX and component traversal follow. JFR corroborates generic
+raster/color conversion. Separate timings and percentages are not an additive
+budget, and the older integrated timing is not overwritten or treated as a
+matched performance regression.
+
+Narrow D23's next target to exactly one first optimization: contract-preserving
+TYPE_3BYTE_BGR source acquisition replacing generic bulk getRGB. Its roughly4ms
+typical measured scope is an optimistic scope-removal ceiling, not promised
+savings or a detector latency projection; required replacement work remains
+unmeasured. This recommendation requires separate implementation authorization.
+Geometry mathematics, topology, rounding, affine conventions and scientific
+behavior remain frozen. No raster fast path or geometry optimization is performed.

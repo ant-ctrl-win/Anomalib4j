@@ -124,8 +124,16 @@ Matched two-fork JMH directly measured the canonical fast decision at
 preprocessing component (4.718592ms p50; tensor B1.404928ms). One setup-only PID
 collision required replacing only the missing preprocessing fork; the report
 preserves all measurements and source identities. CPU node execution is verified;
-180 Java/44 Python tests pass. **Next target: profile/optimize Metal Nut geometry**
-under its frozen contract, in a separately authorized task. Production original-frame
+180 Java/44 Python tests passed for integration. The subsequent
+[measurement-only geometry profile](experiments/JAVA_CANONICAL_GEOMETRY_PROFILE.md)
+is complete: unchanged whole geometry p50/mean/p95 5.537792/7.061223/16.363520ms
+on this campaign's host conditions. Bulk getRGB dominates (p50 4.243456ms), followed
+by fused luminance/BOX reduction and component traversal; JFR corroborates generic
+raster/color conversion cost. All423 geometry references and183 Java tests pass,
+with production source unchanged. **One next optimization target: contract-preserving
+TYPE_3BYTE_BGR pixel acquisition replacing generic bulk getRGB**, requiring a
+separately authorized task. The report bounds the opportunity without predicting
+end-to-end speedup. Production original-frame
 localization and other-category canonicalization remain later work. Use this new
 report for canonical timing and the Java M2 report for legacy unaligned timing;
 neither oracle nor Python pilot timing measures this integrated path.
