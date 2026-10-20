@@ -440,3 +440,33 @@ feasibility checkpoint**, keeping axis/polarity/B fixed and source-border cases
 accounted for, before separately authorizing full M2 qualification. Reject further
 rotation work for the audited near-radial/cross-section/texture strategies in this
 phase; no universal estimator/framework or production promotion is justified.
+
+## D27 - Screw fixed placement passes the framing checkpoint
+
+Date:2026-10-20. The [FIT-first framing checkpoint](experiments/SCREW_CANONICAL_FRAMING_FEASIBILITY.md)
+completes D26's recommended prerequisite. Audited Screw geometry, logical-RGB700
+view, B sampler, CNN and M2 remain unchanged. At scale1 a single global target
+`(395.50859765961616,349.2832413193618)` contains all253 valid FIT silhouette
+supports with8.712pixels minimum clearance. Centered scaling would instead
+require<=.8932347449 for the frozen4-pixel margin; it is not selected.
+
+FIT-only contract SHA-256 is
+`e4af7c946a0ac980a12936541e2825b262e8ff6082b52690613a14b214ee6928`.
+Subsequent63 valid CAL cases have no clipping and>=7.310pixels clearance.
+One CAL head extent exceeds the empirical FIT maximum by1.402pixels but remains
+inside the frozen margin; no parameter is adjusted. Matched safe FIT cosine
+.784784 retains the audited registration benefit; LOO same-cell gain retains95.91%.
+
+**GO_FOR_M2_QUALIFICATION**, not production promotion. Explicit source-border
+policy: reject before CNN/no score/no unaligned fallback, retain failures and
+coverage, never silently report survivor-only metrics as complete validation.
+All256/64 training identities remain accounted for, including3/1 source-border
+failures. The reduced silhouette remains a proxy for semantic object support.
+
+Next is separately authorized/frozen Screw preprocessing identity and unchanged
+M2 qualification on the original FIT/CAL/TEST manifests, with all failures reported.
+No fitting/calibration/scoring, TEST pixel access, anomaly metrics, new timing,
+localization, generalized registry or production source change occurred here.
+206 Java tests pass;165 source/resource hashes remain stable. D26's original
+generality findings and historical reports remain evidence for their recorded
+framing, not silently reinterpreted as safe-frame detector results.

@@ -167,8 +167,14 @@ category support was added. Experimental grayscale conversion was corrected befo
 CNN/TEST screening; both source/evidence versions remain explicitly separated.
 197 Java tests pass; the final run retains 162 source/resource and 2,347 input hashes.
 
-**No new category is recommended for immediate M2 refitting.** Next: a Screw
-FIT-only framing feasibility checkpoint with the audited axis/polarity and B fixed,
-source-border cases retained, and an explicit safe placement/canvas contract before
-separate full M2 qualification. Metal Nut remains the only integrated canonical
-Java detector; default unaligned M2, M0 and historical numerical results are unchanged.
+The subsequent [Screw framing checkpoint](experiments/SCREW_CANONICAL_FRAMING_FEASIBILITY.md)
+is complete: **GO_FOR_M2_QUALIFICATION**, experimental only. One fixed scale1 anchor
+`(395.50859765961616,349.2832413193618)` preserves all253 valid FIT/63 valid CAL
+silhouette supports, with minimum clearance8.712/7.310 pixels. The3 FIT/1 CAL
+source-border failures retain explicit rejection/no-score and coverage accounting.
+Matched safe-frame cosine is.784784 versus.782811 current and.469488 identity;
+206 Java tests pass. No M2 fitting/scoring or new TEST evaluation occurred.
+Next, separately authorize/freeze Screw preprocessing identity and full M2
+FIT/CAL/TEST qualification with this unchanged contract and all failures reported.
+Metal Nut remains the only integrated canonical Java detector; default unaligned
+M2, M0 and historical numerical results are unchanged.
