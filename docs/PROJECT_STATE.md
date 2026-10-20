@@ -181,8 +181,17 @@ Image/Pixel/AUPRO is.663456/.961903/.845029 versus retained.564870/.863996/.6021
 All category metrics improve, but scratch_head worsens on all three, including
 AUPRO.784869->.713909. A distinct test-only Screw bundle binds the frozen contract;
 169 source/resource hashes remain stable and215 Java tests pass. No production
-promotion, TEST tuning or new timing occurred. Next is a separately preregistered
-matched B_IDENTITY control on the same253/63/160 populations to separate registration
-from filtering/coverage effects before deciding on broader qualification.
+promotion, TEST tuning or new timing occurred. The subsequent
+[matched B_IDENTITY control](experiments/SCREW_B_IDENTITY_M2_CONTROL.md) is complete:
+**POSE_EFFECT_SUPPORTED_BUT_MIXED**. Same253/63 usable normals and160 TEST names,
+fresh identity statistics/Z, exact identity tensor/retained FIT parity. Identity
+Image/Pixel/AUPRO is.564870/.864740/.607138; canonical adds
+.098586/.097163/.237891 over that matched control. Pipeline-only net gains are
+small, while pose amplifies scratch_head losses (Pixel-.026605, AUPRO-.059242).
+All172 source/resource and897 canonical-evidence hashes remain stable;225 Java
+tests pass. The unsuffixed control root is a pre-fit JSON-representation diagnostic;
+the `-validated` root supplies final evidence. Next recommended work is a separately
+authorized FIT/CAL-first head-response failure analysis using frozen models/maps,
+without TEST tuning or production promotion.
 Metal Nut remains the only integrated canonical Java detector; default unaligned
 M2, M0 and historical numerical results are unchanged.

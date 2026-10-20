@@ -496,3 +496,40 @@ Metal Nut remains the only integrated/qualified canonical category. Next is a
 separately preregistered matched B_IDENTITY M2 control using253/63 usable normals,
 the same source/filter/metric conventions and160 TEST names. Preserve the present
 result and investigate the head tradeoff before production generalization.
+
+## D29 - Matched Screw identity control supports pose, with a head tradeoff
+
+Date:2026-10-20. The [matched control](experiments/SCREW_B_IDENTITY_M2_CONTROL.md)
+completes D28's requested causal comparison. Only the conceptual spatial transform
+changes: exact identity replaces canonical pose, with the same logical-sRGB700/B,
+CNN,253 FIT/63 CAL/160 TEST, unchanged M2 and evaluation operators. Fresh identity
+local statistics and held-out Z are frozen before TEST. No pose estimator or saved
+pose drives sampling. All253 retained FIT units and full identity coherence match
+exactly; all476 usable input tensors equal the audited direct B identity call.
+
+Identity Image/Pixel/AUPRO is.564870/.864740/.607138. H->identity deltas are
+0/+.000745/+.005031; identity->canonical deltas are+.098586/+.097163/+.237891.
+The small compound pipeline/population gain does not explain the large canonical
+aggregate gain. Four defect groups improve on all three versus identity, but
+scratch_head loses.015244/.026605/.059242. Pose amplifies a smaller pipeline loss;
+it contributes87.09% of historical->canonical Pixel loss and83.49% of AUPRO loss.
+Mechanism remains unresolved; the matched intervention includes refitted local/Z
+state and coordinate remapping, not an isolated resampling mechanism.
+
+**POSE_EFFECT_SUPPORTED_BUT_MIXED**. D28's original whole-contract MIXED_RESULT
+remains valid. A second geometrically distinct object family supports the aggregate
+architectural hypothesis on this split; it is not a second generally qualified
+production detector. Metal Nut, M0 and default unaligned M2 remain unchanged.
+No generalized architecture, performance work, TEST tuning or commit.
+
+The unsuffixed root retains a pre-fit exact-JSON-check failure (LongNode/IntNode
+counts with equal numeric values). A failing-first regression fixed representation
+comparison without tolerance relaxation. Corrected sources were frozen in the
+`-validated` namespace before fresh extraction/TEST. Final225 Java tests pass;
+172 source/resource hashes include original169 unchanged;897 canonical evidence
+hashes stay unchanged. No retained scientific result was overwritten.
+
+Next recommended task: separately authorized FIT/CAL-first head-response failure
+analysis on frozen models/descriptors/maps, followed by descriptive frozen TEST
+response analysis. No new detector or TEST-selected parameters are authorized by
+this recommendation.
