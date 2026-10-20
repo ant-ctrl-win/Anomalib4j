@@ -533,3 +533,36 @@ Next recommended task: separately authorized FIT/CAL-first head-response failure
 analysis on frozen models/descriptors/maps, followed by descriptive frozen TEST
 response analysis. No new detector or TEST-selected parameters are authorized by
 this recommendation.
+
+## D30 - Diagnose Screw head loss as nuisance competition, without changing M2
+
+Date:2026-10-20. The [head-response analysis](experiments/SCREW_HEAD_RESPONSE_ANALYSIS.md)
+uses D29's frozen identity/canonical models, descriptors, raw/Z arrays, maps and
+poses. Diagnostic geometric head/neck/thread support is defined from253 FIT
+silhouette medians and frozen before TEST response/GT access. No regional scorer,
+refit, recalibration, inference, pose/sampling/metric change or commit.
+
+Head native max increases in17/24 scratch_head images (median2.654->4.127Z),
+GT-local response generally improves, and endpoint variability drops strongly.
+Neck/thread defect-local gains are much larger. Canonical good global max median
+rises4.509->5.939Z, with33/41 maxima outside the fixed diagnostic bands. The
+head Image AUROC loss is net15/984 lost positive/normal pair rankings. Closed-form
+accounting assigns77.13% of head Pixel rank loss to comparisons against good-image
+backgrounds; this is an accounting of the existing metric, not a new scorer.
+
+**COMPETING_MAX_DOMINANCE supported; CALIBRATION_SENSITIVITY_SHIFT present;
+upstream cause UNRESOLVED.** Canonical local std roughly halves in all regions;
+head beta decreases and often amplifies head Z. The largest normal response has
+raw21.672602 before calibration, so calibration alone is not the explanation.
+Four frozen scratch representatives keep contrast/width but some lose gradient
+energy; resampling causation and subtle pose effects remain unproven. No broad
+HEAD_SIGNAL_ATTENUATION or POSE_SEMANTIC_INSTABILITY claim is supported.
+
+All177 source/resource and2,454 input hashes remain stable;236 Java tests pass.
+Independent rank/ROC accumulation differs by at most6.05e-12, explicitly retained
+along with the initial1e-12 cross-check failure. No numerical result or
+test tolerance is replaced. D28/D29's mixed outcome and no-promotion status remain.
+
+Recommend only a separately authorized CAL-only frozen-pose photometric nuisance
+control using the existing robustness protocol and frozen models, with no refit,
+new threshold or TEST access. This recommendation authorizes no implementation.

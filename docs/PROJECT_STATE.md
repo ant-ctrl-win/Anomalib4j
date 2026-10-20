@@ -190,8 +190,15 @@ Image/Pixel/AUPRO is.564870/.864740/.607138; canonical adds
 small, while pose amplifies scratch_head losses (Pixel-.026605, AUPRO-.059242).
 All172 source/resource and897 canonical-evidence hashes remain stable;225 Java
 tests pass. The unsuffixed control root is a pre-fit JSON-representation diagnostic;
-the `-validated` root supplies final evidence. Next recommended work is a separately
-authorized FIT/CAL-first head-response failure analysis using frozen models/maps,
-without TEST tuning or production promotion.
+the `-validated` root supplies final evidence. The subsequent
+[head-response analysis](experiments/SCREW_HEAD_RESPONSE_ANALYSIS.md) is complete:
+head max Z generally strengthens (17/24 images; median2.654->4.127), but normal
+global maxima rise4.509->5.939Z, mostly outside the fixed head band. About77.13%
+of head Pixel rank loss is against normal-image backgrounds. Competing maxima
+are supported; changed calibration sensitivity does not uniformly suppress head
+response. Upstream nuisance-tail cause remains unresolved. Normal-only support
+was frozen before TEST analysis;236 Java tests pass, no detector/refit/inference
+change. Next recommended experiment is a separately authorized CAL-only photometric
+nuisance control with frozen poses/models; no TEST tuning or production promotion.
 Metal Nut remains the only integrated canonical Java detector; default unaligned
 M2, M0 and historical numerical results are unchanged.
