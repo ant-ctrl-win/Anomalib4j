@@ -16,7 +16,7 @@ public final class CanonicalPreprocessor {
         Objects.requireNonNull(image);
         if (image.getWidth() != 700 || image.getHeight() != 700) throw new IllegalArgumentException("Expected source700");
         if (destination.length != AffineTensorSampler.ELEMENTS) throw new IllegalArgumentException("Expected NCHW224 destination");
-        image.getRGB(0, 0, 700, 700, source, 0, 700);
+        CanonicalRgbAcquisition.read(image, source);
         CanonicalGeometry pose = estimator.estimate(source);
         if (pose.status() == CanonicalGeometry.Status.SUCCESS) sampler.sample(source, pose.transform(), destination);
         return pose;

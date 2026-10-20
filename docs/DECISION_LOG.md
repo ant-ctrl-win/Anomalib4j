@@ -368,3 +368,37 @@ savings or a detector latency projection; required replacement work remains
 unmeasured. This recommendation requires separate implementation authorization.
 Geometry mathematics, topology, rounding, affine conventions and scientific
 behavior remain frozen. No raster fast path or geometry optimization is performed.
+
+## D25 - Replace validated BGR acquisition; preserve the scientific contract
+
+Date:2026-10-20. Explicit user instruction authorizes exactly D24's first source
+acquisition optimization. The [completed result](experiments/JAVA_CANONICAL_BGR_FAST_PATH.md)
+uses direct acquisition only for validated built-in TYPE_3BYTE_BGR layouts, with
+generic getRGB fallback. One packed source buffer still serves the unchanged
+geometry estimator and B sampler. A shared direct BGR source interface would
+change both qualified implementations; choose the explicitly permitted minimal
+packed replacement and measure it first. No other optimization is included.
+
+The logical default-sRGB ARGB contract remains exact, including subimage, padded,
+translated and nonzero data-buffer-offset cases. The JDK interleaved raster's
+actual getDataElements addressing is authoritative; tests caught and corrected an
+initial extra-offset error before real parity/timing. Assertions/tolerances were
+not weakened. All423 real inputs reproduce pixels through scores exactly; all115
+TEST outputs/metrics reproduce the existing bundle, with no refit.187 Java tests
+pass. Geometry, B sampling, encoder, M2 equations/calibration, bundle identity,
+default unaligned M2 and M0 are preserved. No production localization or commit.
+
+Two-fork JMH directly measures complete detectScore p50/mean/p95
+4.423680/4.363740/5.816320ms vs matched generic10.272768/10.173606/12.992512ms:
+56.94/57.11/55.23% lower. Historical integration10.108928/10.042803/12.315034ms
+remains separate evidence. Acquisition p50 falls4.141056->0.343040ms; new geometry
+and preprocessing p50 are1.146880/2.359296ms. These scopes are not an additive
+budget; sequential trials and material fork variation limit universal speedup
+claims. All155 source/resource and1,617 retained input hashes stay stable;16 CPU
+profiles verify400 CPU node events. No source change follows measurement.
+
+The approximately306KB/op decision allocation remains; encoder/descriptor/M2/ORT
+ownership optimization is explicitly deferred. Recommend only measuring remaining
+B tensor sampling within optimized preprocessing before selecting another change.
+Other-category canonicalization, localization and exact ONNX export/checkpoint
+provenance remain unresolved/deferred as previously recorded.

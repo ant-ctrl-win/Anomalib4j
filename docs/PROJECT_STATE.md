@@ -130,12 +130,27 @@ is complete: unchanged whole geometry p50/mean/p95 5.537792/7.061223/16.363520ms
 on this campaign's host conditions. Bulk getRGB dominates (p50 4.243456ms), followed
 by fused luminance/BOX reduction and component traversal; JFR corroborates generic
 raster/color conversion cost. All423 geometry references and183 Java tests pass,
-with production source unchanged. **One next optimization target: contract-preserving
-TYPE_3BYTE_BGR pixel acquisition replacing generic bulk getRGB**, requiring a
-separately authorized task. The report bounds the opportunity without predicting
-end-to-end speedup. Production original-frame
-localization and other-category canonicalization remain later work. Use this new
-report for canonical timing and the Java M2 report for legacy unaligned timing;
+with production source unchanged at that checkpoint. The subsequent
+[BGR acquisition optimization](experiments/JAVA_CANONICAL_BGR_FAST_PATH.md) is now
+complete: validated built-in TYPE_3BYTE_BGR rasters use direct acquisition into the
+same reusable packed buffer; every other representation uses generic getRGB.
+Geometry, sampler B, encoder, M2 and bundle identity are unchanged. All423 inputs
+have exact old/new pixel/geometry/tensor/descriptor/map/score parity; all115 TEST
+maps/scores/primary metrics reproduce the retained bundle without refitting.
+187 Java tests pass. All155 source/resource and1,617 retained input hashes remain
+stable through validation/timing; node profiles verify CPU execution.
+
+Direct two-fork JMH fast decision p50/mean/p95 is now
+**4.423680/4.363740/5.816320ms**, versus the matched generic comparator
+10.272768/10.173606/12.992512ms (56.94% lower p50). Acquisition p50 is0.343040ms
+versus4.141056ms; geometry1.146880ms and preprocessing2.359296ms are directly
+measured, not summed. Per-fork variation and historical comparison are retained
+in the new report; approximately306KB/op downstream allocation remains unchanged
+in ownership and deferred. One next measurement target is the remaining B tensor
+sampling within optimized preprocessing, before any further optimization.
+Production original-frame localization and other-category canonicalization remain
+later work. Use the BGR report for current canonical timing, the earlier reports
+for their historical contexts and the Java M2 report for legacy unaligned timing;
 neither oracle nor Python pilot timing measures this integrated path.
 M2 does not inherit historical M0 latency. Public README claims await a separate
 update. [DECISION_LOG.md](DECISION_LOG.md) records supersession and history.
