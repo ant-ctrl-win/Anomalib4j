@@ -198,7 +198,16 @@ of head Pixel rank loss is against normal-image backgrounds. Competing maxima
 are supported; changed calibration sensitivity does not uniformly suppress head
 response. Upstream nuisance-tail cause remains unresolved. Normal-only support
 was frozen before TEST analysis;236 Java tests pass, no detector/refit/inference
-change. Next recommended experiment is a separately authorized CAL-only photometric
-nuisance control with frozen poses/models; no TEST tuning or production promotion.
+change. The subsequent [CAL-only photometric control](experiments/SCREW_CAL_PHOTOMETRIC_NUISANCE.md)
+is complete: **PHOTOMETRIC_SENSITIVITY_PARTIAL**.378 exact factor1 evaluations
+precede1512 perturbed evaluations on the same63 CAL normals, with poses/models
+fixed and no TEST access. Brightness1.20 max-Z medians I/C are39.132/39.357;
+paired amplification median/p95 is2.507/11.329Z. Contrast1.20 has additional
+canonical upper tails; gamma remains much smaller. Strong brightening sensitivity
+is shared, and brightness1.20 clips a median81.42% of input channels. Canonical
+sensitivity is not concentrated in its lowest-std cells.246 Java tests pass;
+no detector, calibration, production API or scientific quality metric changes.
+Next recommended experiment is a separately authorized CAL-only clipping-isolation
+factorial, before choosing a correction; no TEST tuning or production promotion.
 Metal Nut remains the only integrated canonical Java detector; default unaligned
 M2, M0 and historical numerical results are unchanged.

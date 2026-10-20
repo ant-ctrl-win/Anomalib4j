@@ -566,3 +566,38 @@ test tolerance is replaced. D28/D29's mixed outcome and no-promotion status rema
 Recommend only a separately authorized CAL-only frozen-pose photometric nuisance
 control using the existing robustness protocol and frozen models, with no refit,
 new threshold or TEST access. This recommendation authorizes no implementation.
+
+## D31 - Screw photometric control finds partial canonical excess and shared brightening sensitivity
+
+Date:2026-10-20. The [CAL-only control](experiments/SCREW_CAL_PHOTOMETRIC_NUISANCE.md)
+uses the exact63 usable CAL normals, keeping good179 excluded, original poses,
+identity/canonical bundles, B, encoder, raw/Z/max and normal-only semantic bands.
+Logical-RGB native1024 perturbations follow existing brightness/contrast/gamma
+formulas and prescribed.80/.90/1/1.10/1.20 levels before bicubic700. No geometry
+estimation, refit, recalibration, TEST image/map access, corrective experiment,
+production/benchmark change or commit.
+
+All378 baseline evaluations have exact retained normalized-descriptor/raw/Z/max
+parity. Identity tensors match retained hashes; canonical tensors match the
+unchanged unperturbed executable B contract, with absent historical tensor hashes
+explicitly disclosed. Then1512 perturbed evaluations complete, without tuning.
+
+**PHOTOMETRIC_SENSITIVITY_PARTIAL.** Brightness1.20 median max-Z I/C39.132/39.357,
+paired amplification median/p95+2.507/+11.329Z; contrast1.20 p95 I/C23.399/31.869.
+Gamma changes remain small, with no10Z case. Both models have severe brightening
+sensitivity, mostly outside fixed semantic bands. Brightness1.20 clips a median
+81.42% of native channels. Canonical sensitivity is not concentrated in the
+lowest-std/beta quartiles; scaling and raw growth explain different individual
+excesses. Neither universal canonical-only sensitivity nor clipping-only causation
+is established. Existing mixed Screw quality status/no-promotion remains.
+
+183 source/resource and91 selected input hashes stay stable;92 focused/246 full
+Java tests pass. All inputs are explicitly CAL-only; no prior campaign tree or
+TEST scientific data is copied. Independent raw/Z reconstruction errors remain
+below5.69e-14 and native maxima agree exactly. No scientific metric is replaced.
+
+Recommend only a separately authorized CAL-only clipping-isolation factorial at
+existing positive brightness/contrast levels: original, clipping-channel-only,
+nonclipping-channel-only, full transform; same frozen poses/models and no TEST.
+The deterministic original-channel clipping set uses existing[0,255] semantics,
+not a learned region/threshold. This recommendation authorizes no corrective code.
