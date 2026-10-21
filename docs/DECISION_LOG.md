@@ -1,5 +1,13 @@
 # Anomalib4j: decisioni tecniche documentate
 
+Current navigation, 2026-10-21: [D32](#d32---adopt-the-research-synthesis-and-prepare-a-bounded-v1)
+adopts the approved [research synthesis](ANOMALIB4J_RESEARCH_SYNTHESIS.md) and
+sets bounded v1/publication preparation as the active phase. D01-D31 remain
+unchanged historical entries: their "next task", authorization and stop statements
+refer to their recorded dates, not today's work queue. D18/D20 already select
+M2/strict P; D22-D25 qualify/integrate Metal Nut B; D27-D31 record Screw's safe
+framing, mixed quality and diagnostics. Current snapshot: [PROJECT_STATE](PROJECT_STATE.md).
+
 Registro riconciliato il 2026-10-02. La data e quella della registrazione, non dell'approvazione originaria quando questa non e disponibile. Riporta scelte attuate e decisioni operative esplicitamente confermate dall'utente, distinguendole dalle esecuzioni ancora da svolgere. Stato corrente in [PROJECT_STATE.md](PROJECT_STATE.md).
 
 Aggiornamento del 2026-10-03: decisioni D10-D14 dalla nuova richiesta esplicita dell'utente; contract documentale, nessuna nuova esecuzione.
@@ -601,3 +609,84 @@ existing positive brightness/contrast levels: original, clipping-channel-only,
 nonclipping-channel-only, full transform; same frozen poses/models and no TEST.
 The deterministic original-channel clipping set uses existing[0,255] semantics,
 not a learned region/threshold. This recommendation authorizes no corrective code.
+
+## D32 - Adopt the research synthesis and prepare a bounded v1
+
+Date: 2026-10-21. Explicit user approval of the
+[research synthesis](ANOMALIB4J_RESEARCH_SYNTHESIS.md) and instruction to reconcile
+canonical navigation. **Scientific expansion is paused. Current priority is
+repository/publication preparation for a bounded Anomalib4j v1.**
+This entry adopts the synthesis's architectural interpretation and changes the
+active workflow; it does not repeat or replace already accurate scientific
+decisions or rewrite historical results.
+
+### Decisions carried forward, with current interpretation
+
+- **Selected local detector:** D18 already selects strict Java M2. It supersedes
+  M0 as the recommended architecture; M0 remains the valid exact compiled
+  VSA/Adjoint legacy/reference and retained all-15 baseline, with its invariant
+  preserved. Selected M2 has no VSA/Adjoint. C1/V1 remain controls.
+- **Correspondence:** D20 already supersedes the
+  [correspondence report](benchmark/M2_SPATIAL_CORRESPONDENCE_RESULT_20261018.md)'s
+  N1 recommendation. Strict P stays selected; N1/G are measured tradeoffs, not
+  promoted paths. Preserve useful local identity and address geometric variance
+  upstream only when semantic pose is observable and validated.
+- **Canonicalization:** adopt semantic registration as a conditional principle,
+  not universal preprocessing. The six-category [audit](experiments/CANONICALIZATION_GENERALITY_AUDIT.md)
+  rejects the tested Hazelnut/Cable strategies and whole-object Grid pose;
+  Bottle centering has low value. It establishes no pose result for nine other
+  categories and justifies no generalized production registry.
+- **Metal Nut:** D21 retires the pilot's 2 ms product gate without changing its
+  historical NO-GO. D22 qualifies B, D23 integrates the distinct fail-closed
+  bundle/API, and D25 measures the guarded BGR path. Metal Nut H4/scale1/canvas700
+  with direct B remains the sole qualified integrated canonical category.
+  Latest matched complete score-only p50 is **4.423680 ms**, excluding decode/I/O
+  and localization; no camera/system throughput claim. Production original-frame
+  localization/backprojection remains deferred.
+- **Screw:** D27 solves safe fixed framing; D28/D29 retain
+  MIXED_RESULT / POSE_EFFECT_SUPPORTED_BUT_MIXED. Matched identity supports strong
+  aggregate pose benefit, while scratch_head regresses. D30/D31 diagnose nuisance
+  competition and partial photometric sensitivity, not a qualified correction.
+  Screw remains test/experiment-only, with no production promotion. Historical
+  FIT/CAL256/64 differs from matched usable253/63; only the matched comparison
+  isolates pose at the population/operator level.
+
+### Workflow supersession and bounded scope
+
+Earlier recommendations retain their historical meaning. Their current disposition:
+
+| Earlier statement | Supersession / current disposition |
+|---|---|
+| D16-D17: prepare/evaluate current M0; M2 Python-only | D18 completes the campaigns and selects separate Java M2; M0 is legacy/reference |
+| Correspondence report: promote/refine N1 | D20 keeps P; this decision carries it forward |
+| Oracle follow-up and Python pilot closure/2 ms NO-GO | D21 authorizes the Java path independently of the retired gate; D22-D25 complete qualification/integration/optimization |
+| D22: integrate B next; D23-D25: profile/optimize next | Integration and first acquisition optimization completed under D23-D25; further performance work remains deferred |
+| D26: Screw framing blocks qualification | D27 solves framing; D28 qualifies experimentally and D29 completes the matched control with a mixed outcome |
+| D29: head analysis next; D30: photometric control next | Completed under D30/D31; their findings remain diagnostic |
+| D31: clipping-isolation factorial next | **Unexecuted and deferred** by this approved synthesis/publication decision; neither disproved nor silently completed |
+
+**Diagnostic stop:** do not continue scratch_head/photometric micro-optimization
+without a new architectural question and separate authorization. No TEST-derived
+correction, new scientific runner, benchmark or production generalization is the
+current task.
+
+**Optional future research:** covariance-aware local normal statistics remain
+**UNTESTED**, not implemented, not required for v1 and not authorized here.
+If scientific work is reopened, one bounded offline cycle on Metal Nut and Screw
+is the only additional architectural cycle prioritized by the synthesis.
+No rank/shrinkage choice or new model name is selected; historical M3 remains
+VSA dispersion. VSA heterogeneous/multimodal fusion is a separate untested future
+direction, not the explanation of current M2 quality.
+
+**Next publication checkpoint:** reconcile the public README/presentation with
+generic M2, the qualified Metal Nut extension, concise scoped results, production
+versus experimental boundaries and reproducibility limits. README, diagrams and
+release/evidence packaging are separate tasks, not performed in this reconciliation.
+All-15 M2 scientific quality remains the Python campaign with Java subset parity,
+not a newly claimed full Java quality rerun.
+
+Exact ONNX checkpoint-to-export provenance remains unresolved despite known
+SPATIAL_14 bytes. Ignored evidence/dataset restoration, historical measured source
+identity versus current HEAD, known-split qualification and lack of independent
+real acquisition/camera-throughput validation remain explicit. This decision
+changes documentation only; no scientific result, source, artifact or commit.
