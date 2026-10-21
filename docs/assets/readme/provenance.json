@@ -1,0 +1,395 @@
+{
+  "format": "anomalib4j-readme-gallery/v1",
+  "dataset_root": "C:/Users/Ion/IdeaProjects/Anomalib4j_md/mvtec-ad-DatasetNinja",
+  "dataset_attribution": {
+    "name": "MVTec AD, MVTec Software GmbH",
+    "source": "https://www.mvtec.com/company/research/datasets/mvtec-ad",
+    "license": "CC BY-NC-SA 4.0",
+    "license_evidence": {
+      "path": "C:/Users/Ion/IdeaProjects/Anomalib4j_md/mvtec-ad-DatasetNinja/LICENSE.md",
+      "sha256": "1fc36c362f694f892d28e5f6482aa64c691a8b64aade72622e99462bc1be5b13"
+    }
+  },
+  "selection": "Five required generic M2-P categories; Carpet excluded before image inspection. First lexical TEST anomaly in each fixed defect family; no score ranking.",
+  "rendering": {
+    "size": [
+      752,
+      484
+    ],
+    "source_resize": "full-frame 360x360 LANCZOS; no crop",
+    "map_source": "retained original-coordinate evaluated Z; no regeneration/backprojection",
+    "map_display_resize": "float32 BILINEAR 360x360",
+    "z_range": [
+      0,
+      12.0
+    ],
+    "colormap": "matplotlib magma",
+    "opacity": "0.65 * clip(Z/12,0,1)",
+    "rgb": "round(input*(1-opacity)+magma(clip(Z/12,0,1))*255*opacity)",
+    "font": "Pillow bundled default; sizes22/17/14",
+    "png": "compress_level9; optimizeFalse; no timestamp",
+    "disclosure": "Same absolute range on all six cards; Z<0 transparent, Z>=12 saturated. No per-image min/max scaling. Display only, not probabilities/thresholds."
+  },
+  "runtime": {
+    "numpy": "2.2.5",
+    "pillow": "11.3.0",
+    "matplotlib": "3.10.6",
+    "pydantic": "2.11.9",
+    "typer": "0.17.4"
+  },
+  "python": "3.13.5",
+  "renderer": {
+    "path": "tools/readme/render_examples.py",
+    "sha256": "bc6d743ea36b6bac9ab4b08252d413e70bc57eddea43d493c9e3bf91d08cf723"
+  },
+  "examples": [
+    {
+      "category": "bottle",
+      "defect": "broken_large",
+      "model": "M2-P",
+      "evidence_root": "target/ablation/local-models-20261017/M2/bottle",
+      "image": {
+        "path": "C:/Users/Ion/IdeaProjects/Anomalib4j_md/mvtec-ad-DatasetNinja/test/img/bottle_broken_large_000.png",
+        "sha256": "11a691a06a33dd78c5fcab6a822caa48c0d72f27f660e19f5abd9b5aa392b0eb"
+      },
+      "native_z": {
+        "path": "target/ablation/local-models-20261017/M2/bottle/maps/bottle_broken_large_000.native.npy",
+        "sha256": "6b726c725b99cf6fd2c7db05b1302079e04d0c35743a583632e4675488d75c20"
+      },
+      "original_coordinate_z": {
+        "path": "target/ablation/local-models-20261017/M2/bottle/maps/bottle_broken_large_000.evaluated.npy",
+        "sha256": "620142646a5d932872360b1fb775c2f1777f2c348ae64fd038dde659bc628ce7"
+      },
+      "references": [
+        {
+          "path": "target/ablation/local-models-20261017/M2/bottle/predictions.csv",
+          "sha256": "4df028df72bf443bcf382e70975210c02b8f7abbc36783c213123f4bb80e77fc"
+        },
+        {
+          "path": "target/ablation/local-models-20261017/M2/bottle/metrics-unified.json",
+          "sha256": "a9b6bbf8f0f2d6fbe461710ec31eddc10ce055a9181b309fa1c74dab33fc4216"
+        },
+        {
+          "path": "target/ablation/local-models-20261017/M2/bottle/config.json",
+          "sha256": "05a3cc5b174242889ec9d18bf5ae10b876ba488639a563e405becc88b27092bd"
+        },
+        {
+          "path": "target/ablation/local-models-20261017/source-hashes.json",
+          "sha256": "a93f4db7ab5117517d0cba15402fb98a80ece565021a45919803a3a8dabb76de"
+        },
+        {
+          "path": "target/ablation/local-models-20261017/M2/bottle/maps/bottle_broken_large_000.native.json",
+          "sha256": "763815cc50bed181d4ffe3fdad683b1e86c614b6f3afd653aab6c10376553220"
+        },
+        {
+          "path": "target/ablation/local-models-20261017/M2/bottle/maps/bottle_broken_large_000.evaluated.json",
+          "sha256": "43723e2546cbcd05fae3588e3518e97f69340014744b52b5d51d3c3fcfc78b5c"
+        }
+      ],
+      "metrics": {
+        "category": "bottle",
+        "method": "M2",
+        "status": "verified",
+        "image_auroc": 1.0,
+        "pixel_auroc": 0.9756973762813215,
+        "aupro030": 0.9157380339562484
+      },
+      "asset": {
+        "path": "docs/assets/readme/bottle_example.png",
+        "sha256": "0d11fd56987cfdfc38a5977a43474370616d0bfe8a77f248ff3c1358ce6aba11"
+      },
+      "evaluated_z_min": -1.4398949337800075,
+      "evaluated_z_max": 190.5507199619797
+    },
+    {
+      "category": "leather",
+      "defect": "cut",
+      "model": "M2-P",
+      "evidence_root": "target/ablation/local-models-20261017/M2/leather",
+      "image": {
+        "path": "C:/Users/Ion/IdeaProjects/Anomalib4j_md/mvtec-ad-DatasetNinja/test/img/leather_cut_000.png",
+        "sha256": "d362fb12f480398438d29250d99e9420c632addd65dcb4b837b4c5c3bbf9b154"
+      },
+      "native_z": {
+        "path": "target/ablation/local-models-20261017/M2/leather/maps/leather_cut_000.native.npy",
+        "sha256": "16fc7346272b5290fdbdb3bc9db147001daec6aef7c458b5620c1c6fb135d382"
+      },
+      "original_coordinate_z": {
+        "path": "target/ablation/local-models-20261017/M2/leather/maps/leather_cut_000.evaluated.npy",
+        "sha256": "97871723ba05730c6e3bdff792ffe14c0b61ffc4deba2ec14e430a43b59c7252"
+      },
+      "references": [
+        {
+          "path": "target/ablation/local-models-20261017/M2/leather/predictions.csv",
+          "sha256": "b7034d14254524a99edf665642bb594672dd4a85c0df20bf6d88f679253c5eb1"
+        },
+        {
+          "path": "target/ablation/local-models-20261017/M2/leather/metrics-unified.json",
+          "sha256": "b481b2fafb31f4acc1d809fe8eb28704f52fbdcad031eb4dc1126e25be9f1d62"
+        },
+        {
+          "path": "target/ablation/local-models-20261017/M2/leather/config.json",
+          "sha256": "ca0d236946695833d38fec63a9faa714005ad39f47bbbb1cc0e6c061e5ded7ca"
+        },
+        {
+          "path": "target/ablation/local-models-20261017/source-hashes.json",
+          "sha256": "a93f4db7ab5117517d0cba15402fb98a80ece565021a45919803a3a8dabb76de"
+        },
+        {
+          "path": "target/ablation/local-models-20261017/M2/leather/maps/leather_cut_000.native.json",
+          "sha256": "bc2e129db3f41d15629f143d9651dc1a9b485180e057b6b568a5ea05c50469ed"
+        },
+        {
+          "path": "target/ablation/local-models-20261017/M2/leather/maps/leather_cut_000.evaluated.json",
+          "sha256": "f72ada9a0687311a03ede7fdff2e18a07794d9b50e3223fdb0eb88be96ddda8b"
+        }
+      ],
+      "metrics": {
+        "category": "leather",
+        "method": "M2",
+        "status": "verified",
+        "image_auroc": 0.9983016304347826,
+        "pixel_auroc": 0.9913652154039416,
+        "aupro030": 0.9613107547423185
+      },
+      "asset": {
+        "path": "docs/assets/readme/leather_example.png",
+        "sha256": "1626a4768829b1d25bee455fb876d3941c7f2feb7cfd888895c7596e097442f0"
+      },
+      "evaluated_z_min": -1.0090487294248156,
+      "evaluated_z_max": 33.66283165582568
+    },
+    {
+      "category": "tile",
+      "defect": "crack",
+      "model": "M2-P",
+      "evidence_root": "target/ablation/local-models-20261017/M2/tile",
+      "image": {
+        "path": "C:/Users/Ion/IdeaProjects/Anomalib4j_md/mvtec-ad-DatasetNinja/test/img/tile_crack_000.png",
+        "sha256": "d10be1f6ec065f83d54c03b4093d7d87dfcc77617d8eb0df9f5a053aece4becf"
+      },
+      "native_z": {
+        "path": "target/ablation/local-models-20261017/M2/tile/maps/tile_crack_000.native.npy",
+        "sha256": "5fa8e8a146f873c4753733db5927257735918b89f7ca25163c76b96e9d1dcf85"
+      },
+      "original_coordinate_z": {
+        "path": "target/ablation/local-models-20261017/M2/tile/maps/tile_crack_000.evaluated.npy",
+        "sha256": "ec9fadaa4b8a3381863926c4c2a8247487a887251ae9dff6a9408a9fb6f2703b"
+      },
+      "references": [
+        {
+          "path": "target/ablation/local-models-20261017/M2/tile/predictions.csv",
+          "sha256": "d4c9d3f74e1ffaf15a74ae85ac4d48904bea2dff96538faaf52fc1dcd72feb26"
+        },
+        {
+          "path": "target/ablation/local-models-20261017/M2/tile/metrics-unified.json",
+          "sha256": "2c8c87404639c1605fb315fb1313e60fd2461eb6816d5b3618cc46b6dfb3d848"
+        },
+        {
+          "path": "target/ablation/local-models-20261017/M2/tile/config.json",
+          "sha256": "fc84f0594e6b97795a018d41f50b7e56c14db9d0d9b6b27af834d9b1506a0be1"
+        },
+        {
+          "path": "target/ablation/local-models-20261017/source-hashes.json",
+          "sha256": "a93f4db7ab5117517d0cba15402fb98a80ece565021a45919803a3a8dabb76de"
+        },
+        {
+          "path": "target/ablation/local-models-20261017/M2/tile/maps/tile_crack_000.native.json",
+          "sha256": "4249175ebffc61166ac0fc47042403b4e9895b9786f4eea4f415523f49cb933c"
+        },
+        {
+          "path": "target/ablation/local-models-20261017/M2/tile/maps/tile_crack_000.evaluated.json",
+          "sha256": "866c23c07d28f64fedd26ab0befa3648fc6808aa18d89d46b1233a29d70bffbf"
+        }
+      ],
+      "metrics": {
+        "category": "tile",
+        "method": "M2",
+        "status": "verified",
+        "image_auroc": 0.9805194805194806,
+        "pixel_auroc": 0.9404069392199629,
+        "aupro030": 0.84916403348883
+      },
+      "asset": {
+        "path": "docs/assets/readme/tile_example.png",
+        "sha256": "a5876a304c2fb806fbb090aed0e974b58ca1a82000375220dac041f641f7dd7b"
+      },
+      "evaluated_z_min": -1.3702678455746917,
+      "evaluated_z_max": 17.782035157406884
+    },
+    {
+      "category": "grid",
+      "defect": "broken",
+      "model": "M2-P",
+      "evidence_root": "target/ablation/local-models-20261017/M2/grid",
+      "image": {
+        "path": "C:/Users/Ion/IdeaProjects/Anomalib4j_md/mvtec-ad-DatasetNinja/test/img/grid_broken_000.png",
+        "sha256": "9f0f649d7120425428025badaa7373f46bd33e3d79f3138dfc23183bc54da4cd"
+      },
+      "native_z": {
+        "path": "target/ablation/local-models-20261017/M2/grid/maps/grid_broken_000.native.npy",
+        "sha256": "03298fd9256aa3b05fba6f133c7bcd574270fae5820da3ed1473193e6817129f"
+      },
+      "original_coordinate_z": {
+        "path": "target/ablation/local-models-20261017/M2/grid/maps/grid_broken_000.evaluated.npy",
+        "sha256": "7a8f6b75da9f64fbaa74efff4a60d9f83f1e547940056b42b8618958f4ffeb6c"
+      },
+      "references": [
+        {
+          "path": "target/ablation/local-models-20261017/M2/grid/predictions.csv",
+          "sha256": "a71315c55cd900df7a2c3d6b975647378b88f0d87f2aab8c8072eeac3108a004"
+        },
+        {
+          "path": "target/ablation/local-models-20261017/M2/grid/metrics-unified.json",
+          "sha256": "4e110008e9ca4b56004a17d0d82618868977c9df2687b346ad75dc44652c8fdc"
+        },
+        {
+          "path": "target/ablation/local-models-20261017/M2/grid/config.json",
+          "sha256": "202b339e9e3cbd14c67d6ab69a7f736776fd2ff9bdf1e0b4c905aecb570ea77a"
+        },
+        {
+          "path": "target/ablation/local-models-20261017/source-hashes.json",
+          "sha256": "a93f4db7ab5117517d0cba15402fb98a80ece565021a45919803a3a8dabb76de"
+        },
+        {
+          "path": "target/ablation/local-models-20261017/M2/grid/maps/grid_broken_000.native.json",
+          "sha256": "4031601738f97322a6d40c5b57a1dd1f9282cc81723ccff8589b81ff513f118b"
+        },
+        {
+          "path": "target/ablation/local-models-20261017/M2/grid/maps/grid_broken_000.evaluated.json",
+          "sha256": "60bb227ffacc0d1c4960f7bcc3f4d5f04d97d01a973b2948a29464ae0fcb5f0d"
+        }
+      ],
+      "metrics": {
+        "category": "grid",
+        "method": "M2",
+        "status": "verified",
+        "image_auroc": 0.9615705931495405,
+        "pixel_auroc": 0.9457826977210427,
+        "aupro030": 0.8589651813700683
+      },
+      "asset": {
+        "path": "docs/assets/readme/grid_example.png",
+        "sha256": "4e4aadf2c85c381496ffa62296e7bfb73797e69f1f2c3ece84120e641d4c6aca"
+      },
+      "evaluated_z_min": -1.529478654590685,
+      "evaluated_z_max": 19.960526411703214
+    },
+    {
+      "category": "zipper",
+      "defect": "broken_teeth",
+      "model": "M2-P",
+      "evidence_root": "target/ablation/local-models-20261017/M2/zipper",
+      "image": {
+        "path": "C:/Users/Ion/IdeaProjects/Anomalib4j_md/mvtec-ad-DatasetNinja/test/img/zipper_broken_teeth_000.png",
+        "sha256": "a4e1c5a988d05432b59e3ffadfab2dd643503740232b8d8ce48d9c9bf58d7606"
+      },
+      "native_z": {
+        "path": "target/ablation/local-models-20261017/M2/zipper/maps/zipper_broken_teeth_000.native.npy",
+        "sha256": "50e2118a7c24ce7c6bf85cf79551735932633b83868d5a8ebfedbeffaed3a44d"
+      },
+      "original_coordinate_z": {
+        "path": "target/ablation/local-models-20261017/M2/zipper/maps/zipper_broken_teeth_000.evaluated.npy",
+        "sha256": "c943848017c1db7072c92d9235d1acf83d3be2791c0312394546fbe0ecedff9d"
+      },
+      "references": [
+        {
+          "path": "target/ablation/local-models-20261017/M2/zipper/predictions.csv",
+          "sha256": "997d8f42bfade0f8a18352aa8729535a1b761cd596ef5fa44ad634fba94d59b0"
+        },
+        {
+          "path": "target/ablation/local-models-20261017/M2/zipper/metrics-unified.json",
+          "sha256": "c8ebdf66bca81f5d39cb25a0b2f4cf48695b8b4cc4e891ba6a056e715b64c02b"
+        },
+        {
+          "path": "target/ablation/local-models-20261017/M2/zipper/config.json",
+          "sha256": "361f553340ae5ac9790d883dfd1c3eb4f738a581e51589bf2be354b90335d39e"
+        },
+        {
+          "path": "target/ablation/local-models-20261017/source-hashes.json",
+          "sha256": "a93f4db7ab5117517d0cba15402fb98a80ece565021a45919803a3a8dabb76de"
+        },
+        {
+          "path": "target/ablation/local-models-20261017/M2/zipper/maps/zipper_broken_teeth_000.native.json",
+          "sha256": "84f4a669d3addffe93b58ab5e7c2cd9e446e1f927d4dbfe54b239ac5a1d56c70"
+        },
+        {
+          "path": "target/ablation/local-models-20261017/M2/zipper/maps/zipper_broken_teeth_000.evaluated.json",
+          "sha256": "f47d9922c22f5c0a7299c6289f24a0d4be262ea49580efb135c194611d8d8e26"
+        }
+      ],
+      "metrics": {
+        "category": "zipper",
+        "method": "M2",
+        "status": "verified",
+        "image_auroc": 0.9598214285714286,
+        "pixel_auroc": 0.9609910116653013,
+        "aupro030": 0.8821071851879975
+      },
+      "asset": {
+        "path": "docs/assets/readme/zipper_example.png",
+        "sha256": "3877ed241843f1719a6531119b8c733ea9d56a7bfd59eed86ed0d05ec3b12565"
+      },
+      "evaluated_z_min": -1.4567866689614017,
+      "evaluated_z_max": 12.254970373818413
+    },
+    {
+      "category": "metal_nut",
+      "defect": "bent",
+      "model": "M2 + semantic registration (B)",
+      "evidence_root": "target/experiments/java-canonical-m2-integration-20261019-validated/evaluation",
+      "image": {
+        "path": "C:/Users/Ion/IdeaProjects/Anomalib4j_md/mvtec-ad-DatasetNinja/test/img/metal_nut_bent_000.png",
+        "sha256": "602cceb099d5aa10a416f31cd6370ef9d8c810118f4ada9dbc9c28e91a889e0b"
+      },
+      "native_z": {
+        "path": "target/experiments/java-canonical-m2-integration-20261019-validated/evaluation/maps/metal_nut_bent_000.native.npy",
+        "sha256": "e3fa1f526f5bc9e85848267d6a8a6ad7c62e15ba7b1a8b26fd9fbd2ac4bd7717"
+      },
+      "original_coordinate_z": {
+        "path": "target/experiments/java-canonical-m2-integration-20261019-validated/evaluation/maps/metal_nut_bent_000.evaluated.npy",
+        "sha256": "a8dbfc067c4680022a7c7f38ea61088e939060124fd46bf59b7e4e272ef79604"
+      },
+      "references": [
+        {
+          "path": "target/experiments/java-canonical-m2-integration-20261019-validated/evaluation/predictions.csv",
+          "sha256": "ad68ec4cc9715da7e7b6007d49fb8c15f91ffeb6d736078042a5bdaa0381b8e5"
+        },
+        {
+          "path": "target/experiments/java-canonical-m2-integration-20261019-validated/evaluation/metrics-unified.json",
+          "sha256": "e27094a31959ab0daea3b9b26f40d1594eda9841dc64b873c5548f7fc3c913d7"
+        },
+        {
+          "path": "target/experiments/java-canonical-m2-integration-20261019-validated/evaluation/config.json",
+          "sha256": "b8bfaf3c166324a3221da943c1e26641376df7f7b82720cfc71e5196367cd1ac"
+        },
+        {
+          "path": "target/experiments/java-canonical-m2-integration-20261019-validated/metal-nut.canonical-m2",
+          "sha256": "8771287ad2777083c8a14f3e862142b9f36f4ef56dcbdec46cf156f30ebf9bb0"
+        },
+        {
+          "path": "target/experiments/java-canonical-m2-integration-20261019-validated/evaluation/maps/metal_nut_bent_000.native.json",
+          "sha256": "36716d93601238c9ae911b592fe4e0295e1bb703a042dfee830ae750083a6184"
+        },
+        {
+          "path": "target/experiments/java-canonical-m2-integration-20261019-validated/evaluation/maps/metal_nut_bent_000.evaluated.json",
+          "sha256": "5e6dfd73eaa1d88b021aaf99847a6c880e76596cb056f42f78883ab6671e0638"
+        }
+      ],
+      "metrics": {
+        "category": "metal_nut",
+        "method": "M2",
+        "status": "verified",
+        "image_auroc": 0.9608993157380255,
+        "pixel_auroc": 0.8866021047395616,
+        "aupro030": 0.6468117811251299
+      },
+      "asset": {
+        "path": "docs/assets/readme/metal_nut_canonical_example.png",
+        "sha256": "f6758fe3a1df99ccc2738dc57fd01746d7742fda9fa95b45cbd83ec45871839d"
+      },
+      "evaluated_z_min": -1.3434777942912985,
+      "evaluated_z_max": 124.63070636664118
+    }
+  ]
+}
