@@ -25,6 +25,8 @@ public class M2Benchmark {
         @Param({"required"}) public String dataset;
         @Param({"bottle"}) public String category;
         @Param({"cpu-verified"}) public String benchmarkName;
+        @Param({"SMALL_SPATIAL_14"}) public String encoderSpec;
+        EncoderSpec spec;
         M2Model m2;
         ComparisonModel.Loaded m0;
         M2Detector detector;
@@ -40,21 +42,23 @@ public class M2Benchmark {
             if (!providers.contains(OrtProvider.CPU) || !EnumSet.of(OrtProvider.CPU, OrtProvider.AZURE).containsAll(providers))
                 throw new IllegalStateException("Unexpected hardware runtime providers: " + providers);
             Path directory = Path.of(run);
-            m2 = M2ModelStore.read(directory.resolve("M2/" + category + "/model.bin"), M2ModelStore.encoderHash());
-            m0 = ComparisonModel.load(Path.of(baseline).resolve("anomalib4j/" + category));
+            spec = EncoderSpec.valueOf(encoderSpec);
+            m2 = M2ModelStore.read(directory.resolve("M2/" + category + "/model.bin"), spec);
+            if (spec == EncoderSpec.SMALL_SPATIAL_14 && !baseline.equals("required"))
+                m0 = ComparisonModel.load(Path.of(baseline).resolve("anomalib4j/" + category));
             Path fixture = DatasetManifests.fixture(Path.of(dataset), directory.resolve("data/" + category), false);
             image = ComparisonRunner.read(fixture);
-            encoder = new OnnxMobileNetV4Encoder();
+            encoder = new OnnxMobileNetV4Encoder(spec);
             detector = new M2Detector(m2);
-            units = M2Model.normalize(encoder.extract(image)); raw = m2.raw(units); z = m2.calibrate(raw);
+            units = M2Model.normalize(encoder.extract(image), spec); raw = m2.raw(units); z = m2.calibrate(raw);
             nchw = BenchmarkPreprocessing.preprocess(image);
             environment = OrtEnvironment.getEnvironment();
             Path evidence = directory.resolve("benchmark/" + benchmarkName); Files.createDirectories(evidence);
-            try (var stream = OnnxMobileNetV4Encoder.class.getResourceAsStream("/models/mobilenetv4_spatial_14x14.onnx");
+            try (var stream = OnnxMobileNetV4Encoder.class.getResourceAsStream(spec.resourcePath());
                  var options = new OrtSession.SessionOptions()) {
                 if (stream == null) throw new IllegalStateException("Missing encoder");
                 byte[] model = stream.readAllBytes();
-                M2CpuEvidence.verify(model, nchw, evidence);
+                M2CpuEvidence.verify(model, nchw, evidence, spec.inputName());
                 session = environment.createSession(model, options);
             }
             ComparisonArtifacts.json(evidence.resolve("runtime-" + ProcessHandle.current().pid() + ".json"), Map.of(
@@ -62,7 +66,7 @@ public class M2Benchmark {
                 "session_options", "default; no additional EP; all profiled nodes CPU; Azure available but inactive", "ort", environment.getVersion(),
                 "java", System.getProperty("java.version"), "affinity", ComparisonArtifacts.affinity(),
                 "heap_max_bytes", Runtime.getRuntime().maxMemory(), "fixture", fixture.toString(),
-                "fixture_sha256", NpyMap.sha256(fixture), "encoder_sha256", M2ModelStore.encoderHash()));
+                "fixture_sha256", NpyMap.sha256(fixture), "encoder_sha256", spec.sha256()));
             System.out.println("CPU-only ONNX Runtime " + environment.getVersion() + "; providers=" + providers);
         }
         @TearDown(Level.Trial) public void close() throws Exception {
@@ -72,9 +76,9 @@ public class M2Benchmark {
     @Benchmark public void preprocessing(StateData s, Blackhole bh) { bh.consume(BenchmarkPreprocessing.preprocess(s.image)); }
     @Benchmark public void cnnExtraction(StateData s, Blackhole bh) throws Exception {
         try (var input = OnnxTensor.createTensor(s.environment, FloatBuffer.wrap(s.nchw), new long[]{1, 3, 224, 224});
-             var result = s.session.run(Map.of("input_image", input))) {
-            var output = (OnnxTensor) result.get("spatial_features").orElseThrow();
-            float[] features = new float[M2Model.ELEMENTS]; output.getFloatBuffer().get(features);
+             var result = s.session.run(Map.of(s.spec.inputName(), input))) {
+            var output = (OnnxTensor) result.get(s.spec.outputName()).orElseThrow();
+            float[] features = new float[s.spec.grid().elements()]; output.getFloatBuffer().get(features);
             for (float value : features) if (!Float.isFinite(value)) throw new IllegalStateException("Nonfinite features");
             bh.consume(features);
         }
@@ -91,10 +95,12 @@ public class M2Benchmark {
         bh.consume(LocalizationMaps.upsample(z, 14, 14, s.image.getWidth(), s.image.getHeight()));
     }
     @Benchmark public void m0Detection(StateData s, Blackhole bh) throws Exception {
+        if (s.m0 == null) throw new IllegalStateException("M0 benchmark requires Small and a retained M0 baseline");
         var scores = HeldOutBottleCalibration.score(s.m0.filters(), s.encoder.extract(s.image), s.m0.calibration());
         bh.consume(BottleEvaluation.summarize(scores.z()).max()); bh.consume(scores);
     }
     @Benchmark public void m0Localization(StateData s, Blackhole bh) throws Exception {
+        if (s.m0 == null) throw new IllegalStateException("M0 benchmark requires Small and a retained M0 baseline");
         var scores = HeldOutBottleCalibration.score(s.m0.filters(), s.encoder.extract(s.image), s.m0.calibration());
         bh.consume(BottleEvaluation.summarize(scores.z()).max());
         bh.consume(LocalizationMaps.upsample(scores.z(), 14, 14, s.image.getWidth(), s.image.getHeight())); bh.consume(scores);

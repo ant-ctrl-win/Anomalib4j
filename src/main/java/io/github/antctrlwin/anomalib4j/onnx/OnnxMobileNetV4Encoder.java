@@ -19,16 +19,25 @@ import java.util.Objects;
 
 public final class OnnxMobileNetV4Encoder implements AutoCloseable {
     public enum Variant {
-        SPATIAL_14("/models/mobilenetv4_spatial_14x14.onnx", new GridShape(14, 14, 96)),
-        SPATIAL_28("/models/mobilenetv4_spatial_28x28.onnx", new GridShape(28, 28, 64));
+        SPATIAL_14(EncoderSpec.SMALL_SPATIAL_14),
+        SPATIAL_28("/models/mobilenetv4_spatial_28x28.onnx", new GridShape(28, 28, 64)),
+        LARGE_SPATIAL_14(EncoderSpec.LARGE_SPATIAL_14);
 
         private final String resourcePath;
         private final GridShape grid;
+        private final EncoderSpec spec;
+
+        Variant(EncoderSpec spec) {
+            this.resourcePath = spec.resourcePath(); this.grid = spec.grid(); this.spec = spec;
+        }
 
         Variant(String resourcePath, GridShape grid) {
             this.resourcePath = resourcePath;
             this.grid = grid;
+            this.spec = null;
         }
+        private String inputName() { return spec == null ? INPUT_NAME : spec.inputName(); }
+        private String outputName() { return spec == null ? OUTPUT_NAME : spec.outputName(); }
     }
 
     private static final String INPUT_NAME = "input_image";
@@ -42,6 +51,13 @@ public final class OnnxMobileNetV4Encoder implements AutoCloseable {
 
     public OnnxMobileNetV4Encoder() throws IOException, OrtException {
         this(Variant.SPATIAL_14);
+    }
+
+    public OnnxMobileNetV4Encoder(EncoderSpec spec) throws IOException, OrtException {
+        this(switch (Objects.requireNonNull(spec)) {
+            case SMALL_SPATIAL_14 -> Variant.SPATIAL_14;
+            case LARGE_SPATIAL_14 -> Variant.LARGE_SPATIAL_14;
+        });
     }
 
     public OnnxMobileNetV4Encoder(Variant variant) throws IOException, OrtException {
@@ -60,7 +76,7 @@ public final class OnnxMobileNetV4Encoder implements AutoCloseable {
     }
 
     public String modelId() {
-        return "mobilenetv4_conv_small.e2400_r224_in1k";
+        return variant.spec == null ? EncoderSpec.SMALL_SPATIAL_14.modelId() : variant.spec.modelId();
     }
 
     public String preprocessingId() {
@@ -90,13 +106,13 @@ public final class OnnxMobileNetV4Encoder implements AutoCloseable {
         if (nchw.length != 3*224*224) throw new IllegalArgumentException("Expected prepared NCHW [1,3,224,224]");
         for (float value : nchw) if (!Float.isFinite(value)) throw new IllegalArgumentException("Nonfinite prepared input");
         try (OnnxTensor input = OnnxTensor.createTensor(environment, FloatBuffer.wrap(nchw), INPUT_SHAPE);
-             OrtSession.Result result = session.run(Map.of(INPUT_NAME, input))) {
-            var value = result.get(OUTPUT_NAME)
+             OrtSession.Result result = session.run(Map.of(variant.inputName(), input))) {
+            var value = result.get(variant.outputName())
                     .orElseThrow(() -> new IllegalStateException("Missing spatial_features output"));
             if (!(value instanceof OnnxTensor output)) {
                 throw new IllegalStateException("Spatial features must be a tensor");
             }
-            requireTensor(output.getInfo(), outputShape(variant), OUTPUT_NAME);
+            requireTensor(output.getInfo(), outputShape(variant), variant.outputName());
             FloatBuffer data = output.getFloatBuffer();
             if (data == null || data.remaining() != grid().elements()) {
                 throw new IllegalStateException("Unexpected spatial feature buffer size");
@@ -126,7 +142,7 @@ public final class OnnxMobileNetV4Encoder implements AutoCloseable {
             if (stream == null) {
                 throw new IOException("Missing classpath model: " + variant.resourcePath);
             }
-            model = stream.readAllBytes();
+            model = variant.spec == null ? stream.readAllBytes() : variant.spec.verifiedBytes();
         }
         OrtSession created = null;
         try (var options = new OrtSession.SessionOptions()) {
@@ -134,11 +150,11 @@ public final class OnnxMobileNetV4Encoder implements AutoCloseable {
             Map<String, NodeInfo> inputs = created.getInputInfo();
             Map<String, NodeInfo> outputs = created.getOutputInfo();
             if (inputs.size() != 1 || outputs.size() != 1
-                    || !inputs.containsKey(INPUT_NAME) || !outputs.containsKey(OUTPUT_NAME)) {
+                    || !inputs.containsKey(variant.inputName()) || !outputs.containsKey(variant.outputName())) {
                 throw new IllegalArgumentException("Unexpected MobileNetV4 input/output names");
             }
-            requireTensor(inputs.get(INPUT_NAME).getInfo(), INPUT_SHAPE, INPUT_NAME);
-            requireTensor(outputs.get(OUTPUT_NAME).getInfo(), outputShape(variant), OUTPUT_NAME);
+            requireTensor(inputs.get(variant.inputName()).getInfo(), INPUT_SHAPE, variant.inputName());
+            requireTensor(outputs.get(variant.outputName()).getInfo(), outputShape(variant), variant.outputName());
         } catch (OrtException | RuntimeException | Error failure) {
             if (created != null) {
                 try {

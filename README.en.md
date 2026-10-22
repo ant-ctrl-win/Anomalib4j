@@ -1,133 +1,273 @@
 # Anomalib4j
 
-**Industrial anomaly detection in Java: ONNX inference on CPU, local visual memory and compiled VSA scoring.**
+[Italiano](README.md) | **English**
 
-[Versione italiana](README.md)
+> Java-based anomaly detection for industrial computer vision, with ONNX inference,
+> local statistical modeling, reproducible evaluation and CPU performance benchmarking.
+> The project shows how a modern visual anomaly-detection pipeline can be integrated into a Java environment with ONNX inference, persistent statistical state, localization and reproducible benchmarking.
 
-Anomalib4j is a computer-vision project built with **Java 21 and ONNX Runtime**, using **MobileNetV4**, to detect image anomalies and locate them through heatmaps.
+- **Java-native inference and evaluation**, built on Java 21 and ONNX Runtime.
+- **Frozen MobileNetV4 Conv Small** producing **14x14x96 spatial features**.
+- **Normal-only category adaptation**, with no CNN fine-tuning.
+- **Evaluated across all 15 MVTec AD categories**, with recorded inputs, metrics
+  and real-hardware CPU measurements.
 
-The project addresses two main aspects: reducing the cost of comparison against a visual memory and better describing variation among normal examples. The Java baseline compiles VSA scoring into equivalent CNN-feature filters; the subsequent M2 model improves localization by learning local dispersion. Code, tests and measurements document both results.
+**Selected MVTec AD category results**
 
-## Key results
+| Category | Image AUROC |
+|---|---:|
+| Bottle | 1.000 |
+| Leather | 0.998 |
+| Tile | 0.981 |
+| Grid | 0.962 |
+| Zipper | 0.960 |
 
-- **Java pipeline on CPU:** preprocessing, ONNX feature extraction, local scoring and heatmap generation.
-- **M2, the current best detector:** for localization, it achieves AUPRO **0.916 on Bottle** and **0.624 on Metal Nut**, compared with M0's **0.877** and **0.380**.
-- **Verified Adjoint equivalence:** maximum error **1.31 × 10⁻¹²** between explicit and compiled VSA scores, over **16,268 real patches**.
-- **M0 performance:** about **12 µs for 196 positions** in the JMH kernel measurement; on Bottle, **3.723 ms p50** for detection and **9.486 ms p50** for full localization.
-- **Same-hardware benchmark:** v1 compared with PaDiM and PatchCore, quality evaluated using common conventions and execution costs documented.
+**CPU p50:** complete detection **2.90 ms**; Bottle 900x900 localization
+**7.42 ms**. [Measurement scope](#cpu-performance).
 
-**M2 metrics and M0 latencies belong to different detector versions.** M0 remains the current Java implementation; M2 is a retained Python experiment. No full 15-category MVTec AD validation has been completed.
+## The project
 
-## The project at a glance
+Many computer-vision workflows are Python-centric. Anomalib4j integrates pretrained
+vision models as software components inside a tested Java application pipeline:
+image preprocessing, spatial feature extraction, statistical modeling, model
+persistence, anomaly scoring and quantitative evaluation.
 
-The input is an RGB image. Pretrained, frozen MobileNetV4 extracts a **14×14×96** grid: 196 local descriptors with 96 components each. The memory learns nominal behaviour from normal images.
+Java owns inference and metric evaluation; Python tooling orchestrates campaigns,
+numerical parity checks and evidence capture.
 
-At each position the detector computes a deviation; calibration uses normal images separate from fitting. The maximum of the calibrated map provides the image score; interpolation produces the heatmap at the original resolution.
+## Pipeline
 
 ```text
-RGB image
-    |
-Preprocessing + MobileNetV4 / ONNX
-    |
-14×14×96 features --> normalized descriptors
-    |
-Local memory + positional scoring
-    |
-Positional calibration
-    +--> image score
-    `--> 14×14 map --> full-resolution heatmap
+Image
+  |
+RGB preprocessing / ImageNet normalization
+  |
+MobileNetV4 Conv Small / ONNX Runtime
+  |
+14x14x96 spatial descriptors
+  |
+Local statistical M2 model
+  |
+Anomaly score + anomaly map
+  |
+Evaluation / application output
 ```
 
-The M0 baseline core is Java. Comparison tools and the M2 ablation include Python; M2 operates on the same features extracted by the Java encoder.
+M2 models normal appearance at each spatial position:
 
-![Bottle: image, annotation and RAW heatmap](docs/images/bottle-broken-large.png)
+1. Normalize each local descriptor.
+2. Estimate per-position, per-channel mean and sample standard deviation from
+   normal **FIT** images.
+3. Calibrate local discrepancies using separate held-out **CAL** normal images.
+4. Produce a standardized 14x14 anomaly map; its maximum is the image score.
 
-*M0/v1 baseline output, RAW localization variant: image, defect annotation and overlay. This is not an M2 output. Colours display a score on a visualization scale, not probabilities.*
+The encoder stays frozen. Category adaptation estimates statistics rather than
+optimizing CNN weights. Preprocessing resizes the full RGB image to 224x224 with
+bicubic interpolation and applies ImageNet normalization. Z scores are
+standardized discrepancies, not probabilities.
 
-## Current best detector
+[Model definition and numerical validation](docs/benchmark/JAVA_M2_RESULT_20261018.md#selection-and-implementation).
 
-**M2 is the project's current best detector for localization on the two evaluated categories.**
+## MVTec AD results
 
-At each position it learns the mean feature behaviour and the normal variability of each component. A deviation in a stable component therefore matters more than the same deviation in a naturally variable component. The score combines squared standardized residuals.
+### Selected category results
 
-Results after positional Z calibration; higher is better:
+Representative examples from the validated generic detector, not aggregate values:
 
-| Category | Model | Image AUROC | Pixel AUROC | AUPRO@0.30 |
-|---|---|---:|---:|---:|
-| Bottle | M0 — v1 baseline | 1.000000 | 0.961664 | 0.877447 |
-| Bottle | **M2 — local dispersion** | **1.000000** | **0.975697** | **0.915738** |
-| Metal Nut | M0 — v1 baseline | 0.757576 | 0.692630 | 0.379794 |
-| Metal Nut | **M2 — local dispersion** | **0.845552** | **0.849318** | **0.624208** |
+| Category | Image AUROC | Pixel AUROC | AUPRO@0.30 |
+|---|---:|---:|---:|
+| Bottle | 1.000000 | 0.975697 | 0.915738 |
+| Leather | 0.998302 | 0.991365 | 0.961311 |
+| Tile | 0.980519 | 0.940407 | 0.849164 |
+| Grid | 0.961571 | 0.945783 | 0.858965 |
+| Zipper | 0.959821 | 0.960991 | 0.882107 |
 
-Image AUROC measures separation between normal and anomalous images; Pixel AUROC measures separation at the pixel level; AUPRO evaluates coverage of defective regions, considering false-positive rates up to 0.30.
+### Full-dataset aggregate
 
-**M2 was developed after the frozen v1 benchmark**, keeping the CNN features and splits. The external PaDiM/PatchCore comparison therefore concerns M0.
+**Equal-category macro averages across all 15 MVTec AD categories**, using the
+generic M2 detector and MobileNetV4 Conv Small:
 
-## Compiling VSA scoring
+| Metric | Macro average |
+|---|---:|
+| Image AUROC | **0.871803** |
+| Pixel AUROC | **0.931016** |
+| AUPRO@0.30 | **0.805887** |
 
-M0 builds a memory in VSA space, a **10,000-dimensional** representation, accumulating statistics and nominal examples into positional archetypes.
+The evaluation covers 2,900 FIT normals, 729 held-out CAL normals and 1,725 TEST
+images. Every category has equal weight; performance varies by category.
+Image AUROC measures image ranking, while Pixel AUROC and AUPRO measure
+localization. [Evaluation conventions](docs/benchmark/LOCALIZATION_CONVENTIONS.md)
+and [full result evidence](docs/EXPERIMENT_INDEX.md#latest-completed-campaigns).
 
-Once the memory is fixed, projection, standardization and comparison against the archetype can be incorporated into a filter on the **96 CNN features**. This transformation is Adjoint compilation.
+## CPU performance
 
-The high-dimensional projection disappears from inference while preserving the score. Feature normalization remains in the path. Verification on the 83 Bottle images compared **16,268 cells**, with maximum absolute error **1.31 × 10⁻¹²**.
+Direct JMH measurements on **AMD Ryzen AI 9 HX 370 / Windows 11 Pro**, Java 21,
+ONNX Runtime 1.30.0. Executed ONNX nodes were verified on
+`CPUExecutionProvider`.
 
-The later JMH kernel measurement is about **12 µs per map**. This is the scoring cost: CNN extraction and heatmap construction belong to full-pipeline latency.
+| Measured scope | p50 | Mean | p95 |
+|---|---:|---:|---:|
+| Encoder extraction: preprocessed tensor -> spatial features | **0.641024 ms** | 0.671423 ms | 0.819200 ms |
+| Complete generic detection | **2.904064 ms** | 2.910571 ms | 3.637248 ms |
+| Complete Bottle 900x900 localization | **7.421952 ms** | 7.280697 ms | 8.812954 ms |
 
-## Frozen Java v1 baseline benchmark
+Complete paths start with a predecoded image and a ready model/session. Detection
+includes preprocessing, encoder execution, descriptor normalization, M2 and the
+image score; localization also produces the 900x900 map. Decode, disk I/O and
+model/session loading are excluded. Each complete path is measured directly.
 
-**Before the introduction of M2.** The tables preserve the systems actually executed in the original run, without replacing them with later results.
+JMH uses one caller, two forks, five 2-second warmups and ten 2-second measurement
+iterations per fork. These are desktop request latencies, not camera throughput.
+[Detailed benchmark records and reproducibility](docs/EXPERIMENT_INDEX.md#latest-completed-campaigns).
 
-Comparison with the **Anomalib 2.6.2** implementations of PaDiM and PatchCore, on **AMD Ryzen AI 9 HX 370**, Windows 11:
+### Same-hardware reference systems
 
-| Category | Method | Image AUROC | Pixel AUROC | AUPRO@0.30 |
-|---|---|---:|---:|---:|
-| Bottle | **Anomalib4j M0** | **1.000** | **0.962** | **0.877** |
-| Bottle | PaDiM | 0.998 | 0.978 | 0.922 |
-| Bottle | PatchCore | 1.000 | 0.985 | 0.944 |
-| Metal Nut | **Anomalib4j M0** | **0.758** | **0.693** | **0.380** |
-| Metal Nut | PaDiM | 0.952 | 0.941 | 0.851 |
-| Metal Nut | PatchCore | 0.998 | 0.987 | 0.940 |
+| System | Bottle 900x900 localization p50 |
+|---|---:|
+| Anomalib4j / MobileNetV4 Small | **7.42 ms** |
+| PaDiM | 57.60 ms |
+| PatchCore | 247.42 ms |
 
-Median latency for localization at the original resolution:
+These are independent complete pipelines on the **same physical hardware**.
+The Anomalib 2.6.2 references use ResNet18 for PaDiM and WideResNet50-2 for
+PatchCore, with their own pipeline configurations. This is not an equal-backbone
+scorer microbenchmark.
+Measurement tools and dates differ: the numbers are practical engineering
+references, not causal claims about isolated algorithms.
 
-| Category | Resolution | M0 | PaDiM | PatchCore |
-|---|---|---:|---:|---:|
-| Bottle | 900×900 | **9.49 ms** | 57.60 ms | 247.42 ms |
-| Metal Nut | 700×700 | **5.78 ms** | 44.46 ms | 222.93 ms |
+The deployment files are compact: **1,269,313 bytes** for the truncated ONNX
+encoder and **304,381 bytes** (about 304 KB) for each serialized category M2
+archive. Encoder and category state are stored separately; these are file sizes.
 
-M0 detection alone measures **3.723 ms** on Bottle and **3.695 ms** on Metal Nut. Measurements include preprocessing and inference, batch 1, with the image already decoded; file loading and model construction are excluded.
+## Visual examples
 
-Backbones and fitting budgets differ across systems. Latencies use JMH for Java and a Python harness for competitors. The result measures a quality/cost trade-off of the entire pipeline; it does not attribute the advantage to Adjoint alone.
+The examples below show the same generic M2 detector on objects, textures and periodic structures.
+All five examples below use the unregistered pipeline.
 
-## From a limitation to an improvement
+<table>
+<tr>
+<td width="50%" align="center">
+<strong>Bottle</strong><br>
+<img src="docs/assets/readme/bottle_example.png" alt="Bottle broken container: original TEST image and M2 anomaly overlay" width="100%"><br>
+<sub>Image AUROC 1.000000 · broken_large</sub>
+</td>
+<td width="50%" align="center">
+<strong>Leather</strong><br>
+<img src="docs/assets/readme/leather_example.png" alt="Leather cut: original TEST image and M2 anomaly overlay" width="100%"><br>
+<sub>Image AUROC 0.998302 · cut</sub>
+</td>
+</tr>
+<tr>
+<td width="50%" align="center">
+<strong>Tile</strong><br>
+<img src="docs/assets/readme/tile_example.png" alt="Tile crack: original TEST image and M2 anomaly overlay" width="100%"><br>
+<sub>Image AUROC 0.980519 · crack</sub>
+</td>
+<td width="50%" align="center">
+<strong>Grid</strong><br>
+<img src="docs/assets/readme/grid_example.png" alt="Grid broken structure: original TEST image and M2 anomaly overlay" width="100%"><br>
+<sub>Image AUROC 0.961571 · broken</sub>
+</td>
+</tr>
+<tr>
+<td colspan="2" align="center">
+<strong>Zipper</strong><br>
+<img src="docs/assets/readme/zipper_example.png" alt="Zipper broken teeth: original TEST image and M2 anomaly overlay" width="500"><br>
+<sub>Image AUROC 0.959821 · broken_teeth</sub>
+</td>
+</tr>
+</table>
 
-M0's weak localization on Metal Nut prompted inspection of the memory and its statistics. The archetype describes a positional direction relative to the global population, without explicitly modelling local nominal dispersion.
+Metrics describe the category, not the individual example. Panels pair the
+original TEST image with its retained anomaly overlay. All use a fixed display
+range **Z [0,12]**, without per-image min/max scaling; clipping affects display
+only. [Image identities, map hashes and rendering provenance](docs/assets/readme/README.md).
 
-M2 introduces that dispersion while keeping the features frozen. The comparison verifies improvement on both categories, particularly Metal Nut: **measurement of the limitation, diagnosis, targeted change and verification**.
+## Geometric registration
 
-## What this project demonstrates
+**Positional modeling works best for textures and geometrically consistent or
+registered objects.** A displaced normal feature can otherwise meet the wrong
+spatial reference.
 
-- **AI integration in Java:** ONNX Runtime, preprocessing and descriptor handling.
-- **Design and optimization:** positional memory and scoring compilation.
-- **Verification and benchmarking:** numerical tests, JMH and system comparison.
-- **Measurable diagnosis:** a change to the memory model, comparison on the same features and documented results.
+The Metal Nut extension estimates object pose and canonicalizes sampling before
+feature extraction. Fitting, calibration and inference share the same geometric
+contract. Its persisted bundle binds geometry, preprocessing, encoder and model
+state; invalid geometry is rejected before CNN execution.
 
-## Getting started and further reading
+This integration is qualified for **Metal Nut**. It exposes native maps and pose
+metadata; original-frame overlays are produced by evaluation tooling.
+[Registration contract and Java integration](docs/experiments/JAVA_CANONICAL_M2_INTEGRATION.md).
 
-Core prerequisites: **JDK 21 and Maven**. Tests use JUnit 5. To compile and run a targeted group of algebra and memory tests, without training on real images:
+## Engineering highlights
+
+- **Java 21 inference:** reusable ONNX Runtime sessions, ImageNet preprocessing,
+  spatial feature extraction and local anomaly maps.
+- **Statistical adaptation:** normal-only fitting and independent held-out
+  calibration, with explicit descriptor and variance validation.
+- **Validated persistence:** versioned binary models reject incompatible encoder
+  hashes, preprocessing identities, geometry and invalid numerical state.
+- **Dataset and evaluation infrastructure:** metadata-driven labels, deterministic
+  FIT/CAL/TEST manifests, original-image geometry and all-15 MVTec AD evaluation.
+- **Numerical validation:** Java/Python parity checks for statistics, calibration,
+  scores and maps, alongside JUnit tests for contracts and persistence.
+- **Performance and reproducibility:** JMH measurements, executed-provider
+  profiling, CLI orchestration, source/input hashes and retained result artifacts.
+
+## Quick Start
+
 
 ```shell
-mvn -B "-Dtest=AdjointEquivalenceTest,DenseRademacherProjectionTest,ProjectionStatisticsAccumulatorTest,PositionalMemoryBuilderTest" test
+git clone https://github.com/ant-ctrl-win/Anomalib4j.git
+cd Anomalib4j
+mvn -B compile
+mvn -B -Pbenchmark '-Dtest=M2BenchmarkSmokeTest' test
 ```
 
-The normal `mvn test` also includes real-data tests. The dataset and benchmark artifacts are external to the public copy; full reproduction prerequisites are in the technical overview.
+## Full validation
 
-- [Technical overview](docs/TECHNICAL_OVERVIEW.md): data flow, models, formulas and reproducibility.
-- [Equivalence on real images](docs/development/SPRINT7_RESULT.md).
-- [Full benchmark](docs/benchmark/BENCHMARK_FINAL_RESULT.md).
-- [Local-memory ablation](docs/diagnostics/LOCAL_MEMORY_ABLATION_RESULT.md).
-- [Positional/global diagnostic](docs/diagnostics/POSITIONAL_GLOBAL_VARIANCE_DIAGNOSTIC.md).
+```shell
+mvn -B -Pbenchmark '-Dtest=*Test,!BottleTrainingTest,!BottleRealEvaluationTest' test
+```
 
-## Status and limitations
+These commands clone and build the pipeline, run the dataset-free test suite, and execute
+a pipeline smoke example. The smoke example uses synthetic image/model fixtures
+with real ONNX execution, detection and 900x900 localization. It does not measure
+benchmark latency. The two excluded tests require external Bottle data; the
+`benchmark` profile compiles the harness without launching a JMH campaign.
 
-The project is a prototype, not a production-ready product. Results concern two MVTec AD categories with a frozen backbone; the internal ablation uses already-observed categories and does not establish independent generalization. M2 is not included in the external PaDiM/PatchCore run, and the results do not establish general superiority.
+For real images, fit or restore a category model first. Full-dataset evaluation
+uses the [campaign CLI](tools/ablation/java_m2.py), an external
+[DatasetNinja-layout MVTec AD export](docs/benchmark/MVTEC_DATASET_CENSUS.md), and
+restored manifests, data hashes and reference outputs. The
+[evidence index](docs/EXPERIMENT_INDEX.md) records these prerequisites and artifact
+locations. Generated evidence lives in ignored `target/`; preserve it when
+reproducing measurements.
+
+## Repository layout
+
+```text
+src/main/java/              Java encoder, M2 detector and registration
+src/main/resources/models/ ONNX model resources
+src/test/java/              Tests, dataset handling and evaluation
+src/jmh/java/               JMH benchmarks and CPU-provider verification
+tools/                      Campaign, parity and reproducibility utilities
+docs/                       Architecture, benchmarks and visual provenance
+```
+
+## Further documentation
+
+- [ONNX model and preprocessing contract](docs/architecture/ONNX_MODEL_CONTRACT.md)
+- [M2 model and numerical validation](docs/benchmark/JAVA_M2_RESULT_20261018.md#selection-and-implementation)
+- [Localization and metric conventions](docs/benchmark/LOCALIZATION_CONVENTIONS.md)
+- [Dataset layout and coverage](docs/benchmark/MVTEC_DATASET_CENSUS.md)
+- [Evaluation, benchmark evidence and reproducibility index](docs/EXPERIMENT_INDEX.md)
+
+## License
+
+Code: [Apache License 2.0](LICENSE).
+
+Gallery figures are resized and overlaid adaptations of MVTec AD images,
+attributed to **MVTec Software GmbH**, and distributed under
+[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/).
+[Sources, transformations and attribution](docs/assets/readme/README.md).
+The dataset is obtained separately.

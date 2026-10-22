@@ -9,12 +9,15 @@ import java.util.*;
 final class M2CpuEvidence {
     private M2CpuEvidence() { }
     static void verify(byte[] model, float[] nchw, Path directory) throws Exception {
+        verify(model, nchw, directory, "input_image");
+    }
+    static void verify(byte[] model, float[] nchw, Path directory, String inputName) throws Exception {
         var env = OrtEnvironment.getEnvironment();
         try (var options = new OrtSession.SessionOptions()) {
             options.enableProfiling(directory.resolve("cpu-proof-" + ProcessHandle.current().pid()).toString());
             try (var session = env.createSession(model, options);
                  var input = OnnxTensor.createTensor(env, FloatBuffer.wrap(nchw), new long[]{1, 3, 224, 224})) {
-                try (var result = session.run(Map.of("input_image", input))) {
+                try (var result = session.run(Map.of(inputName, input))) {
                     if (result.size() != 1) throw new IllegalStateException("Unexpected model outputs");
                 }
                 Path trace = Path.of(session.endProfiling());

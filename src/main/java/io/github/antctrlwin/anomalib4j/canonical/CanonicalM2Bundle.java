@@ -9,6 +9,8 @@ public final class CanonicalM2Bundle {
 
     public CanonicalM2Bundle(M2Model model) {
         this.model = Objects.requireNonNull(model);
+        if (model.encoderSpec() != io.github.antctrlwin.anomalib4j.onnx.EncoderSpec.SMALL_SPATIAL_14)
+            throw new IllegalArgumentException("Canonical Metal Nut is qualified only with Small");
         identity = CanonicalM2BundleStore.identity(model);
     }
     public M2Model model() { return model; }

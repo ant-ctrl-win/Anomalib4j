@@ -10,9 +10,9 @@ public final class M2Detector implements AutoCloseable {
     private final M2Model model;
     private final OnnxMobileNetV4Encoder encoder;
     public M2Detector(M2Model model) throws IOException, OrtException {
-        if (!model.encoderSha256().equals(M2ModelStore.encoderHash())) throw new IOException("Encoder identity mismatch");
+        if (!model.encoderSha256().equals(M2ModelStore.encoderHash(model.encoderSpec()))) throw new IOException("Encoder identity mismatch");
         this.model = model;
-        encoder = new OnnxMobileNetV4Encoder();
+        encoder = new OnnxMobileNetV4Encoder(model.encoderSpec());
     }
     public double[] nativeMap(BufferedImage image) throws OrtException { return model.score(encoder.extract(image)); }
     public double detect(BufferedImage image) throws OrtException { return M2Model.imageScore(nativeMap(image)); }

@@ -1,14 +1,24 @@
 # Experiment index
 
-Canonical evidence index, updated **2026-10-21**. Current implementation and
+Canonical evidence index, updated **2026-10-22**. Current implementation and
 active work are defined in [PROJECT_STATE.md](PROJECT_STATE.md).
 The approved [research synthesis](ANOMALIB4J_RESEARCH_SYNTHESIS.md) provides the
 high-level interpretation. [D32](DECISION_LOG.md#d32---adopt-the-research-synthesis-and-prepare-a-bounded-v1)
-sets the active phase: **scientific expansion paused; bounded v1/publication
-preparation next**. Strict Java M2-P is selected; M0 is legacy/reference; Metal Nut
+records the transition to publication preparation. The current phase is
+**portfolio presentation freeze; no additional scientific experiment required**,
+with working-tree/publication status in [PROJECT_STATE.md](PROJECT_STATE.md).
+Strict Java M2-P is selected; M0 is legacy/reference; Metal Nut
 is the only qualified integrated canonical category; Screw remains MIXED and
 experiment-only. Covariance-aware statistics are UNTESTED optional future work,
 not implemented or required for v1.
+
+Engineering checkpoint 2026-10-22: [generic M2 Small/Large integration](architecture/M2_ENCODER_INTEGRATION.md)
+adds the 192-channel encoder alongside the default 96-channel Small, with unchanged
+mathematics/evaluator and explicit v2 persistence. The subsequent
+[final S/L campaign](benchmark/MOBILENETV4_SMALL_LARGE_FINAL_COMPARISON.md) is now
+complete on all15 categories, with fresh Java features and matched CPU JMH.
+Historical rows retain their Small/source identities. Large's [Colab export verification](architecture/MOBILENETV4_LARGE_EXPORT_VERIFICATION.md)
+is externally supplied evidence, distinct from local Java integration tests.
 
 Values below summarize retained reports and local CSVs; they do not certify a
 fresh execution. Dates identify recorded campaigns/checkpoints (ranges retain
@@ -17,7 +27,7 @@ detector qualified. **QUALIFIED** is scoped to the stated Metal Nut contract;
 **MIXED** retains benefits and regressions; **REJECTED/NO-GO** refers to the tested
 strategy or historical gate; **DIAGNOSTIC** is not new TEST quality;
 **SYNTHESIS** is interpretation, not an experiment. Historical recommendations
-below describe their recorded stage; D32 defines the current next action.
+below describe their recorded stage; PROJECT_STATE.md defines the current phase.
 
 **Metric order: Image AUROC / Pixel AUROC / AUPRO@0.30.** Values are rounded
 to six decimals here; detailed reports/artifacts retain their recorded precision.
@@ -30,6 +40,7 @@ All listed detector experiments use projection seed 42 where applicable.
 
 | ID | Date / classification | Implementation / source | Coverage and split | Macro Image / Pixel / AUPRO | Evidence and status |
 |---|---|---|---|---|---|
+| `m2-small-large-final-20261022-validated` | 2026-10-22; COMPLETE / final portfolio comparison | Java generic M2-P, Small96 vs Large192; frozen scientific/benchmark source hashes; controller-only resume amendment disclosed | All15; fresh features both; identical seed42 FIT2900/CAL729/TEST1725 manifests, held-out positional Z, unchanged evaluator; no canonicalization/tuning | Small0.871803/0.931016/0.805887; Large0.878013/0.946494/0.837383; delta+0.006210/+0.015477/+0.031496 | [Final comparison](benchmark/MOBILENETV4_SMALL_LARGE_FINAL_COMPARISON.md); `target/comparison/m2-small-large-final-20261022-validated`; complete JMH, actual sizes and direct adaptation times retained; mixed category outcomes, Small recommended default |
 | Research synthesis | 2026-10-21; COMPLETE / SYNTHESIS | Approved documentation-only interpretation; no new campaign | All retained generations; no new split/calibration | Establish bounded M2 v1, Metal-only qualified extension, mixed Screw and UNTESTED covariance hypothesis | [Synthesis](ANOMALIB4J_RESEARCH_SYNTHESIS.md); no experiment evidence root; D32 adopts publication preparation |
 | `screw-cal-photometric-nuisance-20261020` | 2026-10-20; COMPLETE / DIAGNOSTIC / partial | Test-only logical-native RGB brightness/contrast/gamma with unchanged B/CNN/frozen identity/canonical M2;183 source/resource hashes, previous177 unchanged | Exactly63 usable CAL normals; good179 excluded; retained original poses; no refit/recalibration/TEST access;378 exact baseline+1512 perturbed evaluations | No new quality metrics. Brightness1.20 max-Z medians I/C39.132/39.357; paired median/p95+2.507/+11.329Z; contrast high-tail excess, gamma small; brightness clips median81.42% channels | [Photometric control](experiments/SCREW_CAL_PHOTOMETRIC_NUISANCE.md), [protocol](experiments/SCREW_CAL_PHOTOMETRIC_PROTOCOL.md); `target/experiments/screw-cal-photometric-nuisance-20261020`; PHOTOMETRIC_SENSITIVITY_PARTIAL,246 Java tests, no production promotion; proposed clipping-isolation follow-up remains unexecuted/deferred by D32 |
 | `screw-head-response-analysis-20261020` | 2026-10-20; COMPLETE / DIAGNOSTIC | Test-only retained-array/map diagnostic;177 source/resource hashes, previous172 unchanged; identity/canonical models never refitted | Matched253 FIT/63 CAL/160 TEST; normal-only geometric bands frozen before TEST analysis;8 fixed image/tensor representatives | No new primary metrics. Head max median2.654->4.127Z; good global max4.509->5.939Z;77.13% of head Pixel rank loss against good-image backgrounds | [Head analysis](experiments/SCREW_HEAD_RESPONSE_ANALYSIS.md), [protocol](experiments/SCREW_HEAD_RESPONSE_PROTOCOL.md); `target/experiments/screw-head-response-analysis-20261020`; competing maxima supported, calibration sensitivity shifts, upstream cause unresolved;236 Java tests, no production change |

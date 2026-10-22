@@ -2,6 +2,7 @@ package io.github.antctrlwin.anomalib4j.evaluation;
 
 import io.github.antctrlwin.anomalib4j.model.GridShape;
 import io.github.antctrlwin.anomalib4j.onnx.OnnxMobileNetV4Encoder;
+import io.github.antctrlwin.anomalib4j.onnx.EncoderSpec;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -28,21 +29,22 @@ public final class PositionalVarianceFeatureDump {
     private PositionalVarianceFeatureDump() { }
 
     public static void main(String[] args) throws Exception {
-        if (args.length < 4 || args.length > 5) {
-            throw new IllegalArgumentException("Expected: <dataset> <outputDir> <manifest> <category> [role]");
+        if (args.length < 4 || args.length > 6) {
+            throw new IllegalArgumentException("Expected: <dataset> <outputDir> <manifest> <category> [role] [encoder]");
         }
         Path dataset = Path.of(args[0]);
         Path output = Path.of(args[1]);
         Path manifest = Path.of(args[2]);
         String category = args[3];
-        String role = args.length == 5 ? args[4] : "train";
+        String role = args.length >= 5 ? args[4] : "train";
+        var spec = args.length == 6 ? EncoderSpec.valueOf(args[5]) : EncoderSpec.SMALL_SPATIAL_14;
         if (!role.equals("train") && !role.equals("test")) {
             throw new IllegalArgumentException("role must be train or test");
         }
         Files.createDirectories(output);
 
         List<String> names = Files.readAllLines(manifest).stream().filter(s -> !s.isBlank()).toList();
-        try (var encoder = new OnnxMobileNetV4Encoder(OnnxMobileNetV4Encoder.Variant.SPATIAL_14)) {
+        try (var encoder = new OnnxMobileNetV4Encoder(spec)) {
             GridShape grid = encoder.grid();
             int elements = grid.elements();
             float[] features = new float[Math.multiplyExact(names.size(), elements)];
@@ -64,10 +66,11 @@ public final class PositionalVarianceFeatureDump {
         Files.writeString(output.resolve("meta.json"), ComparisonArtifacts.JSON.writeValueAsString(Map.of(
                 "category", category,
                 "role", role,
-                "variant", OnnxMobileNetV4Encoder.Variant.SPATIAL_14.name(),
-                "encoderId", "mobilenetv4_conv_small.e2400_r224_in1k",
-                "preprocessingId", "imagenet-rgb-resize224-bicubic-v1",
-                "grid", Map.of("height", 14, "width", 14, "channels", 96),
+                "variant", spec.name(),
+                "encoderId", spec.modelId(),
+                "encoderSha256", spec.sha256(),
+                "preprocessingId", spec.preprocessingId(),
+                "grid", Map.of("height", spec.grid().height(), "width", spec.grid().width(), "channels", spec.grid().channels()),
                 "count", names.size(),
                 "dtype", "float32",
                 "layout", "N,H,W,C")) + "\n",

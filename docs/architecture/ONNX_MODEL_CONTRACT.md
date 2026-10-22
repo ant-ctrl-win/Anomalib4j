@@ -1,6 +1,15 @@
 # Contratto dell'encoder MobileNetV4 — Anomalib4j
 
 Documento di riferimento per l'integrazione ONNX Runtime in Java.
+
+**Estensione 2026-10-22:** il contratto storico Small sotto resta conservato.
+Il percorso M2 generico supporta ora anche Conv Large SPATIAL_14, con la stessa
+geometria spaziale 14x14 e 192 canali. Identità, byte, hash, conteggi del grafo,
+API e preparazione del confronto sono nel
+[contratto Small/Large](M2_ENCODER_INTEGRATION.md); la parità Colab del Large è
+registrata come [evidenza esterna](MOBILENETV4_LARGE_EXPORT_VERIFICATION.md).
+Nessuna nuova campagna MVTec all-15 o misura finale S/L è dichiarata.
+
 Generato per **sola ispezione**: nessun file di codice, `pom.xml`, modello o risorsa è stato modificato.
 Unico file creato/sovrascritto nell'ispezione originale: `ONNX_MODEL_CONTRACT.md`.
 

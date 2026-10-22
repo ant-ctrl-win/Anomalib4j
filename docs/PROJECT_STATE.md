@@ -1,6 +1,6 @@
 # Current project state
 
-Updated **2026-10-21** against the approved
+Updated **2026-10-22** against the approved
 [research synthesis](ANOMALIB4J_RESEARCH_SYNTHESIS.md), the high-level scientific and
 engineering interpretation. This file is the current snapshot; the
 [experiment index](EXPERIMENT_INDEX.md) navigates retained evidence and the
@@ -8,22 +8,35 @@ engineering interpretation. This file is the current snapshot; the
 records chronology and supersession. Repository code/evidence are authoritative;
 chat history and ignored handoffs are not required.
 
-## Current phase and next action
+## Current phase and publication status
 
-**Scientific expansion is paused. Current priority is repository/publication
-preparation for a bounded Anomalib4j v1.**
+**Portfolio presentation freeze. Scientific development is closed for this phase;
+no additional experiment is needed or authorized.** The public/default system is
+MobileNetV4 Conv Small -> 14x14x96 -> M2. Detailed scientific history remains
+retained evidence, not the public landing-page narrative.
 
-Next checkpoint: rewrite the public README/presentation around generic M2, the
-qualified Metal Nut extension, measured results and explicit limits. README,
-diagrams and publication packaging are separate work, not completed by this
-reconciliation. No further scratch_head/photometric micro-optimization is the
-active task; another scientific intervention requires a new architectural
-question and separate authorization.
+[README.md](../README.md) is the primary Italian landing page;
+[README.en.md](../README.en.md) is its aligned English equivalent. Both foreground
+selected category examples, immediately disclose the all-15 macro results in
+Results, and present measured CPU scopes and independent same-hardware references.
 
-Covariance-aware local normal statistics are **UNTESTED**, optional future
-one-cycle research, not implemented, not the current task and not required for
-v1. No rank/shrinkage choice or implementation is authorized. Historical M3
-already denotes VSA dispersion and is not renamed.
+The 2026-10-22 freeze audit verified compilation, 262 targeted Java tests and
+two pipeline smoke cases in a clean copy of the proposed publication files,
+without ignored scientific artifacts. The clone URL works, but published HEAD
+`2cb0ef8fb08654d05f405ed0d7adf4fb9866df40` does not yet contain the new
+encoder-contract source/resources and pipeline smoke test. **The validated
+working tree is ready for portfolio review; publication is pending versioning
+and publication of the intentional uncommitted/untracked files.** No commit or
+push was authorized or performed.
+
+The final generic Java M2 Small/Large all-15 campaign and matched CPU JMH are
+complete; the [technical comparison](benchmark/MOBILENETV4_SMALL_LARGE_FINAL_COMPARISON.md)
+retains their evidence. They are not featured in either README. The separate
+qualified Metal Nut extension retains its existing scope.
+
+Covariance-aware local statistics remain an UNTESTED, unimplemented historical
+hypothesis outside this freeze. No scientific follow-up is scheduled.
+Historical M3 denotes VSA dispersion and is not renamed.
 
 ## Selected generic detector: strict local M2
 
@@ -32,6 +45,11 @@ The selected Java architecture is **M2-P**, in
 
 - Frozen MobileNetV4 `mobilenetv4_conv_small.e2400_r224_in1k`, SPATIAL_14:
   float32 NHWC[1,14,14,96], flattened HWC.
+- Explicit `EncoderSpec` also supports frozen
+  `mobilenetv4_conv_large.e500_r256_in1k`, NHWC[1,14,14,192], through the same
+  generic M2 pipeline. Small remains default. The historical metrics below
+  describe Small; the completed final comparison separately records Large's
+  all-15 quality and matched complete CPU latency.
 - Unit local descriptors `u=x/||x||`, rejecting nonfinite values/norm below 1e-6.
   FIT normals supply per-position/channel mean and sample std, floored at 1e-6.
 - Strict positional reference, with
@@ -45,6 +63,8 @@ The selected Java architecture is **M2-P**, in
 default remains unaligned whole-image RGB bicubic224, /255, ImageNet mean/std,
 float32 NCHW (`imagenet-rgb-resize224-bicubic-v1`), without crop/letterboxing.
 The encoder also has a prepared-tensor boundary for explicit canonical sampling.
+New generic M2 archives are v2 with explicit encoder identity/hash/geometry;
+old v1 archives still load as Small only. Canonical Metal Nut remains Small-only.
 See the [Java M2 parity/performance report](benchmark/JAVA_M2_RESULT_20261018.md)
 for inference state, APIs, checks and measured scopes.
 
@@ -70,11 +90,15 @@ features/evaluator, consuming retained M0 metrics). These are ignored local
 artifacts, not guaranteed clone contents. Definitions are in the
 [frozen local-model plan](experiments/LOCAL_MODEL_ABLATION_PLAN.md).
 
-Java M2 reproduced all three Python metrics on retained Bottle, Metal Nut and
-Hazelnut with zero reported deltas. **No separate full all-15 Java M2 TEST-quality
-campaign is claimed.** All-15 Java normal robustness and test-only correspondence
-studies have separate scopes. The observed macro ordering is not a significance
-claim or a claim of uniform category performance.
+Java M2 first reproduced all three Python metrics on retained Bottle, Metal Nut
+and Hazelnut with zero reported deltas. The final 2026-10-22 fresh all-15 Java
+campaign now confirms Small macros 0.871803/0.931016/0.805887 and measures Large
+macros 0.878013/0.946494/0.837383 (Image/Pixel/AUPRO). Large wins 10/15 Image and
+13/15 Pixel/AUPRO categories; Small remains the recommended default for compact
+CPU inference. See the final comparison for category regressions, artifact/source
+identities, adaptation timing limitations and direct JMH scopes. Robustness and
+correspondence studies retain their separate scopes. Macro ordering is not a
+significance claim or a claim of uniform category performance.
 
 ## Correspondence and robustness
 
